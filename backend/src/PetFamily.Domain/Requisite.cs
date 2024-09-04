@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Domain;
+﻿using PetFamily.Domain.Enum;
+
+namespace PetFamily.Domain;
 
 public class Requisite
 {

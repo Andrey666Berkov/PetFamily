@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain;
+﻿namespace PetFamily.Domain.Enum;
 
 public enum Transaction
 {
