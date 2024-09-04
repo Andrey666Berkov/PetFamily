@@ -15,10 +15,10 @@ public class Pet
     public double Weight { get; set; }
     public int Height { get; set; }
     public int NumberPhoneOwner { get; set; }
-    public Castrated Castrated { get; set; }   
+    public bool IsCastrated { get; set; }   
     public DateOnly BirthDate { get; set; }
     public Vaccinated Vaccinated { get; set; }
     public StatusHelper StatusHelper { get; set; }
-    public Requisites Requisites { get; set; }= default!;
+    public List<Requisite> Requisites { get; set; }= [];
     public DateTime CreatedOn { get; set; } = DateTime.Now;
 }
