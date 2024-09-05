@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain;
 using PetFamily.Domain.Enum;
+using PetFamily.Domain.Modules;
 
 namespace PetFamily.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -13,21 +14,9 @@ public class HomeController:Controller
         int numberPhoneOwner, bool isCastrated, 
         StatusHelper statusHelper,Requisite? requisite )
     {
-       //Result<Pet> petResult = 
-         //   Pet.CreatePet(nickName, discription, numberPhoneOwner:numberPhoneOwner);
-        /*if (petResult.IsFailure)
-        {
-            return BadRequest(petResult.Error);
-        }
-        
-        var res=Save(petResult.Value);
-        if (res.IsFailure)
-        {
-            return BadRequest(res.Error);
-        }
-        */ 
-        
-        var pet=Pet.CreatePet(nickName,  discription, 
+       
+        var pet=Pet.CreatePet(PetId.CreateNewPetId() 
+            ,nickName,  discription, 
             petType,  breed, 
             color,  infoHelth, 
             address,  weight,

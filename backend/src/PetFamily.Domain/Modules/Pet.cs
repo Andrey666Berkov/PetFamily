@@ -1,21 +1,15 @@
-﻿using CSharpFunctionalExtensions;
+﻿
+using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enum;
-using System.Linq;
 
-namespace PetFamily.Domain;
+namespace PetFamily.Domain.Modules;
 
-public class PetPhoto
-{
-    public Guid Id { get; set; }
-    public string PhotoPath { get; set; } = default!;
-    public bool IsFavorite { get; set; }
-}
-public class Pet
+public class Pet : Entity<PetId>
 {
     //property
-    private readonly List<Requisite>  _requisites;
-    private readonly List<PetPhoto> _photos;
-    public Guid Id { get; private set; }
+    private readonly List<Requisite>  _requisites=[];
+    private readonly List<PetPhoto> _photos=[];
+    public PetId Id { get; private set; }
     public string NickName { get; private set; }= default!;
     public PetType PetType { get; private set; }
     public string Description { get; private set; }= default!;
@@ -37,13 +31,18 @@ public class Pet
 
     /// //////////////////////////
     //constructor
-    private Pet(string nickName, string description, 
+    public Pet(PetId id):base(id)
+    {
+        Id = id;
+    }
+    private Pet(PetId id, string nickName, string description, 
         PetType petType, string breed, 
         string color, string infoHealth, 
         string address, double weight,
         int height, int numberPhoneOwner, 
-        bool isCastrated, Requisite requisite)
+        bool isCastrated, Requisite requisite):base(id)
     {
+        Id= id;
         NickName = nickName; Description = description;
         PetType = petType; Breed = breed;
         Color = color; InfoHelth = infoHealth;
@@ -54,7 +53,7 @@ public class Pet
     }
     /// //////////////////////////////////////
     //CretePet
-    public static Result<Pet> CreatePet(string nickName, string discription, 
+    public static Result<Pet> CreatePet(PetId petid, string nickName, string discription, 
         PetType petType, string breed, string color, string infoHealth, 
         string address, double weight, int height,
         int numberPhoneOwner, bool isCastrated, 
@@ -85,7 +84,7 @@ public class Pet
         if (requisite == null)
             return Result.Failure<Pet>("Requisite is not null or empty");
         
-        var pet = new Pet( nickName,  discription, 
+        var pet = new Pet( petid, nickName,  discription, 
             petType,  breed, 
             color,  infoHealth, 
             address,  weight,

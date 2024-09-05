@@ -1,16 +1,27 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enum;
 
-namespace PetFamily.Domain;
+namespace PetFamily.Domain.Modules;
 
-public class Volunteer
+public record VolunteerId
+{
+    private VolunteerId(Guid value)
+    {
+        Value = value;
+    }
+    public Guid Value { get; }
+    public static VolunteerId CreateNewPetId()=>new(Guid.NewGuid());
+    public static VolunteerId CreateEmptyPetID() => new(Guid.Empty);
+
+}
+public class Volunteer:Entity<VolunteerId> 
 {
     //property
-    private readonly List<Pet>  _pets; 
-    private readonly List<Requisite>  _requisites;   
-    private readonly List<SocialNetwork> _socialNetworks;
+    private readonly List<Pet>  _pets=[]; 
+    private readonly List<Requisite>  _requisites=[];   
+    private readonly List<SocialNetwork> _socialNetworks=[];
    
-    public Guid Id { get; private set; }
+    public VolunteerId Id { get; private set; }
     public string FirstName { get; private set; }= default!;
     public string LastName { get; private set; }= default!;
     public string MiddleName { get; private set; }= default!;
@@ -24,10 +35,11 @@ public class Volunteer
     private IReadOnlyList<SocialNetwork> SocialNetwork=>_socialNetworks;
     /// //////////////////////////
     //constructor
-    private Volunteer(string firstName, string lastName, 
+    private Volunteer(VolunteerId id,string firstName, string lastName, 
         string middleName, string email, 
-        int numberPhone, int experience, Requisite requisite)
+        int numberPhone, int experience, Requisite requisite):base(id)
     {
+        Id = id;
         FirstName = firstName;
         LastName = lastName;
         MiddleName = middleName;
@@ -59,19 +71,23 @@ public class Volunteer
         _pets.Add(pet); 
         return _pets.Count;
     }
+    public int GetNumPets()=>_pets.Count;
     public int GetNumPetNeedHelp()
     {
-        var petNeedHelp = Pets.Where(pet => pet.StatusHelper == StatusHelper.NeedHelp);
+        var petNeedHelp = 
+            Pets.Where(pet => pet.StatusHelper == StatusHelper.NeedHelp);
         return petNeedHelp.Count();
     }
     public int GetNumPetSearchHome()
     {
-        var petNeedHelp = Pets.Where(pet => pet.StatusHelper == StatusHelper.SearchHome);
+        var petNeedHelp = 
+            Pets.Where(pet => pet.StatusHelper == StatusHelper.SearchHome);
         return petNeedHelp.Count();
     }
     public int GetNumPetFoundHome()
     {
-        var petNeedHelp = Pets.Where(pet => pet.StatusHelper == StatusHelper.FoundHome);
+        var petNeedHelp = 
+            Pets.Where(pet => pet.StatusHelper == StatusHelper.FoundHome);
         return petNeedHelp.Count();
     }
     
@@ -111,7 +127,7 @@ public class Volunteer
     }
     /// //////////////////////////////////////
     //CreateVolunteer
-    public static Result<Volunteer> CreateVolunteer(string firstName, string lastName,
+    public static Result<Volunteer> CreateVolunteer(VolunteerId id,string firstName, string lastName,
         string middleName, string email,
         int numberPhone, int experience,Requisite? requisite)
     {
@@ -128,7 +144,7 @@ public class Volunteer
         if (requisite == null)
             return Result.Failure<Volunteer>("Requisite is not null or empty");
         
-        var volunteer = new Volunteer(firstName, lastName,
+        var volunteer = new Volunteer(id,firstName, lastName,
             middleName, email,
             numberPhone, experience, requisite);
         return Result.Success(volunteer);
