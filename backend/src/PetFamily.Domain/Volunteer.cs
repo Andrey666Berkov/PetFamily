@@ -19,9 +19,9 @@ public class Volunteer
     public int Experience { get; private set; }
     public int NumberPhone { get; private set; }
 
-    public IReadOnlyList<Pet> Pets => _pets;
-    public IReadOnlyList<Requisite> Requisites=>_requisites;
-    public IReadOnlyList<SocialNetwork> SocialNetwork=>_socialNetworks;
+    private IReadOnlyList<Pet> Pets => _pets;
+    private IReadOnlyList<Requisite> Requisites=>_requisites;
+    private IReadOnlyList<SocialNetwork> SocialNetwork=>_socialNetworks;
     /// //////////////////////////
     //constructor
     private Volunteer(string firstName, string lastName, 
@@ -69,6 +69,11 @@ public class Volunteer
         var petNeedHelp = Pets.Where(pet => pet.StatusHelper == StatusHelper.SearchHome);
         return petNeedHelp.Count();
     }
+    public int GetNumPetFoundHome()
+    {
+        var petNeedHelp = Pets.Where(pet => pet.StatusHelper == StatusHelper.FoundHome);
+        return petNeedHelp.Count();
+    }
     
     public void AddRequisites(Requisite requisite)
     {
@@ -85,35 +90,25 @@ public class Volunteer
         }
         return "requisite not found";
     }
-    public void SetFirstName(string firstName)
+    public void SetProperty(string? firstName=null, string? lastName=null, 
+        string? middleName=null, string? email=null, 
+        int numberPhone=default, int experience=default, Requisite? requisite=null)
     {
-        FirstName = firstName;
+        if (!string.IsNullOrWhiteSpace(firstName))
+        {FirstName = firstName;}
+        if (!string.IsNullOrWhiteSpace(lastName))
+        {LastName = lastName;}
+        if (!string.IsNullOrWhiteSpace(middleName))
+        {MiddleName = middleName;}
+        if (!string.IsNullOrWhiteSpace(email))
+        {Email = email;}
+        if(numberPhone !=0)
+        {NumberPhone = numberPhone;}
+        if(experience !=0)
+        {Experience = experience;}
+        if(requisite!=null)
+        {AddRequisites(requisite);}
     }
-    public void SetLastName(string lastName)
-    {
-        LastName = lastName;
-    }
-    public void SetMiddleName(string middleName)
-    {
-        MiddleName = middleName;
-    }
-    public void SetEmail(string email)
-    {
-        Email = email;
-    }
-    public void SetDescription(string description)
-    {
-        Description = description;
-    }
-    public void SetHeight(int experience)
-    {
-        Experience = experience;
-    }
-    public void SetNumberPhone(int numberPhone)
-    {
-        NumberPhone = numberPhone;
-    }
-    
     /// //////////////////////////////////////
     //CreateVolunteer
     public static Result<Volunteer> CreateVolunteer(string firstName, string lastName,
