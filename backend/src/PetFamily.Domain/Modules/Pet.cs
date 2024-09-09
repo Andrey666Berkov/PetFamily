@@ -4,11 +4,11 @@ using PetFamily.Domain.Enum;
 
 namespace PetFamily.Domain.Modules;
 
-public class Pet : Entity<PetId>
+public sealed class Pet : Entity<PetId>
 {
+    
     //property
     private readonly List<Requisite>  _requisites=[];
-    private readonly List<PetPhoto> _photos=[];
     public PetId Id { get; private set; }
     public string NickName { get; private set; }= default!;
     public PetType PetType { get; private set; }
@@ -26,7 +26,8 @@ public class Pet : Entity<PetId>
     public StatusHelper StatusHelper { get; private set; }
     public IReadOnlyList<Requisite> Requisites=>_requisites;
     public DateTime CreatedOn  => DateTime.Now;
-    public IReadOnlyList<PetPhoto> Photos => _photos;
+    public PetListPhoto? Photos { get; private set; }
+
     
 
     /// //////////////////////////
@@ -139,6 +140,4 @@ public class Pet : Entity<PetId>
         if(requisite!=null)
         {AddRequisites(requisite);}
     }
-
-
 }

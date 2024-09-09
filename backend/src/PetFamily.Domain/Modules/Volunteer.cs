@@ -12,6 +12,7 @@ public record VolunteerId
     public Guid Value { get; }
     public static VolunteerId CreateNewPetId()=>new(Guid.NewGuid());
     public static VolunteerId CreateEmptyPetID() => new(Guid.Empty);
+    public static VolunteerId Create(Guid id) => new(id);
 
 }
 public class Volunteer:Entity<VolunteerId> 
