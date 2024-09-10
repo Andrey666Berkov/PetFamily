@@ -1,5 +1,5 @@
 ﻿
-using CSharpFunctionalExtensions;
+
 using PetFamily.Domain.Enum;
 
 namespace PetFamily.Domain.Modules;
@@ -8,7 +8,7 @@ public sealed class Pet : Entity<PetId>
 {
     
     //property
-    private readonly List<Requisite>  _requisites=[];
+    
     public PetId Id { get; private set; }
     public string NickName { get; private set; }= default!;
     public PetType PetType { get; private set; }
@@ -24,7 +24,7 @@ public sealed class Pet : Entity<PetId>
     public DateOnly? BirthDate { get; private set; }
     public bool IsVaccinated { get; private set; } = false;
     public StatusHelper StatusHelper { get; private set; }
-    public IReadOnlyList<Requisite> Requisites=>_requisites;
+    public ListRequisites Requisites { get; private set; }
     public DateTime CreatedOn  => DateTime.Now;
     public PetListPhoto? Photos { get; private set; }
 
@@ -61,29 +61,29 @@ public sealed class Pet : Entity<PetId>
         StatusHelper statusHelper,Requisite? requisite)
     {
         if (string.IsNullOrWhiteSpace(nickName))
-            return Result.Failure<Pet>("NickName is not null or empty");
+            return Result<Pet>.Failure("NickName is not null or empty");
         if (string.IsNullOrWhiteSpace(discription))
-            return Result.Failure<Pet>("Discription is not null or empty");
+            return Result<Pet>.Failure("Discription is not null or empty");
         if (petType < (PetType)0 || petType > (PetType)2 )
-            return Result.Failure<Pet>("PetType does not exist");
+            return Result<Pet>.Failure("PetType does not exist");
         if (string.IsNullOrWhiteSpace(breed))
-            return Result.Failure<Pet>("Breed is not null or empty");
+            return Result<Pet>.Failure("Breed is not null or empty");
         if (string.IsNullOrWhiteSpace(color))
-            return Result.Failure<Pet>("Color is not null or empty");
+            return Result<Pet>.Failure("Color is not null or empty");
         if (string.IsNullOrWhiteSpace(infoHealth))
-            return Result.Failure<Pet>("InfoHelth is not null or empty");
+            return Result<Pet>.Failure("InfoHelth is not null or empty");
         if (string.IsNullOrWhiteSpace(address))
-            return Result.Failure<Pet>("Address is not null or empty");
+            return Result<Pet>.Failure("Address is not null or empty");
         if (weight < 0.0 && weight > 300.0)
-            return Result.Failure<Pet>("The weight should be in the range from 0 to 300");
+            return Result<Pet>.Failure("The weight should be in the range from 0 to 300");
         if (height < 0.0 && height > 3.0)
-            return Result.Failure<Pet>("The height should be in the range from 0 to 3");
+            return Result<Pet>.Failure("The height should be in the range from 0 to 3");
         if (statusHelper < (StatusHelper)0 || statusHelper > (StatusHelper)3 )
-            return Result.Failure<Pet>("StatusHelper does not exist");
+            return Result<Pet>.Failure("StatusHelper does not exist");
         if(numberPhoneOwner.ToString().Length<5 || numberPhoneOwner.ToString().Length>20)
-            return Result.Failure<Pet>("There is no such numberPhone");
+            return Result<Pet>.Failure("There is no such numberPhone");
         if (requisite == null)
-            return Result.Failure<Pet>("Requisite is not null or empty");
+            return Result<Pet>.Failure("Requisite is not null or empty");
         
         var pet = new Pet( petid, nickName,  discription, 
             petType,  breed, 
@@ -91,20 +91,21 @@ public sealed class Pet : Entity<PetId>
             address,  weight,
             height,  numberPhoneOwner, 
             isCastrated, requisite);
-        return Result.Success(pet);
+        return Result<Pet>.Success(pet);
     }
     /// /////////////////////////////////
     //methods
     public void AddRequisites(Requisite requisite)
     {
-        _requisites.Add(requisite);
+        Requisites.Requisites.Add(requisite);
     }
     public string RemoveRequisites(Requisite requisite)
     {
-        var req=_requisites.FirstOrDefault(r=>r.Id==requisite.Id);
+        var req=Requisites.Requisites
+            .FirstOrDefault(r=>r.Title==requisite.Title);
         if (req != null)
         {
-            _requisites.Remove(requisite);
+            Requisites.Requisites.Remove(req);
             return "requisite removed";
         }
         return "requisite not found";

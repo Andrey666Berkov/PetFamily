@@ -2,14 +2,20 @@
 
 namespace PetFamily.Domain.Modules;
 
-public class Requisite
+public record Requisite
 {
-    public Guid Id { get; set; }
-    public string Title { get; set; }= default!;
-    public string Description { get; set; }= default!;
-    public Transaction TransactionMoney { get; set; }
-    public int PetId { get; set; }
-    public Pet? Pet { get; set; } = null;
-    public int VolunteerId { get; set; }
-    public Volunteer? Volunteer { get; set; } = null;
+    private Requisite(string title, string description)
+    {
+        Title = title;
+        Description = description;
+    }
+    public string Title { get;  }= default!;
+    public string Description { get; }= default!;
+
+    public static Result<Requisite> Create(string title, string description)
+    {
+        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
+            return Result<Requisite>.Failure("Title or description cannot be empty");
+        return Result<Requisite>.Success(new Requisite(title, description));
+    }
 }

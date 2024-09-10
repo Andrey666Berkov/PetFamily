@@ -27,7 +27,7 @@ public class HomeController:Controller
         return Ok();   
     }
 
-    public Result Save(Pet? pet)
+    /*public Result Save(Pet? pet)
     {
         if (pet != null)
         {
@@ -36,4 +36,5 @@ public class HomeController:Controller
 
         return Result.Failure("pet = null");
     }
+    */
 }

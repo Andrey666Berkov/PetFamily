@@ -1,5 +1,4 @@
-﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Enum;
+﻿using PetFamily.Domain.Enum;
 
 namespace PetFamily.Domain.Modules;
 
@@ -19,8 +18,7 @@ public class Volunteer:Entity<VolunteerId>
 {
     //property
     private readonly List<Pet>  _pets=[]; 
-    private readonly List<Requisite>  _requisites=[];   
-    private readonly List<SocialNetwork> _socialNetworks=[];
+    
    
     public VolunteerId Id { get; private set; }
     public string FirstName { get; private set; }= default!;
@@ -32,8 +30,9 @@ public class Volunteer:Entity<VolunteerId>
     public int NumberPhone { get; private set; }
 
     private IReadOnlyList<Pet> Pets => _pets;
-    private IReadOnlyList<Requisite> Requisites=>_requisites;
-    private IReadOnlyList<SocialNetwork> SocialNetwork=>_socialNetworks;
+    public ListRequisites Requisites { get; private set; }
+    public ListSocialNetwork SocialNetwork { get; private set; }
+    
     /// //////////////////////////
     //constructor
     private Volunteer(VolunteerId id,string firstName, string lastName, 
@@ -47,21 +46,22 @@ public class Volunteer:Entity<VolunteerId>
         Email = email;
         NumberPhone = numberPhone;
         Experience = experience;
-        AddRequisitesVolunteer(requisite);
+        AddRequisites(requisite);
         
     }
     /// /////////////////////////////////
     //methods
-    public void AddRequisitesVolunteer(Requisite requisite)
+    public void AddRequisites(Requisite requisite)
     {
-        _requisites.Add(requisite);
+        Requisites.Requisites.Add(requisite);
     }
-    public string RemoveRequisitesVolunteer(Requisite requisite)
+    public string RemoveRequisites(Requisite requisite)
     {
-        var req=_requisites.FirstOrDefault(r=>r.Id==requisite.Id);
+        var req= Requisites.Requisites
+            .FirstOrDefault(r=>r.Title==requisite.Title);
         if (req != null)
         {
-            _requisites.Remove(requisite);
+            Requisites.Requisites.Remove(req);
             return "requisite removed";
         }
         return "requisite not found";
@@ -91,22 +91,7 @@ public class Volunteer:Entity<VolunteerId>
             Pets.Where(pet => pet.StatusHelper == StatusHelper.FoundHome);
         return petNeedHelp.Count();
     }
-    
-    public void AddRequisites(Requisite requisite)
-    {
-        _requisites.Add(requisite);
-    }
-    
-    public string RemoveRequisites(Requisite requisite)
-    {
-        var req=_requisites.FirstOrDefault(r=>r.Id==requisite.Id);
-        if (req != null)
-        {
-            _requisites.Remove(requisite);
-            return "requisite removed";
-        }
-        return "requisite not found";
-    }
+   
     public void SetProperty(string? firstName=null, string? lastName=null, 
         string? middleName=null, string? email=null, 
         int numberPhone=default, int experience=default, Requisite? requisite=null)
@@ -133,22 +118,22 @@ public class Volunteer:Entity<VolunteerId>
         int numberPhone, int experience,Requisite? requisite)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            return Result.Failure<Volunteer>("FirstName is not null or empty");
+            return Result<Volunteer>.Failure("FirstName is not null or empty");
         if (string.IsNullOrWhiteSpace(lastName))
-            return Result.Failure<Volunteer>("FirstName is not null or empty");
+            return Result<Volunteer>.Failure("FirstName is not null or empty");
         if (string.IsNullOrWhiteSpace(middleName))
-            return Result.Failure<Volunteer>("MiddleName is not null or empty");
+            return Result<Volunteer>.Failure("MiddleName is not null or empty");
         if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-            return Result.Failure<Volunteer>("MiddleName is not null or empty");
+            return Result<Volunteer>.Failure("MiddleName is not null or empty");
         if(numberPhone.ToString().Length<5 || numberPhone.ToString().Length>20)
-            return Result.Failure<Volunteer>("There is no such numberPhone");
+            return Result<Volunteer>.Failure("There is no such numberPhone");
         if (requisite == null)
-            return Result.Failure<Volunteer>("Requisite is not null or empty");
+            return Result<Volunteer>.Failure("Requisite is not null or empty");
         
         var volunteer = new Volunteer(id,firstName, lastName,
             middleName, email,
             numberPhone, experience, requisite);
-        return Result.Success(volunteer);
+        return Result<Volunteer>.Success(volunteer);
     }
     
     
