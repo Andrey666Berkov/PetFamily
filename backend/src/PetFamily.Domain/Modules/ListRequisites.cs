@@ -10,5 +10,5 @@ public record ListRequisites
 
 public record ListSocialNetwork
 {
-    public List<SocialNetwork> SocialNetwork{ get; private set; }
+    public List<SocialNetwork> SocialNetwork{ get;  }
 }

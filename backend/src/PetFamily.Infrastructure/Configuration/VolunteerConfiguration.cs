@@ -8,7 +8,7 @@ public class VolunteerConfiguration:IEntityTypeConfiguration<Volunteer>
 {
     public void Configure(EntityTypeBuilder<Volunteer> builder)
     {
-        builder.ToTable("Volunteers");
+        builder.ToTable("volunteers");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).
             HasConversion(id => id.Value, 
@@ -33,7 +33,7 @@ public class VolunteerConfiguration:IEntityTypeConfiguration<Volunteer>
         });
         builder.OwnsOne(p => p.SocialNetwork, po =>
         {
-            po.ToJson();
+            po.ToJson("social_network");
             po.OwnsMany(s => s.SocialNetwork, s =>
             {
                 s.Property(rq=>rq.Link).IsRequired()

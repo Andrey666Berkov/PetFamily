@@ -26,7 +26,7 @@ public sealed class Pet : Entity<PetId>
     public StatusHelper StatusHelper { get; private set; }
     public ListRequisites Requisites { get; private set; }
     public DateTime CreatedOn  => DateTime.Now;
-    public PetListPhoto? Photos { get; private set; }
+    public PetListPhoto Photos { get; private set; }
 
     
 

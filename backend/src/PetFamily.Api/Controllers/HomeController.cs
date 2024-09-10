@@ -8,11 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 
 public class HomeController:Controller
 {
-    public IActionResult Index(string nickName, string discription, 
-        PetType petType, string breed, string color, string infoHelth, 
-        string address, double weight, int height,
-        int numberPhoneOwner, bool isCastrated, 
-        StatusHelper statusHelper,Requisite? requisite )
+    public IActionResult Index(string nickName, 
+        string discription, 
+        PetType petType, 
+        string breed,
+        string color,
+        string infoHelth, 
+        string address, 
+        double weight, 
+        int height,
+        int numberPhoneOwner, 
+        bool isCastrated, 
+        StatusHelper statusHelper,
+        Requisite? requisite )
     {
        
         var pet=Pet.CreatePet(PetId.CreateNewPetId() 
