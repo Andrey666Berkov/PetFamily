@@ -9,8 +9,7 @@ namespace PetFamily.Infrastructure;
 public class ApplicationDbContext(IConfiguration configuration) : DbContext
 {
     private const string DATABASE = "Database";
-
-    public DbSet<Pet> Pets { get; set; } = null!;
+    
     public DbSet<Volunteer> PeVolunteers { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

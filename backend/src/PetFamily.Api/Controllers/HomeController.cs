@@ -22,17 +22,17 @@ public class HomeController:Controller
         StatusHelper statusHelper,
         Requisite? requisite )
     {
-       
-        var pet=Pet.CreatePet(PetId.CreateNewPetId() 
-            ,nickName,  discription, 
-            petType,  breed, 
-            color,  infoHelth, 
-            address,  weight,
-            height,  numberPhoneOwner, 
-            isCastrated, statusHelper, requisite );
-        
-        pet.Value.SetProperty(description:"dsfsf");
-        return Ok();   
+        //
+        // var pet=Pet.CreatePet(PetId.CreateNewPetId() 
+        //     ,nickName,  discription, 
+        //     petType,  breed, 
+        //     color,  infoHelth, 
+        //     address,  weight,
+        //     height,  numberPhoneOwner, 
+        //     isCastrated, statusHelper, requisite );
+        //
+        // pet.Value.SetProperty(description:"dsfsf");
+         return Ok();   
     }
 
     /*public Result Save(Pet? pet)

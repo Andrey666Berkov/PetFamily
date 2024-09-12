@@ -1,14 +1,18 @@
 ﻿namespace PetFamily.Domain.Modules;
 
-public class SocialNetwork
+public record SocialNetwork
 {
+    private SocialNetwork()
+    {
+        
+    }
     public SocialNetwork(string link, string name)
     {
         Link = link;
         Name = name;
     }
-    public string Link { get; private set; }= default!;
-    public string Name { get; private set; }= default!;
+    public string Link { get;  }= default!;
+    public string Name { get; }= default!;
 
     public static Result<SocialNetwork> Create(string name, string link)
     {

@@ -2,13 +2,11 @@
 
 public record ListRequisites
 {
-    public List<Requisite> Requisites{ get; private set; }
+    private ListRequisites()
+    {
+        
+    }
+    public List<Requisite> Requisites{ get;  }
     
     
-}
-
-
-public record ListSocialNetwork
-{
-    public List<SocialNetwork> SocialNetwork{ get;  }
 }
