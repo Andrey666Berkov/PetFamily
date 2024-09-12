@@ -11,6 +11,7 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
     private const string DATABASE = "Database";
     
     public DbSet<Volunteer> PeVolunteers { get; set; } = null!;
+    public DbSet<Species> Species { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

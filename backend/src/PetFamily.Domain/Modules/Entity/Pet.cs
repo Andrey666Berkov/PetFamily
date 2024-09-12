@@ -22,7 +22,9 @@ public sealed class Pet : Entity<PetId>
         int height, 
         int numberPhoneOwner, 
         bool isCastrated, 
-        Requisite requisite):base(id)
+        Requisite requisite, 
+        SpeciesId speciesId,
+        Guid breedId):base(id)
     {
         NickName = nickName; 
         Description = description;
@@ -35,6 +37,8 @@ public sealed class Pet : Entity<PetId>
         Height = height; 
         NumberPhoneOwner = numberPhoneOwner;
         IsCastrated = isCastrated;
+        SpeciesId = speciesId;
+        BreedId = breedId;
         AddRequisites(requisite);
     }
     /// //////////////////////////////////////
@@ -50,6 +54,8 @@ public sealed class Pet : Entity<PetId>
     public double Weight { get; private set; }
     public int Height { get; private set; }
     public int NumberPhoneOwner { get; private set; }
+    public SpeciesId SpeciesId { get; private set; }
+    public Guid BreedId { get; private set; }
     public bool IsCastrated { get; private set; } = false; 
     public DateOnly? BirthDate { get; private set; }
     public bool IsVaccinated { get; private set; } = false;
@@ -72,7 +78,9 @@ public sealed class Pet : Entity<PetId>
         int numberPhoneOwner, 
         bool isCastrated, 
         StatusHelper statusHelper,
-        Requisite? requisite)
+        Requisite? requisite,
+        SpeciesId speciesId,
+        Guid breedId)
     {
         if (string.IsNullOrWhiteSpace(nickName))
             return Result<Pet>.Failure("NickName is not null or empty");
@@ -119,7 +127,9 @@ public sealed class Pet : Entity<PetId>
             height, 
             numberPhoneOwner, 
             isCastrated,
-            requisite);
+            requisite,
+            speciesId,
+            breedId);
         return Result<Pet>.Success(pet);
     }
     

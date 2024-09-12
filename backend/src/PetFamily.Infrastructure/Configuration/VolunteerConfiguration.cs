@@ -36,7 +36,10 @@ public class VolunteerConfiguration:IEntityTypeConfiguration<Volunteer>
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
 
-
+        builder.HasMany(v => v.Pets)
+            .WithOne()
+            .HasForeignKey("volunteer_id");
+        
         builder.OwnsOne(p => p.Requisites, po =>
          {
              po.ToJson("requisites");

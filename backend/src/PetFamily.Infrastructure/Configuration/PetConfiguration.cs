@@ -60,6 +60,16 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
 
             });
         });
+        
+        builder.Property(c=>c.SpeciesId)
+            .HasConversion(
+                speciesId => speciesId.Value,
+                value => SpeciesId.Create(value))
+            .IsRequired();
+        
+        builder.Property(p=>p.BreedId)
+            .IsRequired()
+            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
 
         builder.ComplexProperty(c => c.Address, b =>
         {
