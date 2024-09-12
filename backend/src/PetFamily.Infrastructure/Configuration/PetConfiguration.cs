@@ -60,18 +60,19 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
 
             });
         });
-        
-        builder.Property(c=>c.SpeciesId)
-            .HasConversion(
-                speciesId => speciesId.Value,
-                value => SpeciesId.Create(value))
-            .IsRequired();
-        
-        builder.Property(p=>p.BreedId)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
 
-        builder.ComplexProperty(c => c.Address, b =>
+        builder.ComplexProperty(p => p.SpeciesBreed, po =>
+        {
+          po.Property(sp=>sp.SpeciesId)
+                .HasConversion(c=>c.Value,
+                    value=>SpeciesId.Create(value))
+                .HasColumnName("species_id");
+          po.Property(sp=>sp.BreedId)
+              .IsRequired()
+              .HasColumnName("breed_id");
+        });
+
+       builder.ComplexProperty(c => c.Address, b =>
         {
             b.IsRequired();
             
