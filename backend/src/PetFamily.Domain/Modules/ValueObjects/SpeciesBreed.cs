@@ -2,10 +2,6 @@
 
 public record SpeciesBreed
 {
-    
-    private SpeciesBreed()
-    {
-    }
     private SpeciesBreed(SpeciesId speciesId, Guid breedId)
     {
         SpeciesId = speciesId;

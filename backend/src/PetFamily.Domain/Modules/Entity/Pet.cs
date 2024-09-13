@@ -4,7 +4,7 @@ using PetFamily.Domain.Enum;
 
 namespace PetFamily.Domain.Modules;
 
-public sealed class Pet : Entity<PetId>
+public class Pet : Entity<PetId>
 {
     //constructor
     public Pet(PetId id):base(id)

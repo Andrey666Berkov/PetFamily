@@ -2,11 +2,7 @@
 
 public record SocialNetwork
 {
-    private SocialNetwork()
-    {
-        
-    }
-    public SocialNetwork(string link, string name)
+   public SocialNetwork(string link, string name)
     {
         Link = link;
         Name = name;

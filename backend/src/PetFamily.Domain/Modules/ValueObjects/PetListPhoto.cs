@@ -2,9 +2,6 @@
 
 public record PetListPhoto
 {
-    private PetListPhoto()
-    {
-    }
-    public List<PetPhoto> Photos { get;  }
+   public List<PetPhoto> Photos { get;  }
     
 }

@@ -4,11 +4,7 @@ namespace PetFamily.Domain.Modules;
 
 public record Requisite
 {
-    private Requisite()
-    {
-        
-    }
-    private Requisite(string title, string description)
+   private Requisite(string title, string description)
     {
         Title = title;
         Description = description;

@@ -4,10 +4,7 @@ namespace PetFamily.Domain.Modules;
 
 public record PetPhoto
 {
-    private PetPhoto()
-    {
-    }
-    private PetPhoto(string pathToStorage, bool isFavorite)
+   private PetPhoto(string pathToStorage, bool isFavorite)
     {
         PathToStorage = pathToStorage;
         IsFavorite = isFavorite;

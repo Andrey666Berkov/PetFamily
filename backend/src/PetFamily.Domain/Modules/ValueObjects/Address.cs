@@ -2,10 +2,7 @@
 
 public record Address
 {
-    private Address()
-    {
-    }
-    private Address(string street, string city, string country)
+   private Address(string street, string city, string country)
     {
         Street = street;
         City = city;
