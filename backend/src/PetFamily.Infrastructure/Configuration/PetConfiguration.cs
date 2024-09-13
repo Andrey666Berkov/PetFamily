@@ -77,13 +77,16 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             b.IsRequired();
             
             b.Property(p => p.City)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("city");
             
             b.Property(p => p.Country)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);  
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("country");  
             
             b.Property(p => p.Street)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH); 
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("street"); 
         });
 
     }
