@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Modules;
+using PetFamily.Domain.Modules.Entity;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configuration;
 
@@ -41,8 +43,12 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             po.ToJson("requisites");
             po.OwnsMany(r => r.Requisites, r =>
             {
-                r.Property(rq=>rq.Title).IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);;
+                r.Property(rq=>rq.Title)
+                    .IsRequired()
+                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                r.Property(rq=>rq.Description)
+                    .IsRequired()
+                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
             });
         });
         

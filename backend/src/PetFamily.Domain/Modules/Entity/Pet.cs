@@ -1,10 +1,10 @@
-﻿
-
+﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enum;
+using PetFamily.Domain.Modules.ValueObjects;
 
-namespace PetFamily.Domain.Modules;
+namespace PetFamily.Domain.Modules.Entity;
 
-public class Pet : Entity<PetId>
+public class Pet : Shared.Entity<PetId>
 {
     //constructor
     public Pet(PetId id):base(id)
@@ -41,7 +41,6 @@ public class Pet : Entity<PetId>
     }
     /// //////////////////////////////////////
     //property
-    public PetId Id { get; private set; }
     public string NickName { get; private set; }= default!;
     public PetType PetType { get; private set; }
     public string Description { get; private set; }= default!;
@@ -57,7 +56,7 @@ public class Pet : Entity<PetId>
     public DateOnly? BirthDate { get; private set; }
     public bool IsVaccinated { get; private set; } = false;
     public StatusHelper StatusHelper { get; private set; }
-    public ListRequisites Requisites { get; private set; }
+    public ListRequisites? Requisites { get; private set; }
     public DateTime CreatedOn  => DateTime.Now;
     public PetListPhoto Photos { get; private set; }
     /// //////////////////////////
@@ -79,37 +78,37 @@ public class Pet : Entity<PetId>
         SpeciesBreed speciesBreed)
     {
         if (string.IsNullOrWhiteSpace(nickName))
-            return Result<Pet>.Failure("NickName is not null or empty");
+            return Result.Failure<Pet>("NickName is not null or empty");
         
         if (string.IsNullOrWhiteSpace(description))
-            return Result<Pet>.Failure("Description is not null or empty");
+            return Result.Failure<Pet>("Description is not null or empty");
         
         if (petType < (PetType)0 || petType > (PetType)2 )
-            return Result<Pet>.Failure("PetType does not exist");
+            return Result.Failure<Pet>("PetType does not exist");
         
         if (string.IsNullOrWhiteSpace(breed))
-            return Result<Pet>.Failure("Breed is not null or empty");
+            return Result.Failure<Pet>("Breed is not null or empty");
         
         if (string.IsNullOrWhiteSpace(color))
-            return Result<Pet>.Failure("Color is not null or empty");
+            return Result.Failure<Pet>("Color is not null or empty");
         
         if (string.IsNullOrWhiteSpace(infoHealth))
-            return Result<Pet>.Failure("InfoHelth is not null or empty");
+            return Result.Failure<Pet>("InfoHelth is not null or empty");
         
         if (weight < 0.0 && weight > 300.0)
-            return Result<Pet>.Failure("The weight should be in the range from 0 to 300");
+            return Result.Failure<Pet>("The weight should be in the range from 0 to 300");
         
         if (height < 0.0 && height > 3.0)
-            return Result<Pet>.Failure("The height should be in the range from 0 to 3");
+            return Result.Failure<Pet>("The height should be in the range from 0 to 3");
         
         if (statusHelper < (StatusHelper)0 || statusHelper > (StatusHelper)3 )
-            return Result<Pet>.Failure("StatusHelper does not exist");
+            return Result.Failure<Pet>("StatusHelper does not exist");
         
         if(numberPhoneOwner.ToString().Length<5 || numberPhoneOwner.ToString().Length>20)
-            return Result<Pet>.Failure("There is no such numberPhone");
+            return Result.Failure<Pet>("There is no such numberPhone");
         
         if (requisite == null)
-            return Result<Pet>.Failure("Requisite is not null or empty");
+            return Result.Failure<Pet>("Requisite is not null or empty");
         
         var pet = new Pet( petid, 
             nickName, 
@@ -125,7 +124,7 @@ public class Pet : Entity<PetId>
             isCastrated,
             requisite,
             speciesBreed);
-        return Result<Pet>.Success(pet);
+        return Result.Success<Pet>(pet);
     }
     
     public void AddRequisites(Requisite requisite)

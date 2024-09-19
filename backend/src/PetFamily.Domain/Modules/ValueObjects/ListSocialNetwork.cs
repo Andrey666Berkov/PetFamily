@@ -1,6 +1,17 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿using CSharpFunctionalExtensions;
+
+namespace PetFamily.Domain.Modules.ValueObjects;
 
 public record ListSocialNetwork
 {
-    public List<SocialNetwork> SocialNetwork{ get;  }
+    private ListSocialNetwork()
+    {
+    }
+    public List<SocialNetwork> SocialNetworks { get; } = [];
+    public static  Result<ListSocialNetwork> Create(SocialNetwork spc)
+    {
+        ListSocialNetwork listSocialNetwork=new ListSocialNetwork();
+        listSocialNetwork.SocialNetworks.Add(spc);
+        return listSocialNetwork;
+    }
 }

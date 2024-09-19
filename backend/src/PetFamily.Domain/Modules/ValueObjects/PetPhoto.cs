@@ -1,6 +1,8 @@
 ﻿
 
-namespace PetFamily.Domain.Modules;
+using CSharpFunctionalExtensions;
+
+namespace PetFamily.Domain.Modules.ValueObjects;
 
 public record PetPhoto
 {
@@ -15,8 +17,8 @@ public record PetPhoto
     public static Result<PetPhoto> Create(string pathToStorage, bool isFavorite)
     {
         if(string.IsNullOrWhiteSpace(pathToStorage))
-            return Result<PetPhoto>.Failure("PathToStorage cannot be empty");
+            return Result.Failure<PetPhoto>("PathToStorage cannot be empty");
         
-        return Result<PetPhoto>.Success(new PetPhoto(pathToStorage, isFavorite)); 
+        return Result.Success<PetPhoto>(new PetPhoto(pathToStorage, isFavorite)); 
     }
 }

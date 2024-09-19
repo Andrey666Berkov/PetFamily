@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿using CSharpFunctionalExtensions;
+
+namespace PetFamily.Domain.Modules.ValueObjects;
 
 public record SpeciesBreed
 {
@@ -13,7 +15,7 @@ public record SpeciesBreed
 
     public static Result<SpeciesBreed> Create(SpeciesId speciesId, Guid breedId)
     {
-        return Result<SpeciesBreed>
-            .Success(new SpeciesBreed(speciesId, breedId));
+        return Result
+            .Success<SpeciesBreed>(new SpeciesBreed(speciesId, breedId));
     }
 }

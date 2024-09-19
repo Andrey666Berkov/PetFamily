@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿namespace PetFamily.Domain.Shared;
 
 public abstract class Entity<Tid>   where Tid : notnull
 {
