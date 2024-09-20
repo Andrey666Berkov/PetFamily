@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain.Enum;
+﻿namespace PetFamily.Domain.Volunteers;
 
 public enum PetType
 {

@@ -1,12 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Modules;
-using PetFamily.Domain.Modules;
-using PetFamily.Domain.Modules.Entity;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Volunteers;
 
-
-namespace PetFamily.Infrastructure.Modules;
+namespace PetFamily.Infrastructure.Repositories;
 
 public class VolunteerRepository : IVolunteerRepository
 {

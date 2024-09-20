@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.IDs;
 
-namespace PetFamily.Domain.Modules.ValueObjects;
+namespace PetFamily.Domain.Species;
 
 public record SpeciesBreed
 {

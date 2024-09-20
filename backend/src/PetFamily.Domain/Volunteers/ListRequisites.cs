@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Modules.ValueObjects;
+namespace PetFamily.Domain.Volunteers;
 
 public record ListRequisites
 {
@@ -15,7 +15,7 @@ public record ListRequisites
     }
     public IReadOnlyList<Requisite> Requisites { get; } = [];
 
-    public static  Result<ListRequisites,Error> Create(List<Requisite>? requisites)
+    public static  Result<ListRequisites,Error> Create(IEnumerable<Requisite>? requisites)
     {
         if (requisites is not null)
         {

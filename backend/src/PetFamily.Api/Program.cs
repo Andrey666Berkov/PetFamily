@@ -1,6 +1,6 @@
 using PetFamily.Application.Modules;
 using PetFamily.Infrastructure;
-using PetFamily.Infrastructure.Modules;
+using PetFamily.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
