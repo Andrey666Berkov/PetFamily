@@ -55,7 +55,7 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             });
         });
         
-        builder.OwnsOne(p => p.Photos, po =>
+        builder.OwnsOne(p => p.PhotosList, po =>
         {
             po.ToJson("photos");
             po.OwnsMany(ph => ph.Photos, pp =>

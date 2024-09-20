@@ -8,9 +8,9 @@ public record ListSocialNetwork
     private ListSocialNetwork()
     {
     }
-    public  ListSocialNetwork(List<SocialNetwork> socialNetworks)
+    public  ListSocialNetwork(IEnumerable<SocialNetwork> socialNetworks)
     {
-        SocialNetworks = socialNetworks;
+        SocialNetworks = socialNetworks.ToList();
     }
     public IReadOnlyList<SocialNetwork> SocialNetworks { get; } = [];
 

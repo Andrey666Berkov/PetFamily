@@ -83,6 +83,12 @@ public class Volunteer: Shared.Entity<VolunteerId>
             Pets.Where(pet => pet.StatusHelper == StatusHelper.FoundHome);
         return petNeedHelp.Count();
     }
+
+    public UnitResult<Error> AddPet(IEnumerable<Pet> pet)
+    {
+        _pets.AddRange(pet);
+        return Result.Success<Error>();
+    }
     
     /// //////////////////////////////////////
     //CreateVolunteer

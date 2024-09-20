@@ -60,7 +60,7 @@ public class Pet : Shared.Entity<PetId>
     public StatusHelper StatusHelper { get; private set; }
     public ListRequisites RequisiteList { get; private set; }
     public DateTime CreatedOn  => DateTime.Now;
-    public PetListPhoto Photos { get; private set; }
+    public PetListPhoto? PhotosList { get; private set; }
     /// //////////////////////////
     
     //methods
@@ -129,7 +129,11 @@ public class Pet : Shared.Entity<PetId>
         
         return Result.Success<Pet, Error>(pet);
     }
-    
+
+    public void UpdateFilePhotosList(PetListPhoto? photosList)
+    {
+        PhotosList = photosList;
+    }
     public void AddRequisites(Requisite requisite)
     {
         RequisiteList.Requisites.Append(requisite);
