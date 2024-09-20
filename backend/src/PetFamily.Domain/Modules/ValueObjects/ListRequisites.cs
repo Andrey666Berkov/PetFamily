@@ -9,7 +9,7 @@ public record ListRequisites
     {
     }
     
-    private  ListRequisites(List<Requisite> requisites)
+    public  ListRequisites(List<Requisite> requisites)
     {
         Requisites = requisites;
     }
