@@ -21,10 +21,9 @@ public class VolunteerController : ApplicationController
     {
        Result<Guid, Error> result= await createVolunteerUseCase.Create(createVolunteerRequest, cancellationToken);
 
-       if (result.IsFailure)
-           return result.Error.ToResponse();
-        
-       return Ok(result.Value);   
+
+
+       return result.ToResponse();
     }
 
    

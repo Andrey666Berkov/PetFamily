@@ -38,17 +38,20 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
         
-        builder.OwnsOne(p => p.Requisites, po =>
+        builder.OwnsOne(p => p.RequisiteList, lb=>
         {
-            po.ToJson("requisites");
-            po.OwnsMany(r => r.Requisites, r =>
+            lb.ToJson("requisites");
+            
+            lb.OwnsMany(r => r.Requisites , rb =>
             {
-                r.Property(rq=>rq.Title)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
-                r.Property(rq=>rq.Description)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
+               
+               rb.Property(r=>r.Title)
+                   .IsRequired()
+                   .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+               
+               rb.Property(r=>r.Description)
+                   .IsRequired()
+                   .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
             });
         });
         

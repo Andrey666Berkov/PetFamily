@@ -13,7 +13,7 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240919071122_initial")]
+    [Migration("20240920060234_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -263,7 +263,7 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasForeignKey("volunteer_id")
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
 
-                    b.OwnsOne("PetFamily.Domain.Modules.ValueObjects.ListRequisites", "Requisites", b1 =>
+                    b.OwnsOne("PetFamily.Domain.Modules.ValueObjects.ListRequisites", "RequisiteList", b1 =>
                         {
                             b1.Property<Guid>("PetId")
                                 .HasColumnType("uuid");
@@ -360,7 +360,8 @@ namespace PetFamily.Infrastructure.Migrations
                     b.Navigation("Photos")
                         .IsRequired();
 
-                    b.Navigation("Requisites");
+                    b.Navigation("RequisiteList")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PetFamily.Domain.Modules.Entity.Volunteer", b =>
@@ -461,9 +462,11 @@ namespace PetFamily.Infrastructure.Migrations
                             b1.Navigation("SocialNetworks");
                         });
 
-                    b.Navigation("RequisitesList");
+                    b.Navigation("RequisitesList")
+                        .IsRequired();
 
-                    b.Navigation("SocialNetworkList");
+                    b.Navigation("SocialNetworkList")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PetFamily.Domain.Modules.Entity.Species", b =>

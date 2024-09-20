@@ -26,31 +26,35 @@ public class CreateVolunteerUseCase
         if (valunteerNameResult.IsSuccess)
             return Errors.Volunteers.AllReadyExist();
         
-        
-        
         //создание доменной модели
+             //ListRequisites
         Result<Requisite, Error> requisiteResult=Requisite.Create(
-            createVolunteerRequest.requisite.Title,
-            createVolunteerRequest.requisite.Description);
+            createVolunteerRequest.requisites.Title,
+            createVolunteerRequest.requisites.Description);
         
         if(requisiteResult.IsFailure)
             return Result.Failure<Guid, Error>(requisiteResult.Error);
 
-        var listRequisites=ListRequisites.Create(requisiteResult.Value).Value;
-       
+        var listRequisitesResult=ListRequisites.Create(requisiteResult.Value);
         
+        if(listRequisitesResult.IsFailure)
+            return  Result.Failure<Guid, Error>(listRequisitesResult.Error);
+             //ListsocialNetworkResult
         Result<SocialNetwork, Error> socialNetworkResult=SocialNetwork.Create(
-            createVolunteerRequest.socialNetworkRequest.Title,
-            createVolunteerRequest.socialNetworkRequest.Description);
+            createVolunteerRequest.SocialNetworkDtos.Title,
+            createVolunteerRequest.SocialNetworkDtos.Description);
         
         if(socialNetworkResult.IsFailure)
             return Result.Failure<Guid, Error>(socialNetworkResult.Error);
         
-        var listSocialNetwork=ListSocialNetwork.Create(socialNetworkResult.Value).Value;
-        
+        var listSocialNetwork=ListSocialNetwork.Create(socialNetworkResult.Value);
+
+        if (listSocialNetwork.IsFailure)
+            return Result.Failure<Guid, Error>(listSocialNetwork.Error);
+            //volunter
         var volunteerId = VolunteerId.CreateNew();
 
-        var volunteerResult = Volunteer.CreateVolunteer(
+        var volunteerResult = Volunteer.Create(
             volunteerId,
             createVolunteerRequest.FirstName,
             createVolunteerRequest.LastName,
@@ -59,9 +63,11 @@ public class CreateVolunteerUseCase
             createVolunteerRequest.Description,
             createVolunteerRequest.NumberPhone,
             createVolunteerRequest.Experience,
-            listRequisites,
-            listSocialNetwork);
+            listRequisitesResult.Value,
+            listSocialNetwork.Value);
         
+        if(volunteerResult.IsFailure)
+            return Errors.General.ValueIsInavalid("Volunteer");
         
         //сохранение в бд
         await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);

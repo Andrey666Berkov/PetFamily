@@ -1,6 +1,7 @@
 ﻿
 
 using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Modules.ValueObjects;
 
@@ -14,11 +15,11 @@ public record PetPhoto
     public string PathToStorage { get;  } 
     public bool IsFavorite { get;  }
 
-    public static Result<PetPhoto> Create(string pathToStorage, bool isFavorite)
+    public static Result<PetPhoto,Error> Create(string pathToStorage, bool isFavorite)
     {
         if(string.IsNullOrWhiteSpace(pathToStorage))
-            return Result.Failure<PetPhoto>("PathToStorage cannot be empty");
+            return Errors.General.ValueIsInavalid(nameof(pathToStorage));
         
-        return Result.Success<PetPhoto>(new PetPhoto(pathToStorage, isFavorite)); 
+        return Result.Success<PetPhoto,Error>(new PetPhoto(pathToStorage, isFavorite)); 
     }
 }
