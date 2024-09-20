@@ -10,10 +10,10 @@ public record CreateVolunteerRequest(
     string Description,
     int NumberPhone, 
     int Experience, 
-    RequesitDto requisites,
-    SocialNetworkDto SocialNetworkDtos);
+    List<RequesitDto>? requisitesDto,
+    List<SocialNetworkDto>? SocialNetworkDto);
     
     
     
     public record RequesitDto(string Title, string Description);
-    public record SocialNetworkDto(string Title, string Description);
+    public record SocialNetworkDto(string Name, string Link);

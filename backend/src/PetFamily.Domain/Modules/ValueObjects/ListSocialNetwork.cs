@@ -13,10 +13,15 @@ public record ListSocialNetwork
         SocialNetworks = socialNetworks;
     }
     public IReadOnlyList<SocialNetwork> SocialNetworks { get; } = [];
-    public static  Result<ListSocialNetwork,Error> Create(SocialNetwork socialNetwork)
+
+    public static Result<ListSocialNetwork, Error> Create(List<SocialNetwork>? socialNetwork)
     {
-        ListSocialNetwork listSocialNetwork=new ListSocialNetwork();
-        listSocialNetwork.SocialNetworks.Append(socialNetwork);
-        return listSocialNetwork;
+        if (socialNetwork is not null)
+        {
+            ListSocialNetwork listSocialNetwork = new ListSocialNetwork(socialNetwork);
+            return listSocialNetwork;
+        }
+        return Errors.General.ValueIsInavalid("listSocialNetwork");
     }
+
 }

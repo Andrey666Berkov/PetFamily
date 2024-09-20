@@ -20,6 +20,6 @@ public record PetPhoto
         if(string.IsNullOrWhiteSpace(pathToStorage))
             return Errors.General.ValueIsInavalid(nameof(pathToStorage));
         
-        return Result.Success<PetPhoto,Error>(new PetPhoto(pathToStorage, isFavorite)); 
+        return new PetPhoto(pathToStorage, isFavorite); 
     }
 }

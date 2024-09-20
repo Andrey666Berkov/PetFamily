@@ -17,7 +17,7 @@ public class VolunteerRepository : IVolunteerRepository
         _context = context;
     }
 
-    public async Task<Result<Guid>> Add(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         await _context.Volunteers.AddAsync(volunteer, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

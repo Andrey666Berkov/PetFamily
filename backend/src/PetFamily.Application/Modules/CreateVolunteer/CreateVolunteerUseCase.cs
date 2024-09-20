@@ -28,29 +28,42 @@ public class CreateVolunteerUseCase
         
         //создание доменной модели
              //ListRequisites
-        Result<Requisite, Error> requisiteResult=Requisite.Create(
-            createVolunteerRequest.requisites.Title,
-            createVolunteerRequest.requisites.Description);
-        
-        if(requisiteResult.IsFailure)
-            return Result.Failure<Guid, Error>(requisiteResult.Error);
-
-        var listRequisitesResult=ListRequisites.Create(requisiteResult.Value);
+             
+             List<Requisite> requisites=null; 
+             
+             if (createVolunteerRequest.requisitesDto is not null)
+             {
+                 requisites=new List<Requisite>();
+                 foreach (var req in createVolunteerRequest.requisitesDto)
+                 {
+                     var reqResult =Requisite.Create(req.Title, req.Description);
+                     if (reqResult.IsSuccess)
+                              requisites.Add(reqResult.Value);
+                 }
+             }
+        Result<ListRequisites, Error> listRequisitesResult=ListRequisites.Create(requisites);
         
         if(listRequisitesResult.IsFailure)
             return  Result.Failure<Guid, Error>(listRequisitesResult.Error);
+        
              //ListsocialNetworkResult
-        Result<SocialNetwork, Error> socialNetworkResult=SocialNetwork.Create(
-            createVolunteerRequest.SocialNetworkDtos.Title,
-            createVolunteerRequest.SocialNetworkDtos.Description);
+             List<SocialNetwork> socilanetworks=null; 
+             
+             if (createVolunteerRequest.SocialNetworkDto is not null)
+             {
+                 socilanetworks=new List<SocialNetwork>();
+                 foreach (var soc in createVolunteerRequest.SocialNetworkDto)
+                 {
+                     var socRezult= SocialNetwork.Create(soc.Name, soc.Link);
+                     if (socRezult.IsSuccess)
+                         socilanetworks.Add(socRezult.Value);
+                 }
+             }
+        var listSocialNetwork=ListSocialNetwork.Create(socilanetworks);
         
-        if(socialNetworkResult.IsFailure)
-            return Result.Failure<Guid, Error>(socialNetworkResult.Error);
-        
-        var listSocialNetwork=ListSocialNetwork.Create(socialNetworkResult.Value);
-
-        if (listSocialNetwork.IsFailure)
-            return Result.Failure<Guid, Error>(listSocialNetwork.Error);
+        if(listSocialNetwork.IsFailure)
+              return  Result.Failure<Guid, Error>(listRequisitesResult.Error);
+             
             //volunter
         var volunteerId = VolunteerId.CreateNew();
 

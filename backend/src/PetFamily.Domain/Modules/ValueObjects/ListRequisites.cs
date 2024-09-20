@@ -9,17 +9,20 @@ public record ListRequisites
     {
     }
     
-    public  ListRequisites(List<Requisite> requisites)
+    private  ListRequisites(List<Requisite> requisites)
     {
         Requisites = requisites;
     }
     public IReadOnlyList<Requisite> Requisites { get; } = [];
 
-    public static  Result<ListRequisites,Error> Create(Requisite requisites)
+    public static  Result<ListRequisites,Error> Create(List<Requisite>? requisites)
     {
-        ListRequisites listRequisites = new ListRequisites();
-        listRequisites.Requisites.Append(requisites);
-        return listRequisites;
+        if (requisites is not null)
+        {
+            var listRequisites=new ListRequisites(requisites);
+            return listRequisites;
+        }
+        return Errors.General.ValueIsInavalid();
     }
 };
 
