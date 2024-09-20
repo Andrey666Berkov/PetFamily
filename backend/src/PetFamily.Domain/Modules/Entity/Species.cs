@@ -1,6 +1,9 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
-public class Species : Entity<SpeciesId>
+namespace PetFamily.Domain.Modules.Entity;
+
+public class Species : Shared.Entity<SpeciesId>
 {
     private Species(SpeciesId id) : base(id)
     {
@@ -16,21 +19,20 @@ public class Species : Entity<SpeciesId>
     
     private readonly List<Breed> _breeds=[]; 
     
-    public SpeciesId Id { get; private set; }
     public string Name { get; private set; }= default!;
     public string Description { get; private set; }= default!;
     public IReadOnlyList<Breed> Breeds =>_breeds;
 
-    public static Result<Species> Create(SpeciesId id, string name, string description)
+    public static Result<Species, Error> Create(SpeciesId id, string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result<Species>.Failure("Species name cannot be null or empty.");
+            return Errors.General.ValueIsInavalid("Species_name");
         
         if (string.IsNullOrWhiteSpace(description))
-            return Result<Species>.Failure("Description name cannot be null or empty.");
+            return Errors.General.ValueIsInavalid("Species_description");
 
         var species=new Species(id,name,description);
         
-        return Result<Species>.Success(species);
+        return Result.Success<Species, Error>(species);
     }
 }

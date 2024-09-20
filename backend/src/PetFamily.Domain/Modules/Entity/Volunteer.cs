@@ -1,8 +1,11 @@
-﻿using PetFamily.Domain.Enum;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Enum;
+using PetFamily.Domain.Modules.ValueObjects;
+using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Modules;
+namespace PetFamily.Domain.Modules.Entity;
 
-public class Volunteer:Entity<VolunteerId> 
+public class Volunteer: Shared.Entity<VolunteerId> 
 {
     //constructor
     private Volunteer(VolunteerId id) : base(id)
@@ -14,22 +17,25 @@ public class Volunteer:Entity<VolunteerId>
         string lastName, 
         string middleName,
         string email, 
+        string description,
         int numberPhone, 
         int experience, 
-        Requisite requisite):base(id)
+        ListRequisites requisite, 
+        ListSocialNetwork socialNetwork):base(id)
     {
         FirstName = firstName;
         LastName = lastName;
         MiddleName = middleName;
         Email = email;
+        Description = description;
         NumberPhone = numberPhone;
         Experience = experience;
-        AddRequisites(requisite);
+        RequisitesList = requisite;
+        SocialNetworkList = socialNetwork;
     }
     
     //property
     private readonly List<Pet>  _pets=[]; 
-    public VolunteerId Id { get; private set; }
     public string FirstName { get; private set; }= default!;
     public string LastName { get; private set; }= default!;
     public string MiddleName { get; private set; }= default!;
@@ -38,8 +44,8 @@ public class Volunteer:Entity<VolunteerId>
     public int Experience { get; private set; }
     public int NumberPhone { get; private set; }
     public IReadOnlyList<Pet> Pets => _pets;
-    public ListRequisites Requisites { get; private set; }
-    public ListSocialNetwork SocialNetwork { get; private set; }
+    public ListRequisites RequisitesList { get; private set; }
+    public ListSocialNetwork SocialNetworkList { get; private set; }
     
     /// //////////////////////////
    
@@ -47,11 +53,11 @@ public class Volunteer:Entity<VolunteerId>
     //methods
     public void AddRequisites(Requisite requisite)
     {
-       Requisites.Requisites.Add(requisite);
+        RequisitesList.Requisites.Append(requisite);
     }
     public void AddSocialNetworks(SocialNetwork socialNetwork)
     {
-        SocialNetwork.SocialNetwork.Add(socialNetwork);
+        SocialNetworkList.SocialNetworks.Append(socialNetwork);
     }
     public int AddPet(Pet pet)
     {
@@ -77,44 +83,58 @@ public class Volunteer:Entity<VolunteerId>
             Pets.Where(pet => pet.StatusHelper == StatusHelper.FoundHome);
         return petNeedHelp.Count();
     }
+
+    public UnitResult<Error> AddPet(IEnumerable<Pet> pet)
+    {
+        _pets.AddRange(pet);
+        return Result.Success<Error>();
+    }
     
     /// //////////////////////////////////////
     //CreateVolunteer
-    public static Result<Volunteer> CreateVolunteer(VolunteerId id,
+    public static Result<Volunteer, Error> Create(VolunteerId id,
         string firstName, 
         string lastName,
         string middleName, 
         string email,
+        string description,
         int numberPhone, 
         int experience,
-        Requisite? requisite)
+        ListRequisites? requisite,
+        ListSocialNetwork? socialNetwork)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            return Result<Volunteer>.Failure("FirstName is not null or empty");
+            return Errors.General.ValueIsInavalid(nameof(firstName));
         
         if (string.IsNullOrWhiteSpace(lastName))
-            return Result<Volunteer>.Failure("FirstName is not null or empty");
+            return Errors.General.ValueIsInavalid(nameof(lastName));
         
         if (string.IsNullOrWhiteSpace(middleName))
-            return Result<Volunteer>.Failure("MiddleName is not null or empty");
+            return Errors.General.ValueIsInavalid(nameof(middleName));
+        
+        if (string.IsNullOrWhiteSpace(description))
+            return Errors.General.ValueIsInavalid(nameof(description));
         
         if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-            return Result<Volunteer>.Failure("MiddleName is not null or empty");
+            return Errors.General.ValueIsInavalid(nameof(email));
         
         if(numberPhone.ToString().Length<5 || numberPhone.ToString().Length>20)
-            return Result<Volunteer>.Failure("There is no such numberPhone");
+            return Errors.General.ValueIsInavalid(nameof(numberPhone));
         
         if (requisite == null)
-            return Result<Volunteer>.Failure("Requisite is not null or empty");
+            return Errors.General.ValueIsInavalid(nameof(requisite));
         
         var volunteer = new Volunteer(id,
             firstName, 
             lastName,
             middleName,
             email,
+            description,
             numberPhone,
             experience, 
-            requisite);
-        return Result<Volunteer>.Success(volunteer);
+            requisite,
+            socialNetwork);
+        
+        return Result.Success<Volunteer,Error>(volunteer);
     }
 }

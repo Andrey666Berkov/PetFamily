@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Modules;
+using PetFamily.Domain.Modules.Entity;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configuration;
 
@@ -39,8 +41,8 @@ public class VolunteerConfiguration:IEntityTypeConfiguration<Volunteer>
         builder.HasMany(v => v.Pets)
             .WithOne()
             .HasForeignKey("volunteer_id");
-        
-        builder.OwnsOne(p => p.Requisites, po =>
+       
+        builder.OwnsOne(p => p.RequisitesList, po =>
          {
              po.ToJson("requisites");
              po.OwnsMany(r => r.Requisites, r =>
@@ -55,10 +57,10 @@ public class VolunteerConfiguration:IEntityTypeConfiguration<Volunteer>
              });
          });
 
-         builder.OwnsOne(p => p.SocialNetwork, po =>
+         builder.OwnsOne(p => p.SocialNetworkList, po =>
          {
              po.ToJson("social_network");
-             po.OwnsMany(s => s.SocialNetwork, s =>
+             po.OwnsMany(s => s.SocialNetworks, s =>
              {
                  s.Property(sn => sn.Link)
                      .IsRequired()

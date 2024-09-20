@@ -1,4 +1,8 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿using System.Runtime.InteropServices.JavaScript;
+using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
+
+namespace PetFamily.Domain.Modules.ValueObjects;
 
 public record Address
 {
@@ -12,17 +16,17 @@ public record Address
     public string Country { get; }
     public string City { get; }
 
-    public static Result<Address> Create(string street, string city, string country)
+    public static Result<Address, Error> Create(string street, string city, string country)
     {
         if (string.IsNullOrWhiteSpace(street))
-            return Result<Address>.Failure("Address cannot be empty");
-        
+            return Errors.General.ValueIsInavalid(nameof(street));
+
         if (string.IsNullOrWhiteSpace(city))
-            return Result<Address>.Failure("City cannot be empty");
+            return Errors.General.ValueIsInavalid(nameof(city));
         
         if (string.IsNullOrWhiteSpace(country))
-            return Result<Address>.Failure("Country cannot be empty");
+            return Errors.General.ValueIsInavalid(nameof(country));
             
-        return Result<Address>.Success(new Address(street, city, country));
+        return new Address(street, city, country);
     }
 }

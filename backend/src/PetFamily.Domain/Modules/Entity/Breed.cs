@@ -1,6 +1,9 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
-public class Breed : Entity<BreedId>
+namespace PetFamily.Domain.Modules.Entity;
+
+public class Breed : Shared.Entity<BreedId>
 {
     private Breed(BreedId id) : base(id)
     {
@@ -14,20 +17,19 @@ public class Breed : Entity<BreedId>
         Description = description;
     }
     
-    public BreedId Id { get; private set; }
-    public string Name { get; private set; }= default!;
+   public string Name { get; private set; }= default!;
     public string Description { get; private set; }= default!;
     
-    public static Result<Breed> Create(BreedId id, string name, string description)
+    public static Result<Breed, Error> Create(BreedId id, string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result<Breed>.Failure("Species name cannot be null or empty.");
+            return Errors.General.ValueIsInavalid(name);
         
         if (string.IsNullOrWhiteSpace(description))
-            return Result<Breed>.Failure("Description name cannot be null or empty.");
+            return Errors.General.ValueIsInavalid(description);
 
         var breed=new Breed(id,name,description);
         
-        return Result<Breed>.Success(breed);
+        return breed;
     }
 }

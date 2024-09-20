@@ -1,6 +1,7 @@
-﻿using PetFamily.Domain.Enum;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Modules;
+namespace PetFamily.Domain.Modules.ValueObjects;
 
 public record Requisite
 {
@@ -11,11 +12,14 @@ public record Requisite
     }
     public string Title { get;  }= default!;
     public string Description { get; }= default!;
-    public static Result<Requisite> Create(string title, string description)
+    public static Result<Requisite, Error> Create(string title, string description)
     {
-        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description))
-            return Result<Requisite>.Failure("Title or description cannot be empty");
+        if (string.IsNullOrWhiteSpace(title))
+            return Errors.General.ValueIsInavalid("Requisire_title");
         
-        return Result<Requisite>.Success(new Requisite(title, description));
+        if (string.IsNullOrWhiteSpace(description))
+            return Errors.General.ValueIsInavalid("Requisire_description");
+        
+        return new Requisite(title, description);
     }
 }

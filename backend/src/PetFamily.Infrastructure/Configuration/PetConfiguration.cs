@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Modules;
+using PetFamily.Domain.Modules.Entity;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configuration;
 
@@ -36,17 +38,24 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
         
-        builder.OwnsOne(p => p.Requisites, po =>
+        builder.OwnsOne(p => p.RequisiteList, lb=>
         {
-            po.ToJson("requisites");
-            po.OwnsMany(r => r.Requisites, r =>
+            lb.ToJson("requisites");
+            
+            lb.OwnsMany(r => r.Requisites , rb =>
             {
-                r.Property(rq=>rq.Title).IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);;
+               
+               rb.Property(r=>r.Title)
+                   .IsRequired()
+                   .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+               
+               rb.Property(r=>r.Description)
+                   .IsRequired()
+                   .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
             });
         });
         
-        builder.OwnsOne(p => p.Photos, po =>
+        builder.OwnsOne(p => p.PhotosList, po =>
         {
             po.ToJson("photos");
             po.OwnsMany(ph => ph.Photos, pp =>
@@ -77,13 +86,16 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             b.IsRequired();
             
             b.Property(p => p.City)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("city");
             
             b.Property(p => p.Country)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);  
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("country");  
             
             b.Property(p => p.Street)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH); 
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("street"); 
         });
 
     }

@@ -1,4 +1,7 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
+
+namespace PetFamily.Domain.Modules.ValueObjects;
 
 public record SocialNetwork
 {
@@ -10,11 +13,15 @@ public record SocialNetwork
     public string Link { get;  }= default!;
     public string Name { get; }= default!;
 
-    public static Result<SocialNetwork> Create(string name, string link)
+    public static Result<SocialNetwork, Error> Create(string name, string link)
     {
-        if(string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(link))
-            return Result<SocialNetwork>.Failure("Nme or link cannot be null or empty");
-        return Result<SocialNetwork>.Success(new SocialNetwork(link, name));
+        if(string.IsNullOrWhiteSpace(name))
+            return Errors.General.ValueIsInavalid("SocialNetwork_name");
+        
+        if(string.IsNullOrWhiteSpace(link))
+            return Errors.General.ValueIsInavalid("SocialNetwork_link");
+        
+        return new SocialNetwork(link, name);
     }
     
 }

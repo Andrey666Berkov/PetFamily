@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Domain.Modules;
+﻿namespace PetFamily.Domain.Shared;
 
 public class Constants
 {
