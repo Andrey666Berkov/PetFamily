@@ -1,7 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Modules.Entity;
+namespace PetFamily.Domain.Species;
 
 public class Breed : Shared.Entity<BreedId>
 {

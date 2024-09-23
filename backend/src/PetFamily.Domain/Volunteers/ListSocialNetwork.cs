@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Modules.ValueObjects;
+namespace PetFamily.Domain.Volunteers;
 
 public record ListSocialNetwork
 {
@@ -14,14 +14,21 @@ public record ListSocialNetwork
     }
     public IReadOnlyList<SocialNetwork> SocialNetworks { get; } = [];
 
-    public static Result<ListSocialNetwork, Error> Create(List<SocialNetwork>? socialNetwork)
+    public static Result<ListSocialNetwork, Error> 
+        Create(IEnumerable<SocialNetwork>? socialNetwork)
     {
         if (socialNetwork is not null)
         {
             ListSocialNetwork listSocialNetwork = new ListSocialNetwork(socialNetwork);
             return listSocialNetwork;
         }
-        return Errors.General.ValueIsInavalid("listSocialNetwork");
+        return ListSocialNetwork.Empty();
+    }
+    
+    public static Result<ListSocialNetwork, Error> Empty()
+    {
+        var listSocialNetwork = new ListSocialNetwork();
+        return listSocialNetwork;
     }
 
 }

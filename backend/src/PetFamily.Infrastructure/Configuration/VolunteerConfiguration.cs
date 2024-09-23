@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Domain.Modules;
-using PetFamily.Domain.Modules.Entity;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Infrastructure.Configuration;
 
@@ -33,10 +33,21 @@ public class VolunteerConfiguration:IEntityTypeConfiguration<Volunteer>
         builder.Property(t=>t.Description)
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
+
+        builder.ComplexProperty(v => v.Email, em =>
+        {
+            em.IsRequired();
+            em.Property(e => e.Emaill)
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("email");
+        });
         
-        builder.Property(t=>t.Email)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
+        builder.ComplexProperty(v => v.PhoneNumber, em =>
+        {
+            em.IsRequired();
+            em.Property(e => e.Phonenumber)
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+        });
 
         builder.HasMany(v => v.Pets)
             .WithOne()

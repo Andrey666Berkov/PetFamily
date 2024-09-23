@@ -1,6 +1,4 @@
-﻿using PetFamily.Domain.Enum;
-
-namespace PetFamily.Domain.Modules;
+﻿namespace PetFamily.Domain.IDs;
 
 public record PetId
 {

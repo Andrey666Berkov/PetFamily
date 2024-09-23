@@ -1,91 +1,96 @@
-﻿using CSharpFunctionalExtensions;
-using PetFamily.Domain.Modules;
-using PetFamily.Domain.Modules.Entity;
-using PetFamily.Domain.Modules.ValueObjects;
+﻿using System.Runtime.Intrinsics.X86;
+using CSharpFunctionalExtensions;
+using FluentValidation;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.ValueObjects;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Modules.CreateVolunteer;
 
 public class CreateVolunteerUseCase
 {
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IValidator<CreateVolunteerRequest> _validator;
 
-    public CreateVolunteerUseCase(IVolunteerRepository volunteerRepository)
+    public CreateVolunteerUseCase(
+        IVolunteerRepository volunteerRepository,
+        IValidator<CreateVolunteerRequest> validator)
     {
         _volunteerRepository = volunteerRepository;
+        _validator = validator;
     }
-    
+
     public async Task<Result<Guid, Error>> Create(
-        CreateVolunteerRequest createVolunteerRequest,
-        CancellationToken cancellationToken =default)
+        CreateVolunteerRequest request,
+        CancellationToken cancellationToken = default)
     {
         //валидация
+        
         var valunteerNameResult = await _volunteerRepository
-            .GetByName(createVolunteerRequest.FirstName);
+            .GetByName(request.FirstName);
 
         if (valunteerNameResult.IsSuccess)
             return Errors.Volunteers.AllReadyExist();
-        
+
         //создание доменной модели
-             //ListRequisites
-             
-             List<Requisite> requisites=null; 
-             
-             if (createVolunteerRequest.requisitesDto is not null)
-             {
-                 requisites=new List<Requisite>();
-                 foreach (var req in createVolunteerRequest.requisitesDto)
-                 {
-                     var reqResult =Requisite.Create(req.Title, req.Description);
-                     if (reqResult.IsSuccess)
-                              requisites.Add(reqResult.Value);
-                 }
-             }
-        Result<ListRequisites, Error> listRequisitesResult=ListRequisites.Create(requisites);
+        //ListRequisites
+        Result<ListRequisites, Error> listRequisitesResult = ListRequisites.Empty();
+        if(request.requisitesDto is not null)
+        {
+            var requisites = new List<Requisite>();
+            foreach (var requisiteDto in request.requisitesDto)
+            {
+                var requisite=Requisite
+                    .Create(requisiteDto.Title, requisiteDto.Description);
+                requisites.Add(requisite.Value);
+            }
+            listRequisitesResult =
+            ListRequisites.Create(requisites);
+        }
         
-        if(listRequisitesResult.IsFailure)
-            return  Result.Failure<Guid, Error>(listRequisitesResult.Error);
+        //ListsocialNetworkResult
+        Result<ListSocialNetwork, Error> socilanetworksResult = ListSocialNetwork.Empty();
+        if(request.SocialNetworkDto is not null)
+        {
+            var socilaNetworks = new List<SocialNetwork>();
+            foreach (var socialDto in request.SocialNetworkDto)
+            {
+                var socilaNetwork=SocialNetwork
+                    .Create(socialDto.Name, socialDto.Link);
+                socilaNetworks.Add(socilaNetwork.Value);
+            }
+            socilanetworksResult =
+                ListSocialNetwork.Create(socilaNetworks);
+        }
         
-             //ListsocialNetworkResult
-             List<SocialNetwork> socilanetworks=null; 
-             
-             if (createVolunteerRequest.SocialNetworkDto is not null)
-             {
-                 socilanetworks=new List<SocialNetwork>();
-                 foreach (var soc in createVolunteerRequest.SocialNetworkDto)
-                 {
-                     var socRezult= SocialNetwork.Create(soc.Name, soc.Link);
-                     if (socRezult.IsSuccess)
-                         socilanetworks.Add(socRezult.Value);
-                 }
-             }
-        var listSocialNetwork=ListSocialNetwork.Create(socilanetworks);
-        
-        if(listSocialNetwork.IsFailure)
-              return  Result.Failure<Guid, Error>(listRequisitesResult.Error);
-             
-            //volunter
+        //PhoneNumber
+        var phoneNumber = PhoneNumber.Create(request.PhoneNumber).Value;
+
+        //Email
+        var email = Email.Create(request.Email).Value;
+
+        //volunter
         var volunteerId = VolunteerId.CreateNew();
 
         var volunteerResult = Volunteer.Create(
             volunteerId,
-            createVolunteerRequest.FirstName,
-            createVolunteerRequest.LastName,
-            createVolunteerRequest.MiddleName,
-            createVolunteerRequest.Email,
-            createVolunteerRequest.Description,
-            createVolunteerRequest.NumberPhone,
-            createVolunteerRequest.Experience,
+            request.FirstName,
+            request.LastName,
+            request.MiddleName,
+            email,
+            request.Description,
+            phoneNumber,
+            request.Experience,
             listRequisitesResult.Value,
-            listSocialNetwork.Value);
-        
-        if(volunteerResult.IsFailure)
+            socilanetworksResult.Value);
+
+        if (volunteerResult.IsFailure)
             return Errors.General.ValueIsInavalid("Volunteer");
-        
+
         //сохранение в бд
         await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
-        
-        return  Result.Success<Guid, Error>(volunteerResult.Value.Id.Value);
-        
+
+        return Result.Success<Guid, Error>(volunteerResult.Value.Id.Value);
     }
 }
