@@ -26,16 +26,6 @@ public class CreateVolunteerUseCase
         CancellationToken cancellationToken = default)
     {
         //валидация
-        var validationResult= await _validator.ValidateAsync(request, cancellationToken);
-
-        if (validationResult.IsValid == false)
-        {
-            var error=Error.Validation(
-                validationResult.Errors[0].ErrorCode, 
-                validationResult.Errors[0].ErrorMessage);
-            
-            return error;
-        }
         
         var valunteerNameResult = await _volunteerRepository
             .GetByName(request.FirstName);
@@ -45,46 +35,40 @@ public class CreateVolunteerUseCase
 
         //создание доменной модели
         //ListRequisites
-        
-        
-        
-
-        List<Requisite> requisites = null;
-
-        if (request.requisitesDto is not null)
+        Result<ListRequisites, Error> listRequisitesResult = ListRequisites.Empty();
+        if(request.requisitesDto is not null)
         {
-            requisites = new List<Requisite>();
-            foreach (var req in request.requisitesDto)
+            var requisites = new List<Requisite>();
+            foreach (var requisiteDto in request.requisitesDto)
             {
-                var reqResult = Requisite.Create(req.Title, req.Description);
-                if (reqResult.IsSuccess)
-                    requisites.Add(reqResult.Value);
+                var requisite=Requisite
+                    .Create(requisiteDto.Title, requisiteDto.Description);
+                requisites.Add(requisite.Value);
             }
+            listRequisitesResult =
+            ListRequisites.Create(requisites);
         }
-
-        Result<ListRequisites, Error> listRequisitesResult = ListRequisites.Create(requisites);
-
-        if (listRequisitesResult.IsFailure)
-            return Result.Failure<Guid, Error>(listRequisitesResult.Error);
-
+        
         //ListsocialNetworkResult
-        List<SocialNetwork> socilanetworks = null;
-
-        if (request.SocialNetworkDto is not null)
+        Result<ListSocialNetwork, Error> socilanetworksResult = ListSocialNetwork.Empty();
+        if(request.SocialNetworkDto is not null)
         {
-            socilanetworks = new List<SocialNetwork>();
-            foreach (var soc in request.SocialNetworkDto)
+            var socilaNetworks = new List<SocialNetwork>();
+            foreach (var socialDto in request.SocialNetworkDto)
             {
-                var socRezult = SocialNetwork.Create(soc.Name, soc.Link);
-                if (socRezult.IsSuccess)
-                    socilanetworks.Add(socRezult.Value);
+                var socilaNetwork=SocialNetwork
+                    .Create(socialDto.Name, socialDto.Link);
+                socilaNetworks.Add(socilaNetwork.Value);
             }
+            socilanetworksResult =
+                ListSocialNetwork.Create(socilaNetworks);
         }
+        
+        //PhoneNumber
+        var phoneNumber = PhoneNumber.Create(request.PhoneNumber).Value;
 
-        var listSocialNetwork = ListSocialNetwork.Create(socilanetworks);
-
-        if (listSocialNetwork.IsFailure)
-            return Result.Failure<Guid, Error>(listRequisitesResult.Error);
+        //Email
+        var email = Email.Create(request.Email).Value;
 
         //volunter
         var volunteerId = VolunteerId.CreateNew();
@@ -94,12 +78,12 @@ public class CreateVolunteerUseCase
             request.FirstName,
             request.LastName,
             request.MiddleName,
-            request.Email,
+            email,
             request.Description,
-            request.NumberPhone,
+            phoneNumber,
             request.Experience,
             listRequisitesResult.Value,
-            listSocialNetwork.Value);
+            socilanetworksResult.Value);
 
         if (volunteerResult.IsFailure)
             return Errors.General.ValueIsInavalid("Volunteer");

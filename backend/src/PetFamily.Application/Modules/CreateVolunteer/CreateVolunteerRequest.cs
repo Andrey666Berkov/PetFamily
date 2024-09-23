@@ -9,7 +9,7 @@ public record CreateVolunteerRequest(
     string MiddleName,
     string Email,
     string Description,
-    int NumberPhone,
+    string PhoneNumber,
     int Experience,
     IEnumerable<RequesitDto>? requisitesDto,
     IEnumerable<SocialNetworkDto>? SocialNetworkDto);

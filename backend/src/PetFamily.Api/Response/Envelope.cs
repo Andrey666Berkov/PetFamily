@@ -5,25 +5,24 @@ namespace PetFamily.Api.Response;
 public record Envelope
 {
     public object? Result { get; }
-    public string? ErrorCode { get; }   
-    public string ErrorMessage { get; }
+    
+    public List<ResponseError> Errors { get; }
     public DateTime TimeGenerated { get; }
 
-    private Envelope(object? result, Error? error)
+    private Envelope(object? result, IEnumerable<ResponseError> errors)
     {
         Result = result;
-        ErrorCode = error?.Code;
-        ErrorMessage = error?.Message;
+        Errors = errors.ToList();
         TimeGenerated = DateTime.Now;
     }
 
     public static Envelope Ok(object? result)
     {
-        return new Envelope(result,null);
+        return new Envelope(result,[]);
     }
     
-    public static Envelope Error(Error? error)
+    public static Envelope Error(IEnumerable<ResponseError> errors)
     {
-        return new Envelope(null, error );
+        return new Envelope(null, errors);
     }
 }
