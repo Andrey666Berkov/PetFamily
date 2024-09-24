@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Intrinsics.X86;
 using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.ValueObjects;
@@ -90,6 +91,9 @@ public class CreateVolunteerUseCase
 
         //сохранение в бд
         await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
+        //_logger.LogInformation("Created volunteer name={ volunteerResult.Value.FirstName} " +
+        //"id={volunteerResult.Value.Id.Value}",
+         //   volunteerResult.Value.FirstName, volunteerResult.Value.Id.Value);
 
         return Result.Success<Guid, Error>(volunteerResult.Value.Id.Value);
     }

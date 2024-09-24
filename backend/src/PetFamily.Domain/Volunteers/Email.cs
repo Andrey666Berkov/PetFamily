@@ -7,7 +7,7 @@ namespace PetFamily.Domain.Volunteers;
 public record Email
 {
     
-    private const string EMAIL_REGEX = @"/^[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$/i";
+    private const string EMAIL_REGEX = @"/\A[^@]+@([^@\.]+\.)+[^@\.]+\z/";
     
     public string Emaill { get; }
 
@@ -22,12 +22,15 @@ public record Email
 
     public static Result<Email, Error> Create(string email)
     {
-        if (Regex.IsMatch(email, EMAIL_REGEX))
+        /*if (Regex.IsMatch(email, EMAIL_REGEX))
         {
             var regex = new Regex(EMAIL_REGEX);
             var emailReg=regex.Match(email).Value;
             return new Email(emailReg);
-        }
+        }*/
+        if (!string.IsNullOrWhiteSpace(email))
+            return new Email(email);
+        
         return Errors.General.ValueIsInavalid("Volunteer_Email");
     }
 }

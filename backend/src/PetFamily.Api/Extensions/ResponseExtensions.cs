@@ -20,7 +20,7 @@ public static class ResponseExtensions
             _=> StatusCodes.Status500InternalServerError
         };
         
-        var responeError=new ResponseError(error.Code, error.Message, null);
+        var responeError=new ResponseError(error.Code, error.Message, default);
 
         var envelop = Envelope.Error([responeError]);
              

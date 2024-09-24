@@ -26,6 +26,7 @@ public class VolunteerController : ApplicationController
        {
            return validationResult.ToValidationErroResponse();
        }*/
+       
         
         Result<Guid, Error> result = await createVolunteerUseCase
             .Create(createVolunteerRequest, cancellationToken);
@@ -33,6 +34,6 @@ public class VolunteerController : ApplicationController
         if (result.IsFailure)
             return result.Error.ToResponse();
         
-        return new ObjectResult(result.Value);
+         return Ok(result.Value);
     }
 }

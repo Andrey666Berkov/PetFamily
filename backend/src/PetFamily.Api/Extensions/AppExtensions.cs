@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetFamily.Infrastructure;
 
+namespace PetFamily.Api.Extensions;
+
 public static class AppExtensions
 {
     public static async  Task<WebApplication> ApplyMigration(this WebApplication app)
