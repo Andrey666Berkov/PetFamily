@@ -14,6 +14,7 @@ public class CreateVolunteerUseCase
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IValidator<CreateVolunteerRequest> _validator;
 
+    //ctor
     public CreateVolunteerUseCase(
         IVolunteerRepository volunteerRepository,
         IValidator<CreateVolunteerRequest> validator)
@@ -21,15 +22,14 @@ public class CreateVolunteerUseCase
         _volunteerRepository = volunteerRepository;
         _validator = validator;
     }
-
+   //method Create
     public async Task<Result<Guid, Error>> Create(
         CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
         //валидация
-        
         var valunteerNameResult = await _volunteerRepository
-            .GetByName(request.FirstName);
+            .GetByName(request.Initional.FirstName);
 
         if (valunteerNameResult.IsSuccess)
             return Errors.Volunteers.AllReadyExist();
@@ -73,12 +73,16 @@ public class CreateVolunteerUseCase
 
         //volunter
         var volunteerId = VolunteerId.CreateNew();
+        
+        //initials
+        var initials = Initials.Create(
+            request.Initional.FirstName, 
+            request.Initional.LastName, 
+            request.Initional.MiddleName);
 
         var volunteerResult = Volunteer.Create(
             volunteerId,
-            request.FirstName,
-            request.LastName,
-            request.MiddleName,
+            initials.Value,
             email,
             request.Description,
             phoneNumber,

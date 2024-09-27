@@ -1,11 +1,12 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.ComponentModel.Design.Serialization;
+using CSharpFunctionalExtensions;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Domain.Volunteers;
 
-public class Volunteer : Shared.Entity<VolunteerId>
+public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
     //constructor
     private Volunteer(VolunteerId id) : base(id)
@@ -13,9 +14,7 @@ public class Volunteer : Shared.Entity<VolunteerId>
     }
 
     private Volunteer(VolunteerId id,
-        string firstName,
-        string lastName,
-        string middleName,
+        Initials initials,
         Email email,
         string description,
         PhoneNumber phoneNumber,
@@ -23,9 +22,7 @@ public class Volunteer : Shared.Entity<VolunteerId>
         ListRequisites requisite,
         ListSocialNetwork socialNetwork) : base(id)
     {
-        FirstName = firstName;
-        LastName = lastName;
-        MiddleName = middleName;
+        Initials = initials;
         Email = email;
         Description = description;
         PhoneNumber = phoneNumber;
@@ -36,9 +33,10 @@ public class Volunteer : Shared.Entity<VolunteerId>
 
     //property
     private readonly List<Pet> _pets = [];
-    public string FirstName { get; private set; } = default!;
-    public string LastName { get; private set; } = default!;
-    public string MiddleName { get; private set; } = default!;
+    private bool _isDeleted  = false;
+    
+    public Initials Initials { get; set; }
+   
     public Email Email { get; private set; } 
     public string Description { get; private set; } = default!;
     public int Experience { get; private set; }
@@ -47,9 +45,38 @@ public class Volunteer : Shared.Entity<VolunteerId>
     public ListRequisites RequisitesList { get; private set; }
     public ListSocialNetwork SocialNetworkList { get; private set; }
 
+
     /// //////////////////////////
     /// /////////////////////////////////
     //methods
+
+    public void UpdateSocialNetwork(IEnumerable<SocialNetwork> socialNetworks)
+    {
+        SocialNetworkList = ListSocialNetwork.Create(socialNetworks).Value;
+    }
+    public void Delete()
+    {
+        if (_isDeleted == false)
+        {
+            _isDeleted = true;
+            foreach (var pet in _pets)
+            {
+                //pet.Delete();
+            }
+        }
+    }
+    
+    public void Restore()
+    {
+        if(_isDeleted == true)
+            _isDeleted = false;
+    }
+    public void UpdateVolunteerInfo(Initials initials,string description)
+    {
+        Initials = initials;
+        Description = description;
+    }
+    
     public void AddRequisites(Requisite requisite)
     {
         RequisitesList.Requisites.Append(requisite);
@@ -98,9 +125,7 @@ public class Volunteer : Shared.Entity<VolunteerId>
     /// //////////////////////////////////////
     //CreateVolunteer
     public static Result<Volunteer, Error> Create(VolunteerId id,
-        string firstName,
-        string lastName,
-        string middleName,
+        Initials initials,
         Email email,
         string description,
         PhoneNumber numberPhone,
@@ -108,15 +133,6 @@ public class Volunteer : Shared.Entity<VolunteerId>
         ListRequisites? requisite,
         ListSocialNetwork? socialNetwork)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            return Errors.General.ValueIsInavalid(nameof(firstName));
-
-        if (string.IsNullOrWhiteSpace(lastName))
-            return Errors.General.ValueIsInavalid(nameof(lastName));
-
-        if (string.IsNullOrWhiteSpace(middleName))
-            return Errors.General.ValueIsInavalid(nameof(middleName));
-
         if (string.IsNullOrWhiteSpace(description))
             return Errors.General.ValueIsInavalid(nameof(description));
 
@@ -126,10 +142,9 @@ public class Volunteer : Shared.Entity<VolunteerId>
         if (requisite == null)
             return Errors.General.ValueIsInavalid(nameof(requisite));
 
-        var volunteer = new Volunteer(id,
-            firstName,
-            lastName,
-            middleName,
+        var volunteer = new Volunteer(
+            id, 
+            initials,
             email,
             description,
             numberPhone,
@@ -138,5 +153,36 @@ public class Volunteer : Shared.Entity<VolunteerId>
             socialNetwork);
 
         return Result.Success<Volunteer, Error>(volunteer);
+    }
+}
+
+public class Initials
+{
+    private Initials(string firstName, string lastName, string middleName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        MiddleName = middleName;
+    }
+
+    public string FirstName { get;  } 
+    public string LastName { get;  } 
+    public string MiddleName { get; }
+    
+    public static Result<Initials, Error> Create(
+        string firstName, 
+        string lastName, 
+        string middleName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+            return Errors.General.ValueIsInavalid(nameof(firstName));
+
+        if (string.IsNullOrWhiteSpace(lastName))
+            return Errors.General.ValueIsInavalid(nameof(lastName));
+        
+        if (string.IsNullOrWhiteSpace(middleName))
+            return Errors.General.ValueIsInavalid(nameof(middleName));
+            
+        return new Initials(firstName, lastName, middleName);
     }
 }

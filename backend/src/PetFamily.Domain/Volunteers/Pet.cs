@@ -6,8 +6,10 @@ using PetFamily.Domain.ValueObjects;
 
 namespace PetFamily.Domain.Volunteers;
 
-public class Pet : Shared.Entity<PetId>
+public class Pet : Shared.Entity<PetId>, ISoftDeletable
 {
+    private bool _isDeleted;
+
     //constructor
     public Pet(PetId id):base(id)
     {
@@ -76,7 +78,7 @@ public class Pet : Shared.Entity<PetId>
         int numberPhoneOwner, 
         bool isCastrated, 
         StatusHelper statusHelper,
-        Requisite? requisite,
+        Requisite requisite,
         SpeciesBreed speciesBreed)
     {
         if (string.IsNullOrWhiteSpace(nickName))
@@ -109,9 +111,6 @@ public class Pet : Shared.Entity<PetId>
         if(numberPhoneOwner.ToString().Length<5 || numberPhoneOwner.ToString().Length>20)
             return Errors.General.ValueIsInavalid(nameof(numberPhoneOwner));        ;
         
-        if (requisite == null)
-            return Errors.General.ValueIsInavalid(nameof(requisite));        ;
-        
         var pet = new Pet( petid, 
             nickName, 
             description, 
@@ -137,5 +136,19 @@ public class Pet : Shared.Entity<PetId>
     public void AddRequisites(Requisite requisite)
     {
         RequisiteList.Requisites.Append(requisite);
+    }
+
+    public void Delete()
+    {
+        if (_isDeleted == false)
+        {
+            _isDeleted = true;
+        }
+    }
+    
+    public void Restore()
+    {
+        if(_isDeleted == true)
+            _isDeleted = false;
     }
 }

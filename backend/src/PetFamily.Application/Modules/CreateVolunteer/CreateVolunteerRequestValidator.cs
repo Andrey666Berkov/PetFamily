@@ -22,20 +22,18 @@ public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteer
             .MustBeValueObject(s =>
                 Requisite.Create(s.Name, s.Link));
 
-        RuleFor(cvr => cvr.FirstName).NotNull()
-            .WithError(Errors.General.ValueIsInavalid("FirstName"))
-            .NotEmpty().WithError(Errors.General.ValueIsInavalid("FirstName"));
-        
-        RuleFor(cvr => cvr.Description).NotNull().WithError(Errors.General.ValueIsInavalid("Description"))
+
+        RuleFor(cvr => cvr.Initional)
+            .MustBeValueObject(s =>
+                Initials.Create(s.FirstName, s.LastName, s.MiddleName));
+
+        RuleFor(cvr => cvr.Description).NotNull()
+            .WithError(Errors.General.ValueIsInavalid("Description"))
             .NotEmpty().WithError(Errors.General.ValueIsInavalid("Description"));
-        
-        RuleFor(cvr => cvr.Experience).NotNull().WithError(Errors.General.ValueIsInavalid("Experience"))
+
+        RuleFor(cvr => cvr.Experience).NotNull()
+            .WithError(Errors.General.ValueIsInavalid("Experience"))
             .NotEmpty().WithError(Errors.General.ValueIsInavalid("Experience"));
-        
-        RuleFor(cvr => cvr.LastName).NotNull().WithError(Errors.General.ValueIsInavalid("LastName"))
-            .NotEmpty().WithError(Errors.General.ValueIsInavalid("LastName"));;
-        
-        RuleFor(cvr => cvr.MiddleName).NotNull().WithError(Errors.General.ValueIsInavalid("MiddleName"))
-            .NotEmpty().WithError(Errors.General.ValueIsInavalid("MiddleName"));;
     }
+
 }

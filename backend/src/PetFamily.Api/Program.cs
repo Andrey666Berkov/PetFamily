@@ -9,7 +9,6 @@ using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.Debug()
@@ -24,7 +23,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSerilog();
-
 
 builder.Services
     .AddInfrostructure()
@@ -46,8 +44,6 @@ if (app.Environment.IsDevelopment())
 
     await app.ApplyMigration();
 }
-
-app.UseHttpLogging();
 
 app.UseHttpsRedirection();
 

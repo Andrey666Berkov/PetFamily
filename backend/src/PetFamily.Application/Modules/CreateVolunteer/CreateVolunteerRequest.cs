@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Transport.Quic;
 namespace PetFamily.Application.Modules.CreateVolunteer;
 
 public record CreateVolunteerRequest(
-    string FirstName,
-    string LastName,
-    string MiddleName,
+    RequesitInitionalDto Initional,
     string Email,
     string Description,
     string PhoneNumber,
@@ -15,5 +13,9 @@ public record CreateVolunteerRequest(
     IEnumerable<SocialNetworkDto>? SocialNetworkDto);
 
 public record RequesitDto(string Title, string Description);
+public record RequesitInitionalDto(
+    string FirstName,
+    string LastName, 
+    string MiddleName);
 
 public record SocialNetworkDto(string Name, string Link);
