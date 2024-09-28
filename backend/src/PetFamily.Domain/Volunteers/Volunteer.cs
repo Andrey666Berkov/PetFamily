@@ -61,7 +61,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
             _isDeleted = true;
             foreach (var pet in _pets)
             {
-                //pet.Delete();
+                pet.Delete();
             }
         }
     }
