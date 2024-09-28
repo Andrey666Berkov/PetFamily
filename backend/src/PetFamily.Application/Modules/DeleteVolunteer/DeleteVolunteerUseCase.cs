@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Modules.DeleteVolunteer;
@@ -18,7 +19,8 @@ public class DeleteVolunteerUseCase
     }
     public async Task<Result<Guid, Error>> Delete(DeleteVolunteerRequest request,CancellationToken cancellationToken = default)
     {
-        var volunteerResult=await _volunteerRepository.GetById(request.VolunteerId, cancellationToken);
+        var volunteerId = VolunteerId.Create(request.VolunteerId);
+        var volunteerResult=await _volunteerRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
         

@@ -21,11 +21,15 @@ public record PhoneNumber
 
     public static Result<PhoneNumber, Error> Create(string numberPhone)
     {
-        if (Regex.IsMatch(numberPhone, NUMBER_REG))
+        /*if (Regex.IsMatch(numberPhone, NUMBER_REG))
         {
             Regex regex = new Regex(NUMBER_REG);
             string phoneNumber = regex.Match(numberPhone).Value;
             return new PhoneNumber(phoneNumber);
+        }*/
+        if (string.IsNullOrWhiteSpace(numberPhone)==false)
+        {
+            return new PhoneNumber(numberPhone);
         }
         return Errors.General.ValueIsInavalid("PhoneNumber");
     }

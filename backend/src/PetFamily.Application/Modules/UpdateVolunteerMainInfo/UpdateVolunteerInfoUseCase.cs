@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
@@ -21,7 +22,8 @@ public class UpdateVolunteerInfoUseCase
         CancellationToken cancellationToken = default)
     {
         //Находим по ID этого волонтера
-        var volunteerResult=await _volunteerRepository.GetById(request.VolunteerID, cancellationToken);
+        VolunteerId volunteerId=VolunteerId.Create(request.VolunteerID);
+        var volunteerResult=await _volunteerRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
         

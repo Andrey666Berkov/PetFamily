@@ -25,18 +25,22 @@ public class VolunteerRepository : IVolunteerRepository
     }
     
     public async Task<Result<Volunteer, Error>> GetById(
-        Guid volunteerId, 
-        CancellationToken cancellationToken = default)
+        VolunteerId volunteerId, 
+        CancellationToken cancellationToken)
     {
         var volunteer = await _context
             .Volunteers
             .Include(pet => pet.Pets)
-            .FirstOrDefaultAsync(v => v.Id.Value == volunteerId, cancellationToken);
-            
-        if(volunteer is  null)
-            return Errors.General.NotFound(volunteerId);
+            .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
+
+        if (volunteer is null)
+        {
+            return Errors.General.NotFound(volunteerId.Value);
+        }
         
-        return volunteer;
+            return volunteer;
+        
+       
     }
     
     public async Task<Result<Volunteer, Error>> GetByName(

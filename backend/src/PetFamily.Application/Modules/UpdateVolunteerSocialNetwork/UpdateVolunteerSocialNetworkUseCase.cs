@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
@@ -21,7 +22,8 @@ public class UpdateVolunteerSocialNetworkUseCase
         UpdateSocialNetworkRequest request
         , CancellationToken cancellationToken)
     {
-        var volunteerResult =  _repository.GetById(request.VolunteerId, cancellationToken).Result;
+        var volunteerId = VolunteerId.Create(request.VolunteerId);
+        var volunteerResult =  _repository.GetById(volunteerId, cancellationToken).Result;
         if (volunteerResult.IsFailure)
             return  Errors.General.NotFound(request.VolunteerId);
 

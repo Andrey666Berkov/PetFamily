@@ -41,9 +41,9 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public string Description { get; private set; } = default!;
     public int Experience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
-    public IReadOnlyList<Pet> Pets => _pets;
-    public ListRequisites RequisitesList { get; private set; }
-    public ListSocialNetwork SocialNetworkList { get; private set; }
+    public IReadOnlyList<Pet>? Pets => _pets;
+    public ListRequisites? RequisitesList { get; private set; }
+    public ListSocialNetwork? SocialNetworkList { get; private set; }
 
 
     /// //////////////////////////
@@ -130,18 +130,16 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         string description,
         PhoneNumber numberPhone,
         int experience,
-        ListRequisites? requisite,
-        ListSocialNetwork? socialNetwork)
+        ListRequisites requisite,
+        ListSocialNetwork socialNetwork)
     {
         if (string.IsNullOrWhiteSpace(description))
             return Errors.General.ValueIsInavalid(nameof(description));
 
-        if (numberPhone.ToString().Length < 5 || numberPhone.ToString().Length > 20)
-            return Errors.General.ValueIsInavalid(nameof(numberPhone));
+        // if (numberPhone.ToString().Length < 5 || numberPhone.ToString().Length > 20)
+        //    return Errors.General.ValueIsInavalid(nameof(numberPhone));
 
-        if (requisite == null)
-            return Errors.General.ValueIsInavalid(nameof(requisite));
-
+        
         var volunteer = new Volunteer(
             id, 
             initials,
@@ -153,36 +151,5 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
             socialNetwork);
 
         return Result.Success<Volunteer, Error>(volunteer);
-    }
-}
-
-public class Initials
-{
-    private Initials(string firstName, string lastName, string middleName)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        MiddleName = middleName;
-    }
-
-    public string FirstName { get;  } 
-    public string LastName { get;  } 
-    public string MiddleName { get; }
-    
-    public static Result<Initials, Error> Create(
-        string firstName, 
-        string lastName, 
-        string middleName)
-    {
-        if (string.IsNullOrWhiteSpace(firstName))
-            return Errors.General.ValueIsInavalid(nameof(firstName));
-
-        if (string.IsNullOrWhiteSpace(lastName))
-            return Errors.General.ValueIsInavalid(nameof(lastName));
-        
-        if (string.IsNullOrWhiteSpace(middleName))
-            return Errors.General.ValueIsInavalid(nameof(middleName));
-            
-        return new Initials(firstName, lastName, middleName);
     }
 }

@@ -20,24 +20,22 @@ public class VolunteerConfiguration:IEntityTypeConfiguration<Volunteer>
         
         builder.ComplexProperty(c => c.Initials, b =>
         {
-            b.IsRequired();
-            
             b.Property(p => p.FirstName)
+                .IsRequired()
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("first_name");
             
             b.Property(p => p.LastName)
+                .IsRequired()
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("last_name");  
             
             b.Property(p => p.MiddleName)
+                .IsRequired()
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("middle_name"); 
             
-            builder.Property<bool>("_isDeleted")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("is_deleted");
-        });
+            });
         
         builder.Property(t=>t.Description)
             .IsRequired()

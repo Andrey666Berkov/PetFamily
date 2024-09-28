@@ -33,7 +33,7 @@ builder.Services.AddFluentValidationAutoValidation(con =>
 
 var app = builder.Build();
 
-app.UseExeptionMiddleware();
+//app.UseExeptionMiddleware();
 
 app.UseSerilogRequestLogging();
 
