@@ -10,8 +10,17 @@ public class UpdateVolunteerSocialNetworkValidate:AbstractValidator<UpdateSocial
     public UpdateVolunteerSocialNetworkValidate()
     {
         RuleFor(vsn=>vsn.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
+      
+    }
+}
 
-        RuleForEach(snr => snr.SocialNetworks)
-            .MustBeValueObject(s => SocialNetwork.Create(s.Name, s.Link));
+public class UpdateVolunteerSocialNetworkDTOValidate:AbstractValidator<UpdateSocialNetworkDto>
+{
+    public UpdateVolunteerSocialNetworkDTOValidate()
+    {
+        RuleForEach(vsn=>vsn.SocialNetworks)
+            .MustBeValueObject(s=>SocialNetwork.Create(s.Name, s.Link));
+
+        
     }
 }

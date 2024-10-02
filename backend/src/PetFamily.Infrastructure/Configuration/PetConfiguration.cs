@@ -96,11 +96,11 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             b.Property(p => p.Street)
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("street"); 
-            
-            builder.Property<bool>("_isDeleted")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("is_deleted");
         });
+       
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted");
 
     }
 }

@@ -23,11 +23,14 @@ public class UpdateVolunteerSocialNetworkUseCase
         , CancellationToken cancellationToken)
     {
         var volunteerId = VolunteerId.Create(request.VolunteerId);
+        
         var volunteerResult =  _repository.GetById(volunteerId, cancellationToken).Result;
         if (volunteerResult.IsFailure)
             return  Errors.General.NotFound(request.VolunteerId);
 
-        volunteerResult.Value.UpdateSocialNetwork(request.SocialNetworks);
+        volunteerResult.Value.UpdateSocialNetwork(request.SocialNetworks.SocialNetworks);
+        
+        await _repository.Save(volunteerResult.Value, cancellationToken);
         
         _logger.LogInformation("Updating volunteer SocialNetwork " +
                                "with VolunteerID: {volunteerResult.Value.Id}",

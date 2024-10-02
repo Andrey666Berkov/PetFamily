@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Modules.UpdateVolunteerMainInfo;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.ValueObjects;
@@ -12,15 +13,17 @@ namespace PetFamily.Application.Modules.CreateVolunteer;
 public class CreateVolunteerUseCase
 {
     private readonly IVolunteerRepository _volunteerRepository;
-    private readonly IValidator<CreateVolunteerRequest> _validator;
+    private readonly ILogger<UpdateVolunteerInfoUseCase> _logger;
 
     //ctor
     public CreateVolunteerUseCase(
         IVolunteerRepository volunteerRepository,
-        IValidator<CreateVolunteerRequest> validator)
+        ILogger<UpdateVolunteerInfoUseCase> logger
+       )
     {
         _volunteerRepository = volunteerRepository;
-        _validator = validator;
+        _logger = logger;
+        
     }
    //method Create
     public async Task<Result<Guid, Error>> Create(
@@ -49,9 +52,10 @@ public class CreateVolunteerUseCase
             listRequisitesResult =
             ListRequisites.Create(requisites);
         }
-        
+       
         //ListsocialNetworkResult
-        Result<ListSocialNetwork, Error> socilanetworksResult = ListSocialNetwork.Empty();
+        Result<ListSocialNetwork, Error> socilanetworksResult 
+            = ListSocialNetwork.Empty();
         if(request.SocialNetworkDto is not null)
         {
             var socilaNetworks = new List<SocialNetwork>();
@@ -88,16 +92,17 @@ public class CreateVolunteerUseCase
             phoneNumber,
             request.Experience,
             listRequisitesResult.Value,
-            socilanetworksResult.Value);
+            socilanetworksResult.Value
+            );
 
         if (volunteerResult.IsFailure)
             return Errors.General.ValueIsInavalid("Volunteer");
 
         //сохранение в бд
         await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
-        //_logger.LogInformation("Created volunteer name={ volunteerResult.Value.FirstName} " +
-        //"id={volunteerResult.Value.Id.Value}",
-         //   volunteerResult.Value.FirstName, volunteerResult.Value.Id.Value);
+        _logger.LogInformation("Created volunteer name={ volunteerResult.Value.FirstName} " +
+        "id={volunteerResult.Value.Id.Value}",
+          volunteerResult.Value.Initials.FirstName, volunteerResult.Value.Id.Value);
 
         return Result.Success<Guid, Error>(volunteerResult.Value.Id.Value);
     }

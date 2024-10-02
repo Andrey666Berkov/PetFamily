@@ -1,7 +1,9 @@
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Middlewares;
 using PetFamily.Api.Validations;
+using PetFamily.Application;
 using PetFamily.Application.Modules;
+using PetFamily.Infrastructure;
 using PetFamily.Infrastructure.Repositories;
 using Serilog;
 using Serilog.Events;
@@ -25,7 +27,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSerilog();
 
 builder.Services
-    .AddInfrostructure()
+    .AddInfrostructure(builder.Configuration)
     .AddApplication();
 
 builder.Services.AddFluentValidationAutoValidation(con =>
@@ -33,7 +35,7 @@ builder.Services.AddFluentValidationAutoValidation(con =>
 
 var app = builder.Build();
 
-//app.UseExeptionMiddleware();
+app.UseExeptionMiddleware();
 
 app.UseSerilogRequestLogging();
 

@@ -24,7 +24,7 @@ public class ApplicationDbContext(
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
         optionsBuilder.EnableSensitiveDataLogging();
-       // optionsBuilder.AddInterceptors(new SoftDeleteInterseptor());
+        //optionsBuilder.AddInterceptors(new SoftDeleteInterseptor());
     }
     private ILoggerFactory CreateLoggerFactory()=>
         LoggerFactory.Create(builder=>

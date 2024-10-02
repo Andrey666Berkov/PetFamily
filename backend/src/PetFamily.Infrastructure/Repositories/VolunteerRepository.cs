@@ -37,9 +37,7 @@ public class VolunteerRepository : IVolunteerRepository
         {
             return Errors.General.NotFound(volunteerId.Value);
         }
-        
             return volunteer;
-        
        
     }
     
@@ -68,7 +66,7 @@ public class VolunteerRepository : IVolunteerRepository
     
     public async Task<Guid> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
-       
+        _context.Remove(volunteer);
         await _context.SaveChangesAsync(cancellationToken);
         
 

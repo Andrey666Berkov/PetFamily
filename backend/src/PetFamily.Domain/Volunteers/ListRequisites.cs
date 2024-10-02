@@ -14,7 +14,7 @@ public record ListRequisites
         Requisites = requisites.ToList();
     }
 
-    public IReadOnlyList<Requisite> Requisites { get; } = [];
+    public IEnumerable<Requisite> Requisites { get; } 
 
     public static Result<ListRequisites, Error> 
         Create(IEnumerable<Requisite>? requisites)

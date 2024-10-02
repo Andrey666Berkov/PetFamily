@@ -8,7 +8,7 @@ namespace PetFamily.Domain.Volunteers;
 
 public class Pet : Shared.Entity<PetId>, ISoftDeletable
 {
-    private bool _isDeleted;
+   
 
     //constructor
     public Pet(PetId id):base(id)
@@ -25,9 +25,10 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         double weight,
         int height, 
         int numberPhoneOwner, 
-        bool isCastrated, 
-        Requisite requisite, 
-        SpeciesBreed speciesBreed):base(id)
+        bool isCastrated ,
+        Requisite requisite,
+        SpeciesBreed speciesBreed
+        ):base(id)
     {
         NickName = nickName; 
         Description = description;
@@ -45,6 +46,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     }
     /// //////////////////////////////////////
     //property
+    private bool _isDeleted =false;
+    
     public string NickName { get; private set; }= default!;
     public PetType PetType { get; private set; }
     public string Description { get; private set; }= default!;
@@ -79,7 +82,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         bool isCastrated, 
         StatusHelper statusHelper,
         Requisite requisite,
-        SpeciesBreed speciesBreed)
+        SpeciesBreed speciesBreed
+        )
     {
         if (string.IsNullOrWhiteSpace(nickName))
             return Errors.General.ValueIsInavalid(nameof(nickName));
@@ -108,8 +112,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         if (statusHelper < (StatusHelper)0 || statusHelper > (StatusHelper)3 )
             return Errors.General.ValueIsInavalid(nameof(statusHelper));        ;
         
-        if(numberPhoneOwner.ToString().Length<5 || numberPhoneOwner.ToString().Length>20)
-            return Errors.General.ValueIsInavalid(nameof(numberPhoneOwner));        ;
+       // if(numberPhoneOwner.ToString().Length<5 || numberPhoneOwner.ToString().Length>20)
+       //     return Errors.General.ValueIsInavalid(nameof(numberPhoneOwner));        ;
         
         var pet = new Pet( petid, 
             nickName, 
@@ -124,7 +128,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
             numberPhoneOwner, 
             isCastrated,
             requisite,
-            speciesBreed);
+            speciesBreed
+            );
         
         return Result.Success<Pet, Error>(pet);
     }
@@ -135,7 +140,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     }
     public void AddRequisites(Requisite requisite)
     {
-        RequisiteList.Requisites.Append(requisite);
+       RequisiteList.Requisites.Append(requisite);
     }
 
     public void Delete()
