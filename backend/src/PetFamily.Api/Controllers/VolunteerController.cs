@@ -17,13 +17,14 @@ using Microsoft.AspNetCore.Mvc;
 
 public class VolunteerController : ApplicationController
 {
-    [HttpDelete("{id:guid}/Pet")]
+    [HttpDelete("{volunteerId:guid}/Pet/{petId:guid}")]
     public async Task<ActionResult> DeletePet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
         [FromServices] DeletePetUseCase deletePetUseCase,
         CancellationToken cancellationToken = default)
     {
-        var deleteDataDto = new DeleteDataDto(id, "photos");
+        var deleteDataDto = new DeleteDataDto(volunteerId , petId, "photos");
         var petdelete = await deletePetUseCase
             .DeleteUseCase(deleteDataDto);
         if (petdelete.IsFailure)
