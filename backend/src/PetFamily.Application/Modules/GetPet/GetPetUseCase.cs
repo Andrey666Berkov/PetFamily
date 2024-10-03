@@ -9,21 +9,21 @@ namespace PetFamily.Application.Modules.GetPet;
 
 public class GetPetUseCase
 {
-    private readonly IFileProvider _fileProvider;
+    private readonly IPhotosProvider _photosProvider;
     private readonly ILogger<GetPetUseCase> _logger;
    
 
     public GetPetUseCase(
-        IFileProvider fileProvider)
+        IPhotosProvider photosProvider)
     {
-        _fileProvider = fileProvider;
+        _photosProvider = photosProvider;
     }
 
     public async Task<Result<string, Error>> GetPat(
         PresignedGetObjectArgsDto presignedGetObjectArgsDto,
         CancellationToken cancellationToken)
     {
-        var petResult= await _fileProvider
+        var petResult= await _photosProvider
             .GetFileAsync(presignedGetObjectArgsDto, cancellationToken);
         
         return petResult.Value;

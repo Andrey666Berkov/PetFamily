@@ -40,7 +40,7 @@ public static class Inject
             o.WithSSL(minioOptions.WithSSL);
         });
         
-        services.AddScoped<IFileProvider, MinioProvider>();
+        services.AddScoped<IPhotosProvider, MinioProvider>();
         
         return services;
     }

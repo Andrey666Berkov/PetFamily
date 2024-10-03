@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
 using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
@@ -9,8 +10,9 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Providers;
 
-public class MinioProvider : IFileProvider
+public class MinioProvider : IPhotosProvider
 {
+    private const int MAX_PARALLEL = 10;
     private readonly IMinioClient _minioClient;
     private readonly ILogger<MinioProvider> _logger;
 
@@ -20,42 +22,57 @@ public class MinioProvider : IFileProvider
         _logger = logger;
     }
 
-    public async Task<Result<string, Error>> UploadFileAsync(FileDataDto fileData,
+    public async Task<UnitResult<Error>> UploadPhotosAsync(
+        PhotoDataDto filesData,
         CancellationToken cancellationToken = default)
     {
+        var semaphoreSlim = new SemaphoreSlim(MAX_PARALLEL);
         try
         {
-            
-            var bucketExistArg = new BucketExistsArgs().WithBucket("photos");
+            var bucketExistArg = new BucketExistsArgs()
+                .WithBucket(filesData.BucketName);
 
             var bucketExistResult = await _minioClient
                 .BucketExistsAsync(bucketExistArg, cancellationToken);
-            
+
             if (bucketExistResult == false)
             {
-                var makeBucketArgs = new MakeBucketArgs().WithBucket("photos");
+                var makeBucketArgs = new MakeBucketArgs().WithBucket(filesData.BucketName);
                 await _minioClient.MakeBucketAsync(makeBucketArgs, cancellationToken);
             }
 
-            var path = Guid.NewGuid();
+            List<Task> tasks = [];
 
-            var putObjectArgs = new PutObjectArgs()
-                .WithBucket("photos")
-                .WithStreamData(fileData.Stream)
-                .WithObjectSize(fileData.Stream.Length)
-                .WithObject(path.ToString());
+            foreach (var photo in filesData.PhotoData)
+            {
+                semaphoreSlim.WaitAsync(cancellationToken);
+                var putObjectArgs = new PutObjectArgs()
+                    .WithBucket(filesData.BucketName)
+                    .WithStreamData(photo.Stream)
+                    .WithObjectSize(photo.Stream.Length)
+                    .WithObject(photo.ObjectName);
 
-            var res = await _minioClient
-                .PutObjectAsync(putObjectArgs, cancellationToken);
+                var task = /*await*/ _minioClient
+                    .PutObjectAsync(putObjectArgs, cancellationToken);
 
-            return res.ObjectName;
+                tasks.Add(task);
+            }
+
+            await Task.WhenAll(tasks);
         }
         catch (Exception ex)
         {
+            //удаление лишних файлов
             _logger.LogError(ex, "Fail to upload file in minio");
             return Error.Failure("FileDataDto upload failed",
                 "Fail to upload file in minio");
         }
+        finally
+        {
+            semaphoreSlim.Release();
+        }
+
+        return Result.Success<Error>();
     }
 
     public async Task<Result<string, Error>> GetFileAsync(
@@ -84,34 +101,32 @@ public class MinioProvider : IFileProvider
         catch (Exception e)
         {
             _logger.LogError(e, "Fail to get file in minio");
-            return Error.Failure("PresignedGetObjectArgs", 
+            return Error.Failure("PresignedGetObjectArgs",
                 "Fail to get file in minio");
         }
     }
-    
-    
+
+
     public async Task<Result<string, Error>> DeletePetAsync(
         DeleteDataDto deleteDataDto,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var args=new RemoveObjectArgs()
+            var args = new RemoveObjectArgs()
                 .WithBucket(deleteDataDto.Bucket)
                 .WithObject(deleteDataDto.PetId.ToString());
-            
-         await _minioClient.RemoveObjectAsync(args, cancellationToken);
-            
+
+            await _minioClient.RemoveObjectAsync(args, cancellationToken);
+
             _logger.LogInformation($"REMOVE object in minio: {deleteDataDto.PetId.ToString()}");
             return $"REMOVE object in minio: {deleteDataDto.PetId.ToString()}";
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Fail to REMOVE file in minio");
-            return Error.Failure("REMOVE_file_in_minio", 
+            return Error.Failure("REMOVE_file_in_minio",
                 "Fail to REMOVE file in minio");
         }
     }
 }
-
-

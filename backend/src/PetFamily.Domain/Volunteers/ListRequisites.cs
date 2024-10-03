@@ -14,20 +14,20 @@ public record ListRequisites
         Requisites = requisites.ToList();
     }
 
-    public IEnumerable<Requisite> Requisites { get; } 
+    public List<Requisite> Requisites { get; }
 
-    public static Result<ListRequisites, Error> 
-        Create(IEnumerable<Requisite>? requisites)
+    public static Result<ListRequisites, Error>
+        Create(IEnumerable<Requisite> requisites)
     {
-        if (requisites is not null)
-        {
-            var listRequisites = new ListRequisites(requisites);
-            return listRequisites;
-        }
-
-        return ListRequisites.Empty();
+        var listRequisites = new ListRequisites(requisites);
+        return listRequisites;
     }
     
+    public  void Add(Requisite requisites)
+    {
+        Requisites.Add(requisites);
+    }
+
     public static Result<ListRequisites, Error> Empty()
     {
         var listRequisites = new ListRequisites();

@@ -4,9 +4,10 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Providers;
 
-public interface IFileProvider
+public interface IPhotosProvider
 {
-    Task<Result<string, Error>> UploadFileAsync(FileDataDto fileData,
+    Task<UnitResult<Error>> UploadPhotosAsync(
+        PhotoDataDto filesData,
         CancellationToken cancellationToken = default);
 
     Task<Result<string, Error>> GetFileAsync(

@@ -26,7 +26,7 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
         
-        builder.Property(t=>t.Breed)
+        /*builder.Property(t=>t.Breed)
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
         
@@ -36,7 +36,7 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
         
         builder.Property(t=>t.InfoHelth)
             .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
+            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);*/
         
         builder.OwnsOne(p => p.RequisiteList, lb=>
         {
@@ -60,9 +60,16 @@ public class PetConfiguration:IEntityTypeConfiguration<Pet>
             po.ToJson("photos");
             po.OwnsMany(ph => ph.Photos, pp =>
             {
-                pp.Property(ps => ps.PathToStorage)
+                pp.OwnsOne(pr => pr.PhotoPathToStorage, pk =>
+                {
+                    pk.Property(p => p.FullPath)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
+
+                });
+                /*pp.Property(ps => ps.PhotoPathToStorage)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);*/
 
                 pp.Property(ps => ps.IsFavorite)
                     .IsRequired();

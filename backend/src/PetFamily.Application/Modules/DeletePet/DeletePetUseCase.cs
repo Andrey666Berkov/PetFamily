@@ -7,17 +7,17 @@ namespace PetFamily.Application.Modules.DeletePet;
 
 public class DeletePetUseCase
 {
-    private readonly IFileProvider _fileProvider;
+    private readonly IPhotosProvider _photosProvider;
 
-    public DeletePetUseCase(IFileProvider fileProvider)
+    public DeletePetUseCase(IPhotosProvider photosProvider)
     {
-        _fileProvider = fileProvider;
+        _photosProvider = photosProvider;
     }
 
     public async Task<Result<string, Error>> DeleteUseCase(DeleteDataDto deleteDataDto,
         CancellationToken cancellationToken = default)
     {
-        return await _fileProvider.DeletePetAsync(deleteDataDto, cancellationToken);
+        return await _photosProvider.DeletePetAsync(deleteDataDto, cancellationToken);
         
     }
 }
