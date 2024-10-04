@@ -11,14 +11,14 @@ namespace PetFamily.Application.Modules.AddPet;
 public class AddPetUseCase
 {
     private const string BUCKET_NAME="photos";
-    private readonly IPhotosProvider _photosProvider;
+    private readonly IFilesProvider _filesProvider;
     private readonly IVolunteerRepository _volunteerRepository;
 
     public AddPetUseCase(
-        IPhotosProvider photosProvider,
+        IFilesProvider filesProvider,
         IVolunteerRepository volunteerRepository)
     {
-        _photosProvider = photosProvider;
+        _filesProvider = filesProvider;
         _volunteerRepository = volunteerRepository;
     }
 
@@ -38,7 +38,7 @@ public class AddPetUseCase
         //MINO LOAD
         foreach (var photo in command.Photos)
         {
-            var extension = Path.GetExtension(photo.FileName);
+            var extension = Path.GetExtension(photo.FilePath);
             
             var photoPathId = Guid.NewGuid();
             
@@ -58,7 +58,7 @@ public class AddPetUseCase
         }
         var photoDataDto=new PhotoDataDto(streamsDataDto, BUCKET_NAME);
         
-        var minioUploadResult=await _photosProvider
+        var minioUploadResult=await _filesProvider
             .UploadPhotosAsync(photoDataDto, cancellationToken);
             
             

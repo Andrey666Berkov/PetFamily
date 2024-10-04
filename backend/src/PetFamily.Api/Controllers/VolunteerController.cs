@@ -2,6 +2,7 @@
 using FluentValidation;
 using PetFamily.Api.Contract;
 using PetFamily.Api.Extensions;
+using PetFamily.Api.Processors;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Modules.AddPet;
 using PetFamily.Application.Modules.CreateVolunteer;
@@ -19,7 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 
 public class VolunteerController : ApplicationController
 {
-    [HttpDelete("{volunteerId:guid}/Pet/{petId:guid}")]
+    [HttpDelete("{volunteerId:guid}/pet/{petId:guid}")]
     public async Task<ActionResult> DeletePet(
         [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
@@ -35,18 +36,19 @@ public class VolunteerController : ApplicationController
         return Ok(petdelete.Value);
     }
 
-    [HttpPost("{id:guid}/Pet")]
+    [HttpPost("{volunteerid:guid}/get-pet/{petid:guid}")]
     public async Task<ActionResult> GetPet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid petid,
+        [FromRoute] Guid volunteerid,
         [FromServices] GetPetUseCase getPetUseCase,
         CancellationToken cancellationToken = default)
     {
         var bucket = "photos";
-        var PresignedGetObjectArgsDto =
-            new PresignedGetObjectArgsDto(bucket, id);
+        var presignedGetObjectArgsDto =
+            new PresignedGetObjectArgsDto(bucket, petid, volunteerid);
 
-        var petResult = await getPetUseCase.GetPat(
-            PresignedGetObjectArgsDto,
+        var petResult = await getPetUseCase.GetPet(
+            presignedGetObjectArgsDto,
             cancellationToken);
         if (petResult.IsFailure)
             return petResult.Error.ToResponse();
@@ -54,59 +56,43 @@ public class VolunteerController : ApplicationController
         return Ok(petResult.Value);
     }
 
-    [HttpPost("{modelId:guid}/pet")]
+    [HttpPost("{modelId:guid}/add-pet")]
     public async Task<ActionResult> AddPet(
         [FromRoute] Guid modelId,
         [FromForm] AddPetRequest request, //Т.к. IFormFile из фромбоди получить не можем
         [FromServices] AddPetUseCase addPetUseCase,
         CancellationToken cancellationToken = default)
     {
-        //await using var stream = file.OpenReadStream();
+        await using var process = new FormPhotoProcessor();
+        var petPhotos = process.Process(request.Photos);
 
-        List<PhotoDto> petPhotos = [];
-        try
-        {
-            foreach (var photo in request.Photos)
-            {
-                var stream = photo.OpenReadStream();
-                petPhotos.Add(new PhotoDto(stream, photo.Name, photo.ContentType));
-            }
+        var address = new AddressDto(
+            request.Address.Street,
+            request.Address.Country,
+            request.Address.City);
 
-            var address=new AddressDto(
-                request.Address.Street, 
-                request.Address.Country, 
-                request.Address.City);
-            
-            var requisiteDto=new RequisiteDto(
-                request.Requisite.Title, 
-                request.Requisite.Description);
-            
-            var path = Guid.NewGuid().ToString();
+        var requisiteDto = new RequisiteDto(
+            request.Requisite.Title,
+            request.Requisite.Description);
 
-            var commands = new FileDataDtoCommand(
-                modelId,
-                petPhotos,
-                address,
-                requisiteDto,
-                request.NickName,
-                request.Description);
+        var path = Guid.NewGuid().ToString();
 
-            Result<Guid, Error> providerUseCaseResult = await addPetUseCase.ProviderUseCase(
-                commands,
-                cancellationToken);
+        var commands = new FileDataDtoCommand(
+            modelId,
+            petPhotos,
+            address,
+            requisiteDto,
+            request.NickName,
+            request.Description);
 
-            if (providerUseCaseResult.IsFailure)
-                return providerUseCaseResult.Error.ToResponse();
-        }
-        finally
-        {
-            foreach (var photo in petPhotos)
-            {
-                await photo.Stream.DisposeAsync();
-            }
-        }
+        Result<Guid, Error> providerUseCaseResult = await addPetUseCase.ProviderUseCase(
+            commands,
+            cancellationToken);
 
-        return Ok();
+        if (providerUseCaseResult.IsFailure)
+            return providerUseCaseResult.Error.ToResponse();
+
+        return Ok(providerUseCaseResult.Value);
     }
 
     [HttpPost]

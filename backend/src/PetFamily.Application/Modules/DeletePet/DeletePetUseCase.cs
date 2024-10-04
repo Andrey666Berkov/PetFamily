@@ -1,23 +1,33 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Providers;
+using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Modules.DeletePet;
 
 public class DeletePetUseCase
 {
-    private readonly IPhotosProvider _photosProvider;
+    private readonly IFilesProvider _filesProvider;
+    private readonly IVolunteerRepository _volunteerRepository;
 
-    public DeletePetUseCase(IPhotosProvider photosProvider)
+    public DeletePetUseCase(IFilesProvider filesProvider,
+        IVolunteerRepository volunteerRepository)
     {
-        _photosProvider = photosProvider;
+        _filesProvider = filesProvider;
+        _volunteerRepository = volunteerRepository;
     }
 
     public async Task<Result<string, Error>> DeleteUseCase(DeleteDataDto deleteDataDto,
         CancellationToken cancellationToken = default)
     {
-        return await _photosProvider.DeletePetAsync(deleteDataDto, cancellationToken);
+        var volunteerId=VolunteerId.Create(deleteDataDto.VolunteerId);
+        var petId=PetId.Create(deleteDataDto.PetId);
+        await _volunteerRepository.DeletePet(volunteerId, petId, cancellationToken);
+        
+        return await _filesProvider
+            .DeletePetAsync(deleteDataDto, cancellationToken);
+        
         
     }
 }

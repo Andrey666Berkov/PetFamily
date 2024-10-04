@@ -4,7 +4,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Providers;
 
-public interface IPhotosProvider
+public interface IFilesProvider
 {
     Task<UnitResult<Error>> UploadPhotosAsync(
         PhotoDataDto filesData,

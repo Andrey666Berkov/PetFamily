@@ -105,6 +105,9 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             .HasForeignKey("volunteer_id")
             .OnDelete(DeleteBehavior.Cascade);
 
+        //builder.Navigation(p => p.Pets).AutoInclude();
+        //т.к. в GetByID У меня include pets
+
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");

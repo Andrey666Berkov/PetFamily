@@ -5,7 +5,7 @@ namespace PetFamily.Domain.Volunteers;
 
 public record PetListPhoto
 {
-    public IEnumerable<PetPhoto> Photos { get; }
+    public IReadOnlyList<PetPhoto> Photos { get; }
     
     private PetListPhoto()
     {
@@ -15,8 +15,8 @@ public record PetListPhoto
         Photos = photos.ToList();
     }
 
-    public static Result<PetListPhoto, Error>
-        Create(IEnumerable<PetPhoto> photos)
+    public static Result<PetListPhoto, Error> Create(
+        IEnumerable<PetPhoto> photos)
     {
         var petListPhotos = new PetListPhoto(photos);
         return petListPhotos;

@@ -23,4 +23,8 @@ public record PhotoPath
         
         return new PhotoPath(fullPath);
     }
+    public static Result<PhotoPath, Error> CreateOfString(string path)
+    {
+       return new PhotoPath(path);
+    }
 }

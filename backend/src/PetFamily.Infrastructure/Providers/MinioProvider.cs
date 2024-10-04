@@ -10,7 +10,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Providers;
 
-public class MinioProvider : IPhotosProvider
+public class MinioProvider : IFilesProvider
 {
     private const int MAX_PARALLEL = 10;
     private readonly IMinioClient _minioClient;
@@ -88,7 +88,7 @@ public class MinioProvider : IPhotosProvider
 
             var presignetGetObjectArgs = new PresignedGetObjectArgs()
                 .WithBucket(getObjectDto.Bucket)
-                .WithObject(getObjectDto.Id.ToString())
+                .WithObject(getObjectDto.petId.ToString())
                 .WithExpiry(1000)
                 .WithHeaders(reqParams);
 

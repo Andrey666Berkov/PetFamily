@@ -43,7 +43,6 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public int Experience { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
     public IReadOnlyList<Pet> Pets => _pets;
-
     public ListRequisites RequisitesList { get; private set; } = null!;
     public ListSocialNetwork SocialNetworkList { get; private set; }
 
@@ -96,6 +95,11 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         return _pets.Count;
     }
 
+    public int DeletePet(Pet pet)
+    {
+        _pets.Remove(pet);
+        return _pets.Count;
+    }
     public int GetNumPets() => _pets.Count;
 
     public int GetNumPetNeedHelp()

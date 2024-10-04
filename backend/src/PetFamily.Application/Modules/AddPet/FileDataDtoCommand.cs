@@ -8,6 +8,6 @@ public record FileDataDtoCommand(
     string NickName,
     string Description);
 
-public record PhotoDto(Stream Stream, string FileName, string ContentType);
+public record PhotoDto(Stream Stream, string FilePath);
 public record AddressDto(string Street, string Country, string City);
 public record RequisiteDto(string Title, string Description);
