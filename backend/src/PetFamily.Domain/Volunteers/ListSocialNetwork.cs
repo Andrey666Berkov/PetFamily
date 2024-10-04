@@ -5,7 +5,7 @@ namespace PetFamily.Domain.Volunteers;
 
 public record ListSocialNetwork
 {
-    public IReadOnlyList<SocialNetwork> SocialNetworks { get; } = [];
+    public IReadOnlyList<SocialNetwork> SocialNetworks { get; }
     private ListSocialNetwork()
     {
     }

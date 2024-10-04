@@ -37,9 +37,7 @@ public class VolunteerRepository : IVolunteerRepository
         {
             return Errors.General.NotFound(volunteerId.Value);
         }
-        
             return volunteer;
-        
        
     }
     
@@ -68,11 +66,33 @@ public class VolunteerRepository : IVolunteerRepository
     
     public async Task<Guid> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
-       
+        _context.Remove(volunteer);
         await _context.SaveChangesAsync(cancellationToken);
         
 
         return volunteer.Id.Value;
+    }
+    
+    public async Task<Result<Guid, Error>> DeletePet(
+        VolunteerId volunteerId, 
+        PetId petId,
+        CancellationToken cancellationToken = default)
+    {
+        var volunteerResult=await GetById(volunteerId, cancellationToken);
+        if(volunteerResult.IsFailure)
+            return volunteerResult.Error;
+        
+        var volunteer = volunteerResult.Value;
+        var pet=volunteer.Pets.FirstOrDefault(p=>p.Id==petId);
+        
+        if(pet is null)
+            return Errors.General.NotFound(volunteerId.Value);
+
+        volunteer.DeletePet(pet);
+        
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        return pet.Id.Value;
     }
    
 }

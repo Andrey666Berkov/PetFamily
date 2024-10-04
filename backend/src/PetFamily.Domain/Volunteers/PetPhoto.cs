@@ -5,19 +5,21 @@ namespace PetFamily.Domain.Volunteers;
 
 public record PetPhoto
 {
-   private PetPhoto(string pathToStorage, bool isFavorite)
+    public PhotoPath PhotoPathToStorage { get; }
+    public bool IsFavorite { get; }
+
+    private PetPhoto()
     {
-        PathToStorage = pathToStorage;
+    }
+
+    private PetPhoto(PhotoPath photoPathToStorage, bool isFavorite)
+    {
+        PhotoPathToStorage = photoPathToStorage;
         IsFavorite = isFavorite;
     }
-    public string PathToStorage { get;  } 
-    public bool IsFavorite { get;  }
-
-    public static Result<PetPhoto,Error> Create(string pathToStorage, bool isFavorite)
+    
+    public static Result<PetPhoto, Error> Create(PhotoPath photoPathToStorage, bool isFavorite)
     {
-        if(string.IsNullOrWhiteSpace(pathToStorage))
-            return Errors.General.ValueIsInavalid(nameof(pathToStorage));
-        
-        return new PetPhoto(pathToStorage, isFavorite); 
+        return new PetPhoto(photoPathToStorage, isFavorite);
     }
 }

@@ -17,9 +17,12 @@ public class DeleteVolunteerUseCase
         _volunteerRepository = volunteerRepository;
         _logger = logger;
     }
-    public async Task<Result<Guid, Error>> Delete(DeleteVolunteerRequest request,CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, Error>> Delete(
+        DeleteVolunteerRequest request,
+        CancellationToken cancellationToken = default)
     {
         var volunteerId = VolunteerId.Create(request.VolunteerId);
+        
         var volunteerResult=await _volunteerRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
