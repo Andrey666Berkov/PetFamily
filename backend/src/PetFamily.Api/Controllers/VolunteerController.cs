@@ -83,7 +83,11 @@ public class VolunteerController : ApplicationController
             address,
             requisiteDto,
             request.NickName,
-            request.Description);
+            request.Description,
+            request.Weight,
+            request.Height,
+            request.NumberPhone,
+            request.IsCastrated);
 
         Result<Guid, Error> providerUseCaseResult = await addPetUseCase.ProviderUseCase(
             commands,

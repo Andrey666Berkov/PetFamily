@@ -22,7 +22,7 @@ public class MinioProvider : IFilesProvider
         _logger = logger;
     }
 
-    public async Task<UnitResult<Error>> UploadPhotosAsync(
+    public async Task<UnitResult<Error>> UploadFilesAsync(
         PhotoDataDto filesData,
         CancellationToken cancellationToken = default)
     {
@@ -50,7 +50,7 @@ public class MinioProvider : IFilesProvider
                     .WithBucket(filesData.BucketName)
                     .WithStreamData(photo.Stream)
                     .WithObjectSize(photo.Stream.Length)
-                    .WithObject(photo.ObjectName);
+                    .WithObject(photo.FilePath);
 
                 var task = /*await*/ _minioClient
                     .PutObjectAsync(putObjectArgs, cancellationToken);

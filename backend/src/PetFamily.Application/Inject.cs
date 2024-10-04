@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Application.Database;
 using PetFamily.Application.Modules.AddPet;
 using PetFamily.Application.Modules.CreateVolunteer;
 using PetFamily.Application.Modules.DeletePet;
@@ -22,6 +23,7 @@ public static class Inject
         services.AddScoped<AddPetUseCase>();
         services.AddScoped<GetPetUseCase>();
         services.AddScoped<DeletePetUseCase>();
+        services.AddScoped<IUnitOfWork>();
        
         return  services;
     }
