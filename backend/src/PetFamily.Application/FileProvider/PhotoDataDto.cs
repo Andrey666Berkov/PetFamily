@@ -1,5 +1,7 @@
-﻿namespace PetFamily.Application.FileProvider;
+﻿using PetFamily.Domain.Volunteers;
 
-public record PhotoDataDto(IEnumerable<FileDataDto> PhotoData, string BucketName);
+namespace PetFamily.Application.FileProvider;
 
-public record FileDataDto(Stream Stream, string FilePath, string BucketName);
+public record PhotoDataDto(IEnumerable<FileDataDto> PhotosData, string BucketName);
+
+public record FileDataDto(Stream Stream, FilePath FilePath, string BucketName);

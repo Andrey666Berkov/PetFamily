@@ -45,7 +45,7 @@ public class GetPetUseCase
         if (pet == null)
             return Errors.General.NotFound(presignedGetObjectArgsDto.petId);
 
-        var photoPathResult = PhotoPath.CreateOfString(petResult.Value);
+        var photoPathResult = FilePath.CreateOfString(petResult.Value);
         var petPhotoResult=PetPhoto.Create(photoPathResult.Value, false);
         var petPhotos=new List<PetPhoto>();
         petPhotos.Add(petPhotoResult.Value);

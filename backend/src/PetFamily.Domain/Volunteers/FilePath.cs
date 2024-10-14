@@ -3,28 +3,28 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Volunteers;
 
-public record PhotoPath
+public record FilePath
 {
     public string FullPath { get; }
 
-    private PhotoPath()
+    private FilePath()
     {
         
     }
-    private PhotoPath(string fullFullPath)
+    private FilePath(string fullFullPath)
     {
         FullPath = fullFullPath;
     }
 
-    public static Result<PhotoPath, Error> Create(Guid path, string extension)
+    public static Result<FilePath, Error> Create(Guid path, string extension)
     {
         //валидация на доступные расширения файлов
         var fullPath=path+"."+extension;
         
-        return new PhotoPath(fullPath);
+        return new FilePath(fullPath);
     }
-    public static Result<PhotoPath, Error> CreateOfString(string path)
+    public static Result<FilePath, Error> CreateOfString(string path)
     {
-       return new PhotoPath(path);
+       return new FilePath(path);
     }
 }

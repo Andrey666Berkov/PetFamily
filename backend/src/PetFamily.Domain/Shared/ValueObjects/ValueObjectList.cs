@@ -4,7 +4,7 @@ namespace PetFamily.Domain.Shared.ValueObjects;
 
 public class ValueObjectList<T> : IReadOnlyList<T>
 {
-    public IReadOnlyList<T> Values { get; } = null!;
+  public IReadOnlyList<T> Values { get; } = null!;
     public T this[int index] => Values[index];
     public int Count => Values.Count;
     
@@ -33,4 +33,5 @@ public class ValueObjectList<T> : IReadOnlyList<T>
     
     public static implicit operator List<T>(ValueObjectList<T> list) =>
         list.Values.ToList();
+ 
 }

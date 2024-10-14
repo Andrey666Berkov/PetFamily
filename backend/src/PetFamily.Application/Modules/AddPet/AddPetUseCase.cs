@@ -55,17 +55,18 @@ public class AddPetUseCase
 
                 var photoPathId = Guid.NewGuid();
 
-                var pathStorageResult = PhotoPath.Create(photoPathId, extension);
+                var pathStorageResult = FilePath.Create(photoPathId, extension);
                 if (pathStorageResult.IsFailure)
                     return pathStorageResult.Error;
 
                 var photoData = new FileDataDto(
                     photo.Stream,
-                    pathStorageResult.Value.FullPath);
+                    pathStorageResult.Value,
+                    photo.BacketName);
 
                 streamsDataDto.Add(photoData);
 
-                var photoPathToStorage = PhotoPath.Create(photoPathId, extension);
+                var photoPathToStorage = FilePath.Create(photoPathId, extension);
                 var petPhoto = PetPhoto.Create(photoPathToStorage.Value, false);
                 photos.Add(petPhoto.Value);
             }
@@ -73,7 +74,7 @@ public class AddPetUseCase
             var photoDataDto = new PhotoDataDto(streamsDataDto, BUCKET_NAME);
 
             var minioUploadResult = await _filesProvider
-                .UploadFilesAsync(photoDataDto, cancellationToken);
+                .UploadFilesAsync(streamsDataDto, cancellationToken);
 
 
             if (minioUploadResult.IsFailure)

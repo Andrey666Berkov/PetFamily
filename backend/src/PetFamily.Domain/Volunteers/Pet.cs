@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.ValueObjects;
 
@@ -26,7 +27,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         bool isCastrated,
         Requisite requisite,
         SpeciesBreed speciesBreed,
-        PetListPhoto petListPhoto
+        ValueObjectList<PetPhoto> petPhotos
     ) : base(id)
     {
         NickName = nickName;
@@ -41,7 +42,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         IsCastrated = isCastrated;
         SpeciesBreed = speciesBreed;
         AddRequisites(requisite);
-        PhotosList = petListPhoto;
+        Photos = petPhotos;
     }
 
 
@@ -65,14 +66,14 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public StatusHelper StatusHelper { get; private set; }
     public ListRequisites RequisiteList { get; private set; }
     public DateTime CreatedOn => DateTime.Now;
-    public PetListPhoto PhotosList { get; private set; }
+    public ValueObjectList<PetPhoto> Photos { get; private set; }
 
     /// //////////////////////////
 
     //methods
-    public void UpdateFilePhotosList(PetListPhoto photosList)
+    public void UpdateFilePhotosList(ValueObjectList<PetPhoto> photosList)
     {
-        PhotosList = photosList;
+        Photos = photosList;
     }
 
     public void AddRequisites(Requisite requisite)
