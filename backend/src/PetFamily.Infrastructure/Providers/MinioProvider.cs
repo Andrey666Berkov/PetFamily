@@ -18,8 +18,10 @@ public class MinioProvider : IFilesProvider
     private readonly IMinioClient _minioClient;
     private readonly ILogger<MinioProvider> _logger;
 
-    public async Task IfBucketNotExistCreateBucket(
-        IEnumerable<FileDataDto> filesData, CancellationToken cancellationToken = default)
+    /// /////////////////////////
+    public async Task IfBucketsNotExistCreateBucket(
+        IEnumerable<FileDataDto> filesData,
+        CancellationToken cancellationToken)
     {
         HashSet<string> buckets = [..filesData.Select(x => x.BucketName)];
         foreach (var busket in buckets)
@@ -36,6 +38,7 @@ public class MinioProvider : IFilesProvider
         }
     }
 
+    /// /////////////////////////
     private async Task<Result<FilePath, Error>> PutObject(
         FileDataDto fileDataDto,
         SemaphoreSlim semaphoreSlim,
@@ -55,13 +58,18 @@ public class MinioProvider : IFilesProvider
         catch (Exception e)
         {
             _logger.LogError(
-                e, "Fail to upload file in minio with path {path} with backet {backet} ",
+                e, "Fail to upload file in minio with path {path} with bucket {backet} ",
                 fileDataDto.FilePath.FullPath,
                 fileDataDto.BucketName);
-            return Error.Failure("file.ipload", "Fail to upload file in minio");
+            return Error.Failure("file.upload", "Fail to upload file in minio");
+        }
+        finally
+        {
+            semaphoreSlim.Release();
         }
     }
 
+    /// /////////////////////////
     public MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logger)
     {
         _minioClient = minioClient;
@@ -76,7 +84,7 @@ public class MinioProvider : IFilesProvider
         var filesList = filesData.ToList();
         try
         {
-            await IfBucketNotExistCreateBucket(filesList, cancellationToken);
+            await IfBucketsNotExistCreateBucket(filesList, cancellationToken);
 
             var tasks = filesList.Select(async file =>
                 await PutObject(file, semaphoreSlim, cancellationToken));
@@ -97,12 +105,10 @@ public class MinioProvider : IFilesProvider
             return Error.Failure("FileDataDto upload failed",
                 "Fail to upload file in minio");
         }
-        
     }
 
-
     public async Task<Result<string, Error>> GetFileAsync(
-        PresignedGetObjectArgsDto getObjectDto,
+        GetPetDto getObjectDto,
         CancellationToken cancellationToken = default)
     {
         try
@@ -114,7 +120,7 @@ public class MinioProvider : IFilesProvider
 
             var presignetGetObjectArgs = new PresignedGetObjectArgs()
                 .WithBucket(getObjectDto.Bucket)
-                .WithObject(getObjectDto.petId.ToString())
+                .WithObject(getObjectDto.PetId.ToString())
                 .WithExpiry(1000)
                 .WithHeaders(reqParams);
 

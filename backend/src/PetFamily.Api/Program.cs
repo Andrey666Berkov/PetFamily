@@ -30,8 +30,10 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
+/*
 builder.Services.AddFluentValidationAutoValidation(con =>
     con.OverrideDefaultResultFactoryWith<CustomResultFactory>());
+    */
 
 var app = builder.Build();
 

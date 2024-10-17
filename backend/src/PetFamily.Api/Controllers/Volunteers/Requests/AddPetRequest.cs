@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Api.Contract;
+﻿namespace PetFamily.Api.Controllers.Volunteers.Requests;
 
 public record AddPetRequest(
     IFormFileCollection Photos,
@@ -9,7 +9,8 @@ public record AddPetRequest(
     double Weight,
     int Height,
     int NumberPhone,
-    bool IsCastrated);
+    bool IsCastrated,
+    string Backet);
 
 public record AddressRequest(string Street, string Country, string City);
 

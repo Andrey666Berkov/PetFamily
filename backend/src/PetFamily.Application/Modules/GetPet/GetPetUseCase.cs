@@ -5,6 +5,7 @@ using PetFamily.Application.FileProvider;
 using PetFamily.Application.Providers;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Modules.GetPet;
@@ -25,34 +26,32 @@ public class GetPetUseCase
     }
 
     public async Task<Result<Pet, Error>> GetPet(
-        PresignedGetObjectArgsDto presignedGetObjectArgsDto,
+        GetPetDto getPetDto,
         CancellationToken cancellationToken)
     {
         //minio
         var petResult= await _filesProvider
-            .GetFileAsync(presignedGetObjectArgsDto, cancellationToken);
-        
+            .GetFileAsync(getPetDto, cancellationToken);
         
         //VolunteerRepository
         var volunteerResult=await _volunteerRepository
-            .GetById(VolunteerId.Create(presignedGetObjectArgsDto.volunteerId),cancellationToken);
+            .GetById(VolunteerId.Create(getPetDto.VolunteerId),cancellationToken);
         if(volunteerResult.IsFailure)
             return volunteerResult.Error;
         
         var pet=volunteerResult.Value.Pets
-            .FirstOrDefault(p=>p.Id.Value==presignedGetObjectArgsDto.petId);
+            .FirstOrDefault(p=>p.Id.Value==getPetDto.PetId);
 
         if (pet == null)
-            return Errors.General.NotFound(presignedGetObjectArgsDto.petId);
+            return Errors.General.NotFound(getPetDto.PetId);
 
         var photoPathResult = FilePath.CreateOfString(petResult.Value);
-        var petPhotoResult=PetPhoto.Create(photoPathResult.Value, false);
-        var petPhotos=new List<PetPhoto>();
-        petPhotos.Add(petPhotoResult.Value);
-        var petListPhoto = PetListPhoto.Create(petPhotos);
+        var petPhotorResult = PetPhoto.Create(photoPathResult.Value, false);
+        var listPhot=new List<PetPhoto>();
+        listPhot.Add(petPhotorResult.Value);
+        var photos= new ValueObjectList<PetPhoto>(listPhot);
         
-        
-        pet.UpdateFilePhotosList(petListPhoto.Value);
+        pet.UpdateFilePhotosList(photos);
 
         return pet;
     }

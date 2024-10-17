@@ -27,12 +27,12 @@ public class CreateVolunteerUseCase
     }
    //method Create
     public async Task<Result<Guid, Error>> Create(
-        CreateVolunteerRequest request,
+        CreateVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {
         //валидация
         var valunteerNameResult = await _volunteerRepository
-            .GetByName(request.Initional.FirstName);
+            .GetByName(command.Initional.FirstName);
 
         if (valunteerNameResult.IsSuccess)
             return Errors.Volunteers.AllReadyExist();
@@ -40,10 +40,10 @@ public class CreateVolunteerUseCase
         //создание доменной модели
         //ListRequisites
         Result<ListRequisites, Error> listRequisitesResult = ListRequisites.Empty();
-        if(request.requisitesDto is not null)
+        if(command.RequisitesDto is not null)
         {
             var requisites = new List<Requisite>();
-            foreach (var requisiteDto in request.requisitesDto)
+            foreach (var requisiteDto in command.RequisitesDto)
             {
                 var requisite=Requisite
                     .Create(requisiteDto.Title, requisiteDto.Description);
@@ -56,10 +56,10 @@ public class CreateVolunteerUseCase
         //ListsocialNetworkResult
         Result<ListSocialNetwork, Error> socilanetworksResult 
             = ListSocialNetwork.Empty();
-        if(request.SocialNetworkDto is not null)
+        if(command.SocialNetworkDto is not null)
         {
             var socilaNetworks = new List<SocialNetwork>();
-            foreach (var socialDto in request.SocialNetworkDto)
+            foreach (var socialDto in command.SocialNetworkDto)
             {
                 var socilaNetwork=SocialNetwork
                     .Create(socialDto.Name, socialDto.Link);
@@ -70,27 +70,27 @@ public class CreateVolunteerUseCase
         }
         
         //PhoneNumber
-        var phoneNumber = PhoneNumber.Create(request.PhoneNumber).Value;
+        var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
 
         //Email
-        var email = Email.Create(request.Email).Value;
+        var email = Email.Create(command.Email).Value;
 
         //volunter
         var volunteerId = VolunteerId.CreateNew();
         
         //initials
         var initials = Initials.Create(
-            request.Initional.FirstName, 
-            request.Initional.LastName, 
-            request.Initional.MiddleName);
+            command.Initional.FirstName, 
+            command.Initional.LastName, 
+            command.Initional.MiddleName);
 
         var volunteerResult = Volunteer.Create(
             volunteerId,
             initials.Value,
             email,
-            request.Description,
+            command.Description,
             phoneNumber,
-            request.Experience,
+            command.Experience,
             listRequisitesResult.Value,
             socilanetworksResult.Value
             );

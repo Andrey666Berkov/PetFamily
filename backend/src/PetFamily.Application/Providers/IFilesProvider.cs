@@ -12,7 +12,7 @@ public interface IFilesProvider
         CancellationToken cancellationToken = default);
 
     Task<Result<string, Error>> GetFileAsync(
-        PresignedGetObjectArgsDto getObjectDto,
+        GetPetDto getObjectDto,
         CancellationToken cancellationToken = default);
 
     Task<Result<string, Error>> DeletePetAsync(

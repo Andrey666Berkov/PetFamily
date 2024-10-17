@@ -5,6 +5,7 @@ using PetFamily.Application.FileProvider;
 using PetFamily.Application.Providers;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.ValueObjects;
 using PetFamily.Domain.Volunteers;
@@ -36,7 +37,7 @@ public class AddPetUseCase
         FileDataDtoCommand command,
         CancellationToken cancellationToken = default)
     {
-        var transaction = _unitOfWork.BeginTransaction(cancellationToken);
+        var transaction =await _unitOfWork.BeginTransaction(cancellationToken);
 
         try
         {
@@ -94,7 +95,6 @@ public class AddPetUseCase
                 SpeciesId.CreateEmpty(),
                 BreedId.CreateEmpty().Value).Value;
 
-
             var pet = new Pet(
                 petId,
                 command.NickName,
@@ -109,7 +109,7 @@ public class AddPetUseCase
                 command.IsCastrated,
                 requisite,
                 speciesBreed,
-                new PetListPhoto(photos));
+                new ValueObjectList<PetPhoto>(photos));
 
             volunteerResult.Value.AddPet(pet);
             await _unitOfWork.SaveChanges(cancellationToken);
@@ -117,7 +117,7 @@ public class AddPetUseCase
             /*var volunteer = await _volunteerRepository
                 .Save(volunteerResult.Value, cancellationToken);*/
 
-            transaction.Commit();
+             transaction.Commit();
             return pet.Id.Value;
         }
         catch (Exception ex)
@@ -125,7 +125,7 @@ public class AddPetUseCase
             _logger.LogError(ex, "Can not add pet to module - {id} in transaction",
                 command.VolunteerId);
 
-            transaction.RollBack(cancellationToken);
+            transaction.Rollback();
 
             return Error.Failure("Can not add pet to module - {id}", "volunteer.pet.failure");
         }

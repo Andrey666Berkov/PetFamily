@@ -13,7 +13,6 @@ public class UnitOfWork : IUnitOfWork
         _dbContext = dbContext;
     }
 
-
     public async Task<IDbTransaction> BeginTransaction(
         CancellationToken cancellationToken = default)
     {

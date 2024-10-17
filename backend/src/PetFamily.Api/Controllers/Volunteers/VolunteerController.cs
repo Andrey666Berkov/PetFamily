@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
-using PetFamily.Api.Contract;
+using Microsoft.AspNetCore.Mvc;
+using PetFamily.Api.Controllers.Volunteers.Requests;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
 using PetFamily.Application.FileProvider;
@@ -12,11 +13,8 @@ using PetFamily.Application.Modules.GetPet;
 using PetFamily.Application.Modules.UpdateVolunteerMainInfo;
 using PetFamily.Application.Modules.UpdateVolunteerSocialNetwork;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Api.Controllers;
-
-using Microsoft.AspNetCore.Mvc;
+namespace PetFamily.Api.Controllers.Volunteers;
 
 public class VolunteerController : ApplicationController
 {
@@ -45,7 +43,7 @@ public class VolunteerController : ApplicationController
     {
         var bucket = "photos";
         var presignedGetObjectArgsDto =
-            new PresignedGetObjectArgsDto(bucket, petid, volunteerid);
+            new GetPetDto(bucket, petid, volunteerid);
 
         var petResult = await getPetUseCase.GetPet(
             presignedGetObjectArgsDto,
@@ -64,7 +62,7 @@ public class VolunteerController : ApplicationController
         CancellationToken cancellationToken = default)
     {
         await using var process = new FormPhotoProcessor();
-        var petPhotos = process.Process(request.Photos);
+        var petPhotos = process.Process(request.Photos, request.Backet);
 
         var address = new AddressDto(
             request.Address.Street,
@@ -88,10 +86,8 @@ public class VolunteerController : ApplicationController
             request.Height,
             request.NumberPhone,
             request.IsCastrated);
-        
-        
 
-        Result<Guid, Error> providerUseCaseResult = await addPetUseCase.ProviderUseCase(
+        var providerUseCaseResult = await addPetUseCase.ProviderUseCase(
             commands,
             cancellationToken);
 
@@ -104,19 +100,20 @@ public class VolunteerController : ApplicationController
     [HttpPost]
     public async Task<ActionResult> Create(
         [FromServices] CreateVolunteerUseCase createVolunteerUseCase,
-        // [FromServices] CreateVolunteerRequestValidator volunteerValidator,
-        [FromBody] CreateVolunteerRequest createVolunteerRequest,
+        [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
-        /*var validationResult = await volunteerValidator
-           .ValidateAsync(createVolunteerRequest, cancellationToken);
-
-      if (!validationResult.IsValid)
-       {
-           return validationResult.ToValidationErrorResponse();
-       }*/
-        Result<Guid, Error> result = await createVolunteerUseCase
-            .Create(createVolunteerRequest, cancellationToken);
+        var command = new CreateVolunteerCommand(
+            request.Initional,
+            request.Email,
+            request.Description,
+            request.PhoneNumber,
+            request.Experience,
+            request.RequisitesDto,
+            request.SocialNetworkDto);
+        
+        var result = await createVolunteerUseCase
+            .Create(command, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -128,19 +125,17 @@ public class VolunteerController : ApplicationController
     public async Task<ActionResult> Update(
         [FromRoute] Guid id,
         [FromServices] UpdateVolunteerInfoUseCase updateVolunteer,
-        [FromBody] UpdateVolunteerInfoDTO dto,
-        [FromServices] IValidator<UpdateVolunteerInfoRequest> validator,
+        [FromBody] UpdateVolunteerRequest req,
+        [FromServices] IValidator<UpdateVolunteerInfoCommand> validator,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateVolunteerInfoRequest(id, dto);
+        
+        var updateCommand = new UpdateVolunteerInfoCommand(id, req.Initials, req.Description);
 
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid == false)
-        {
-            return validationResult.ToValidationErroResponse();
-        }
+        var validationResult = await validator.ValidateAsync(updateCommand, cancellationToken);
+      
 
-        var result = await updateVolunteer.Update(request, cancellationToken);
+        var result = await updateVolunteer.Update(updateCommand, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -152,19 +147,13 @@ public class VolunteerController : ApplicationController
     public async Task<ActionResult> UpdateSocialNetwork(
         [FromRoute] Guid id,
         [FromServices] UpdateVolunteerSocialNetworkUseCase updateVolunteer,
-        [FromBody] UpdateSocialNetworkDto dto,
-        [FromServices] IValidator<UpdateSocialNetworkRequest> validator,
+        [FromBody] UpdateSocialRequest dto,
+        [FromServices] IValidator<UpdateSocialNetworkCommand> validator,
         CancellationToken cancellationToken = default)
     {
-        var request = new UpdateSocialNetworkRequest(id, dto);
+        var command = new UpdateSocialNetworkCommand(id, dto.SocialNetworks);
 
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid == false)
-        {
-            return validationResult.ToValidationErroResponse();
-        }
-
-        var result = await updateVolunteer.Update(request, cancellationToken);
+        var result = await updateVolunteer.Update(command, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -176,18 +165,10 @@ public class VolunteerController : ApplicationController
     public async Task<ActionResult> Delete(
         [FromRoute] Guid id,
         [FromServices] DeleteVolunteerUseCase deleteVolunteer,
-        // [FromBody] DeleteVolunteerRequest requestDto,
-        [FromServices] IValidator<DeleteVolunteerRequest> validator,
+        [FromServices] IValidator<DeleteVolunteerCommand> validator,
         CancellationToken cancellationToken = default)
     {
-        var request = new DeleteVolunteerRequest(id);
-
-        var validationResult = await validator
-            .ValidateAsync(request, cancellationToken);
-        if (validationResult.IsValid == false)
-        {
-            return validationResult.ToValidationErroResponse();
-        }
+        var request = new DeleteVolunteerCommand(id);
 
         var result = await deleteVolunteer
             .Delete(request, cancellationToken);

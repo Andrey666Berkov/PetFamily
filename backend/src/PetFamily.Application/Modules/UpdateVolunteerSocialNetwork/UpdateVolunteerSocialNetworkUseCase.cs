@@ -19,16 +19,16 @@ public class UpdateVolunteerSocialNetworkUseCase
     }
 
     public async Task<Result<Volunteer, Error>> Update(
-        UpdateSocialNetworkRequest request
+        UpdateSocialNetworkCommand command
         , CancellationToken cancellationToken)
     {
-        var volunteerId = VolunteerId.Create(request.VolunteerId);
+        var volunteerId = VolunteerId.Create(command.VolunteerId);
         
         var volunteerResult =  _repository.GetById(volunteerId, cancellationToken).Result;
         if (volunteerResult.IsFailure)
-            return  Errors.General.NotFound(request.VolunteerId);
+            return  Errors.General.NotFound(command.VolunteerId);
 
-        volunteerResult.Value.UpdateSocialNetwork(request.SocialNetworks.SocialNetworks);
+        volunteerResult.Value.UpdateSocialNetwork(command.SocialNetworks);
         
         await _repository.Save(volunteerResult.Value, cancellationToken);
         

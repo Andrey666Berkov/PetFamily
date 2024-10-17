@@ -6,15 +6,15 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Modules.CreateVolunteer;
 
-public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest>
+public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerRequest>
 {
-    public CreateVolunteerRequestValidator()
+    public CreateVolunteerCommandValidator()
     {
         RuleFor(cvr => cvr.Email).MustBeValueObject(Email.Create);
 
         RuleFor(cvr => cvr.PhoneNumber).MustBeValueObject(PhoneNumber.Create);
 
-        RuleForEach(cvr => cvr.requisitesDto)
+        RuleForEach(cvr => cvr.RequisitesDto)
             .MustBeValueObject(r =>
                 Requisite.Create(r.Title, r.Description));
 

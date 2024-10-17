@@ -5,22 +5,18 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Modules.UpdateVolunteerSocialNetwork;
 
-public class UpdateVolunteerSocialNetworkValidate:AbstractValidator<UpdateSocialNetworkRequest>
+public class UpdateVolunteerSocialNetworkValidate 
+    :AbstractValidator<UpdateSocialNetworkCommand>
 {
     public UpdateVolunteerSocialNetworkValidate()
     {
-        RuleFor(vsn=>vsn.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
-      
-    }
-}
-
-public class UpdateVolunteerSocialNetworkDTOValidate:AbstractValidator<UpdateSocialNetworkDto>
-{
-    public UpdateVolunteerSocialNetworkDTOValidate()
-    {
+        RuleFor(vsn=>vsn.VolunteerId)
+            .NotEmpty()
+            .WithError(Errors.General.ValueIsRequired());
         RuleForEach(vsn=>vsn.SocialNetworks)
-            .MustBeValueObject(s=>SocialNetwork.Create(s.Name, s.Link));
+            .MustBeValueObject(s=>
+                SocialNetwork.Create(s.Name, s.Link));
 
-        
     }
 }
+
