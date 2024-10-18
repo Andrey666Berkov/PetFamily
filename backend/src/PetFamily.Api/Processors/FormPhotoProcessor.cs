@@ -1,19 +1,21 @@
-﻿using PetFamily.Application.Modules.AddPet;
+﻿using PetFamily.Application.Dtos;
+using PetFamily.Application.Modules.AddPet;
+using PetFamily.Application.Modules.UploadFilesToPet;
 
 namespace PetFamily.Api.Processors;
 
 public class FormPhotoProcessor:IAsyncDisposable
 
 {
-    private readonly List<CreateFileCommand> _photosDto =[];
+    private readonly List<UploadFileDto> _photosDto =[];
 
-    public List<CreateFileCommand> Process(IFormFileCollection photosRequest, string backet)
+    public List<UploadFileDto> Process(IFormFileCollection files)
     {
-        foreach (var photo in photosRequest)
+        foreach (var file in files)
         {
-            Stream photoStream=photo.OpenReadStream();
-            CreateFileCommand createFileCommand=new(photoStream, photo.FileName, backet);
-            _photosDto.Add(createFileCommand);
+            Stream photoStream=file.OpenReadStream();
+            UploadFileDto uploadFileDto=new(photoStream, file.FileName);
+            _photosDto.Add(uploadFileDto);
         }
         return _photosDto;
     }

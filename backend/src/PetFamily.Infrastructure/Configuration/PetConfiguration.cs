@@ -26,18 +26,6 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
 
-        /*builder.Property(t=>t.Breed)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
-
-        builder.Property(t=>t.Color)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
-
-        builder.Property(t=>t.InfoHelth)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);*/
-
         builder.OwnsOne(p => p.RequisiteList, lb =>
         {
             lb.ToJson("requisites");
@@ -52,6 +40,13 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
             });
+        });
+
+        builder.ComplexProperty(s => s.SerialNumber, lb =>
+        {
+            lb.Property(l => l.Value)
+                .IsRequired()
+                .HasColumnName("serial_number");
         });
 
         builder.OwnsOne(p => p.Photos, po =>

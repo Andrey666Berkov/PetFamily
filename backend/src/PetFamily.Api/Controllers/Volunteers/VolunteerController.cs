@@ -12,6 +12,7 @@ using PetFamily.Application.Modules.DeleteVolunteer;
 using PetFamily.Application.Modules.GetPet;
 using PetFamily.Application.Modules.UpdateVolunteerMainInfo;
 using PetFamily.Application.Modules.UpdateVolunteerSocialNetwork;
+using PetFamily.Application.Modules.UploadFilesToPet;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Api.Controllers.Volunteers;
@@ -54,16 +55,34 @@ public class VolunteerController : ApplicationController
         return Ok(petResult.Value);
     }
 
-    [HttpPost("{modelId:guid}/add-pet")]
-    public async Task<ActionResult> AddPet(
-        [FromRoute] Guid modelId,
-        [FromForm] AddPetRequest request, //Т.к. IFormFile из фромбоди получить не можем
-        [FromServices] AddPetUseCase addPetUseCase,
+    [HttpPost("{id:guid}/pet/{petId:guid}/files")]
+    public async Task<ActionResult> UploadFilesToPet(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromForm] IFormFileCollection files,
+        [FromServices] UploadFilesPetUseCase useCase,
         CancellationToken cancellationToken = default)
     {
         await using var process = new FormPhotoProcessor();
-        var petPhotos = process.Process(request.Photos, request.Backet);
+        var petPhotos = process.Process(files);
 
+        var command = new UploadFilesToPetCommand(id, petId, petPhotos);
+        
+        var result= await useCase.UpLoadFile(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+    
+
+    [HttpPost("{valunteerId:guid}/add-pet")]
+    public async Task<ActionResult> AddPet(
+        [FromRoute] Guid valunteerId,
+        [FromBody] AddPetRequest request, //Т.к. IFormFile из фромбоди получить не можем
+        [FromServices] AddPetUseCase addPetUseCase,
+        CancellationToken cancellationToken = default)
+    {
         var address = new AddressDto(
             request.Address.Street,
             request.Address.Country,
@@ -75,17 +94,11 @@ public class VolunteerController : ApplicationController
 
         var path = Guid.NewGuid().ToString();
 
-        var commands = new FileDataDtoCommand(
-            modelId,
-            petPhotos,
+        var commands = request.CreateCommand(
+            valunteerId,
             address,
-            requisiteDto,
-            request.NickName,
-            request.Description,
-            request.Weight,
-            request.Height,
-            request.NumberPhone,
-            request.IsCastrated);
+            requisiteDto);
+            
 
         var providerUseCaseResult = await addPetUseCase.ProviderUseCase(
             commands,
@@ -103,14 +116,7 @@ public class VolunteerController : ApplicationController
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
-        var command = new CreateVolunteerCommand(
-            request.Initional,
-            request.Email,
-            request.Description,
-            request.PhoneNumber,
-            request.Experience,
-            request.RequisitesDto,
-            request.SocialNetworkDto);
+        var command = request.CreateCommand();
         
         var result = await createVolunteerUseCase
             .Create(command, cancellationToken);

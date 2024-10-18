@@ -2,7 +2,6 @@
 using FluentValidation.Validators;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.Providers;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -51,7 +50,7 @@ public class GetPetUseCase
         listPhot.Add(petPhotorResult.Value);
         var photos= new ValueObjectList<PetPhoto>(listPhot);
         
-        pet.UpdateFilePhotosList(photos);
+        pet.UpdateFiles(photos);
 
         return pet;
     }

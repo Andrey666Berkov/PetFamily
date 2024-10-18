@@ -2,6 +2,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.Modules.UpdateVolunteerMainInfo;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
@@ -13,29 +14,37 @@ namespace PetFamily.Application.Modules.CreateVolunteer;
 public class CreateVolunteerUseCase
 {
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IValidator<CreateVolunteerCommand> _validator;
     private readonly ILogger<UpdateVolunteerInfoUseCase> _logger;
 
     //ctor
     public CreateVolunteerUseCase(
         IVolunteerRepository volunteerRepository,
+        IValidator<CreateVolunteerCommand> validator,
         ILogger<UpdateVolunteerInfoUseCase> logger
        )
     {
         _volunteerRepository = volunteerRepository;
+        _validator = validator;
         _logger = logger;
         
     }
    //method Create
-    public async Task<Result<Guid, Error>> Create(
+    public async Task<Result<Guid, ErrorList>> Create(
         CreateVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {
         //валидация
+        var commandValidator= await _validator
+            .ValidateAsync(command, cancellationToken);
+        if (commandValidator.IsValid == false)
+            commandValidator.ToErrorList();
+        
         var valunteerNameResult = await _volunteerRepository
             .GetByName(command.Initional.FirstName);
 
         if (valunteerNameResult.IsSuccess)
-            return Errors.Volunteers.AllReadyExist();
+            return Errors.Volunteers.AllReadyExist().ToErrorList();
 
         //создание доменной модели
         //ListRequisites
@@ -96,14 +105,17 @@ public class CreateVolunteerUseCase
             );
 
         if (volunteerResult.IsFailure)
-            return Errors.General.ValueIsInavalid("Volunteer");
+            return Errors.General.ValueIsInavalid("Volunteer").ToErrorList();
 
         //сохранение в бд
-        await _volunteerRepository.Add(volunteerResult.Value, cancellationToken);
+        await _volunteerRepository
+            .Add(volunteerResult.Value, cancellationToken);
+        
         _logger.LogInformation("Created volunteer name={ volunteerResult.Value.FirstName} " +
-        "id={volunteerResult.Value.Id.Value}",
-          volunteerResult.Value.Initials.FirstName, volunteerResult.Value.Id.Value);
+                               "id={volunteerResult.Value.Id.Value}",
+          volunteerResult.Value.Initials.FirstName,
+          volunteerResult.Value.Id.Value);
 
-        return Result.Success<Guid, Error>(volunteerResult.Value.Id.Value);
+        return Result.Success<Guid, ErrorList>(volunteerResult.Value.Id.Value);
     }
 }

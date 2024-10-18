@@ -2,7 +2,6 @@
 
 public record FileDataDtoCommand(
     Guid VolunteerId,
-    IEnumerable<CreateFileCommand> Photos,
     AddressDto Address,
     RequisiteDto requisite,
     string NickName,
@@ -12,6 +11,5 @@ public record FileDataDtoCommand(
     int NumberPhone,
     bool IsCastrated);
 
-public record CreateFileCommand(Stream Stream, string FilePath, string BacketName);
 public record AddressDto(string Street, string Country, string City);
 public record RequisiteDto(string Title, string Description);

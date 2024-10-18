@@ -58,12 +58,6 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
         });
 
-        /*builder.Property(v => v.RequisitesList)
-            .HasConversion(
-                list => JsonSerializer.Serialize(list, JsonSerializerOptions.Default),
-                value => JsonSerializer
-                    .Deserialize<ListRequisites>(value, JsonSerializerOptions.Default)!);*/
-        
         builder.OwnsOne(p => p.RequisitesList, po =>
         {
             po.ToJson("requisites");
@@ -78,12 +72,6 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
             });
         });
-
-        /*builder.Property(v => v.SocialNetworkList)
-            .HasConversion(
-                list => JsonSerializer.Serialize(list, JsonSerializerOptions.Default),
-                value => JsonSerializer
-                    .Deserialize<ListSocialNetwork>(value, JsonSerializerOptions.Default)!);*/
 
         builder.OwnsOne(p => p.SocialNetworkList, po =>
         {
@@ -104,9 +92,6 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             .WithOne()
             .HasForeignKey("volunteer_id")
             .OnDelete(DeleteBehavior.Cascade);
-
-        //builder.Navigation(p => p.Pets).AutoInclude();
-        //т.к. в GetByID У меня include pets
 
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.Providers;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
@@ -49,7 +48,7 @@ public class MinioProvider : IFilesProvider
             .WithBucket(fileDataDto.BucketName)
             .WithStreamData(fileDataDto.Stream)
             .WithObjectSize(fileDataDto.Stream.Length)
-            .WithBucket(fileDataDto.FilePath.FullPath);
+            .WithObject(fileDataDto.FilePath.FullPath);
         try
         {
             await _minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
@@ -94,13 +93,17 @@ public class MinioProvider : IFilesProvider
             if (taskresults.Any(p => p.IsFailure))
                 return taskresults.First().Error;
 
-            var results = taskresults.Select(p => p.Value).ToList();
-
+            var results = taskresults
+                .Select(p => p.Value)
+                .ToList();
+            
+            _logger.LogInformation("Upload files: {files}",results
+                .Select(p=>p.FullPath));
+            
             return results;
         }
         catch (Exception ex)
         {
-            //удаление лишних файлов
             _logger.LogError(ex, "Fail to upload file in minio");
             return Error.Failure("FileDataDto upload failed",
                 "Fail to upload file in minio");

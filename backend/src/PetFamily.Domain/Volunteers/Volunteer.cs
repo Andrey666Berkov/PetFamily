@@ -46,10 +46,15 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public ListRequisites RequisitesList { get; private set; } = null!;
     public ListSocialNetwork SocialNetworkList { get; private set; }
 
-
-    /// //////////////////////////
-    /// /////////////////////////////////
     //methods
+    public Result<Pet, Error> GetPetById(PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(p => p.Id == petId);
+        if (pet == null)
+            return Errors.General.NotFound(petId.Value);
+        return pet;
+    }
+
     public void UpdateSocialNetwork(IEnumerable<SocialNetwork> socialNetworks)
     {
         SocialNetworkList = ListSocialNetwork.Create(socialNetworks).Value;
@@ -89,10 +94,28 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         SocialNetworkList.SocialNetworks.Append(socialNetwork);
     }
 
-    public int AddPet(Pet pet)
+    public UnitResult<Error> AddPet(Pet pet)
     {
+        var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+        if (serialNumberResult.IsFailure)
+            return Errors.General.ValueIsInavalid("Invalid serial number");
+
+        pet.SetSerialNumber(serialNumberResult.Value);
+
         _pets.Add(pet);
-        return _pets.Count;
+        return Result.Success<Error>();
+    }
+    
+    public UnitResult<Error> MovieSerialNumberPet(Pet pet, SerialNumber serialNumber)
+    {
+        var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+        if (serialNumberResult.IsFailure)
+            return Errors.General.ValueIsInavalid("Invalid serial number");
+
+        pet.SetSerialNumber(serialNumberResult.Value);
+
+        _pets.Add(pet);
+        return Result.Success<Error>();
     }
 
     public int DeletePet(Pet pet)
@@ -100,6 +123,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         _pets.Remove(pet);
         return _pets.Count;
     }
+
     public int GetNumPets() => _pets.Count;
 
     public int GetNumPetNeedHelp()
@@ -143,10 +167,6 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     {
         if (string.IsNullOrWhiteSpace(description))
             return Errors.General.ValueIsInavalid(nameof(description));
-
-        // if (numberPhone.ToString().Length < 5 || numberPhone.ToString().Length > 20)
-        //    return Errors.General.ValueIsInavalid(nameof(numberPhone));
-
 
         var volunteer = new Volunteer(
             id,

@@ -6,7 +6,7 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Modules.CreateVolunteer;
 
-public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerRequest>
+public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
 {
     public CreateVolunteerCommandValidator()
     {

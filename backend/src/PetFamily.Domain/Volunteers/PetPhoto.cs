@@ -11,8 +11,8 @@ public record PetPhoto
     private PetPhoto()
     {
     }
-
-    private PetPhoto(FilePath filePathToStorage, bool isFavorite)
+    
+    public PetPhoto(FilePath filePathToStorage, bool isFavorite=false)
     {
         FilePathToStorage = filePathToStorage;
         IsFavorite = isFavorite;

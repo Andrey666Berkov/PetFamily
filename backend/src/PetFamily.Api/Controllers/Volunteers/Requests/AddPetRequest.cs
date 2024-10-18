@@ -1,7 +1,9 @@
-﻿namespace PetFamily.Api.Controllers.Volunteers.Requests;
+﻿using PetFamily.Application.Modules.AddPet;
+using PetFamily.Application.Modules.UploadFilesToPet;
+
+namespace PetFamily.Api.Controllers.Volunteers.Requests;
 
 public record AddPetRequest(
-    IFormFileCollection Photos,
     AddressRequest Address,
     RequisiteRequest Requisite,
     string NickName,
@@ -10,7 +12,15 @@ public record AddPetRequest(
     int Height,
     int NumberPhone,
     bool IsCastrated,
-    string Backet);
+    string Backet)
+{
+    public FileDataDtoCommand CreateCommand(Guid volunteerId,
+        AddressDto address, RequisiteDto requisite )
+    {
+        return new FileDataDtoCommand(volunteerId, address, requisite,  NickName, Description, 
+            Weight, Height, NumberPhone, IsCastrated);
+    }
+}
 
 public record AddressRequest(string Street, string Country, string City);
 

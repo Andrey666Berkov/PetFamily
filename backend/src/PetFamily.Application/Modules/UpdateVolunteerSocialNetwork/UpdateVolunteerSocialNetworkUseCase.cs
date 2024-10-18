@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
@@ -10,23 +12,32 @@ public class UpdateVolunteerSocialNetworkUseCase
 {
     private readonly IVolunteerRepository _repository;
     private readonly ILogger<UpdateVolunteerSocialNetworkUseCase> _logger;
+    private readonly IValidator<UpdateSocialNetworkCommand> _validator;
 
-    public UpdateVolunteerSocialNetworkUseCase(IVolunteerRepository repository, 
-        ILogger<UpdateVolunteerSocialNetworkUseCase> logger )
+    public UpdateVolunteerSocialNetworkUseCase(
+        IVolunteerRepository repository, 
+        ILogger<UpdateVolunteerSocialNetworkUseCase> logger,
+        IValidator<UpdateSocialNetworkCommand> validator)
     {
         _repository = repository;
         _logger = logger;
+        _validator = validator;
     }
 
-    public async Task<Result<Volunteer, Error>> Update(
+    public async Task<Result<Volunteer, ErrorList>> Update(
         UpdateSocialNetworkCommand command
         , CancellationToken cancellationToken)
     {
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        if (validationResult.IsValid==false)
+        {
+            return validationResult.ToErrorList();
+        } 
         var volunteerId = VolunteerId.Create(command.VolunteerId);
         
         var volunteerResult =  _repository.GetById(volunteerId, cancellationToken).Result;
         if (volunteerResult.IsFailure)
-            return  Errors.General.NotFound(command.VolunteerId);
+            return  Errors.General.NotFound(command.VolunteerId).ToErrorList();
 
         volunteerResult.Value.UpdateSocialNetwork(command.SocialNetworks);
         

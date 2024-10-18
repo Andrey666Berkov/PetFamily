@@ -31,7 +31,6 @@ public class DeleteVolunteerUseCase
         CancellationToken cancellationToken = default)
     {
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
-        
         if (validationResult.IsValid==false)
         {
             return validationResult.ToErrorList();
