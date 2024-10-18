@@ -2,11 +2,11 @@
 
 namespace PetFamily.Application.Modules.UpdateVolunteerMainInfo;
 
-public record UpdateVolunteerInfoRequest(Guid VolunteerID, UpdateVolunteerInfoDTO Dto);
-public record UpdateVolunteerInfoDTO(
+public record UpdateVolunteerInfoCommand(
+    Guid VolunteerID, 
     RequesitInitialDto Initials,
     string Description);
-    
+
 public record RequesitInitialDto(
     string FirstName,
     string LastName, 

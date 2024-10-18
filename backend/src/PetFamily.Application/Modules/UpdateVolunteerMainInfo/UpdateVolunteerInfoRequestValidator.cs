@@ -5,19 +5,11 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Modules.UpdateVolunteerMainInfo;
 
-public class UpdateVolunteerInfoRequestValidator : AbstractValidator<UpdateVolunteerInfoRequest>
+public class UpdateVolunteerInfoRequestValidator : AbstractValidator<UpdateVolunteerInfoCommand>
 {
     public UpdateVolunteerInfoRequestValidator()
     {
         RuleFor(cvr => cvr.VolunteerID).NotEmpty().WithError(Errors.General.ValueIsRequired());
-    }
-    
-}
-
-public class UpdateVolunteerInfoDTOValidator : AbstractValidator<UpdateVolunteerInfoDTO>
-{
-    public UpdateVolunteerInfoDTOValidator()
-    {
         RuleFor(cvr => cvr.Initials)
             .MustBeValueObject(c => Initials
                 .Create(c.FirstName, c.LastName, c.MiddleName));
@@ -26,3 +18,5 @@ public class UpdateVolunteerInfoDTOValidator : AbstractValidator<UpdateVolunteer
     }
     
 }
+
+
