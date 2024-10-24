@@ -1,5 +1,4 @@
-﻿using PetFamily.Application.Modules.AddPet;
-using PetFamily.Application.Modules.UploadFilesToPet;
+﻿using PetFamily.Application.PetManagment.UseCases.AddPet;
 
 namespace PetFamily.Api.Controllers.Volunteers.Requests;
 

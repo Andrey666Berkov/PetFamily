@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Modules.UpdateVolunteerMainInfo;
+﻿using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
 
 namespace PetFamily.Api.Controllers.Volunteers.Requests;
 

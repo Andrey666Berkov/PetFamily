@@ -8,6 +8,7 @@ using Minio.DataModel.Args;
 using PetFamily.Application.FileProvider;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
+using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Infrastructure.Providers;
 
@@ -19,10 +20,10 @@ public class MinioProvider : IFilesProvider
 
     /// /////////////////////////
     public async Task IfBucketsNotExistCreateBucket(
-        IEnumerable<FileDataDto> filesData,
+        IEnumerable<string> backets,
         CancellationToken cancellationToken)
     {
-        HashSet<string> buckets = [..filesData.Select(x => x.BucketName)];
+        HashSet<string> buckets = [..backets];
         foreach (var busket in buckets)
         {
             var bucketexistArgs = new BucketExistsArgs().WithBucket(busket);
@@ -45,21 +46,21 @@ public class MinioProvider : IFilesProvider
     {
         await semaphoreSlim.WaitAsync(cancellationToken);
         var putObjectArgs = new PutObjectArgs()
-            .WithBucket(fileDataDto.BucketName)
+            .WithBucket(fileDataDto.Info.BucketName)
             .WithStreamData(fileDataDto.Stream)
             .WithObjectSize(fileDataDto.Stream.Length)
-            .WithObject(fileDataDto.FilePath.FullPath);
+            .WithObject(fileDataDto.Info.FilePath.FullPath);
         try
         {
             await _minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
-            return fileDataDto.FilePath;
+            return fileDataDto.Info.FilePath;
         }
         catch (Exception e)
         {
             _logger.LogError(
                 e, "Fail to upload file in minio with path {path} with bucket {backet} ",
-                fileDataDto.FilePath.FullPath,
-                fileDataDto.BucketName);
+                fileDataDto.Info.FilePath.FullPath,
+                fileDataDto.Info.BucketName);
             return Error.Failure("file.upload", "Fail to upload file in minio");
         }
         finally
@@ -79,11 +80,14 @@ public class MinioProvider : IFilesProvider
         IEnumerable<FileDataDto> filesData,
         CancellationToken cancellationToken = default)
     {
+       // return Errors.General.NotFound();
         var semaphoreSlim = new SemaphoreSlim(MAX_PARALLEL);
         var filesList = filesData.ToList();
         try
         {
-            await IfBucketsNotExistCreateBucket(filesList, cancellationToken);
+            await IfBucketsNotExistCreateBucket(
+                filesData.Select(x => x.Info.BucketName)
+                , cancellationToken);
 
             var tasks = filesList.Select(async file =>
                 await PutObject(file, semaphoreSlim, cancellationToken));
@@ -108,6 +112,40 @@ public class MinioProvider : IFilesProvider
             return Error.Failure("FileDataDto upload failed",
                 "Fail to upload file in minio");
         }
+    }
+
+   public async Task<UnitResult<Error>> RemoveFiles(
+        FileInfo filesInfo,
+        CancellationToken cancellationToken = default)
+    { 
+        try
+        {
+            await IfBucketsNotExistCreateBucket([filesInfo.BucketName], cancellationToken);
+
+            var statArgs=new StatObjectArgs()
+                .WithBucket(filesInfo.BucketName)
+                .WithObject(filesInfo.FilePath.FullPath);
+            
+           var statObject= await _minioClient.StatObjectAsync(statArgs, cancellationToken);
+
+           if (statObject == null)
+               return Result.Success<Error>();
+            
+            var removeObjectArg=new RemoveObjectArgs()
+                .WithBucket(filesInfo.BucketName)
+                .WithObject(filesInfo.FilePath.FullPath);
+            
+            await _minioClient.RemoveObjectAsync(removeObjectArg, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Fail to RemoveFiles in minio");
+            return Error.Failure("DeleteFiles",
+                "Fail to RemoveFiles in minio");
+        }
+
+        return Result.Success<Error>();
+
     }
 
     public async Task<Result<string, Error>> GetFileAsync(

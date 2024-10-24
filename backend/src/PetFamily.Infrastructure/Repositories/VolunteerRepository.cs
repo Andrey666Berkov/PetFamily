@@ -1,17 +1,18 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Modules;
+using PetFamily.Application.PetManagment;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories;
 
 public class VolunteerRepository : IVolunteerRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly WriteDbContext _context;
 
-    public VolunteerRepository(ApplicationDbContext context)
+    public VolunteerRepository(WriteDbContext context)
     {
         _context = context;
     }
@@ -22,6 +23,14 @@ public class VolunteerRepository : IVolunteerRepository
         await _context.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id.Value;
+    }
+    
+    public async Task<Result<IEnumerable<Volunteer>>> GetWithPagination(
+        CancellationToken cancellationToken)
+    {
+        var volunteer = await _context.Volunteers.ToListAsync(cancellationToken);
+        
+        return volunteer;
     }
     
     public async Task<Result<Volunteer, Error>> GetById(
@@ -96,3 +105,8 @@ public class VolunteerRepository : IVolunteerRepository
     }
    
 }
+
+
+
+
+

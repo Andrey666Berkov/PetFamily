@@ -5,20 +5,22 @@ using PetFamily.Api.Controllers.Volunteers.Requests;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.Modules.AddPet;
-using PetFamily.Application.Modules.CreateVolunteer;
-using PetFamily.Application.Modules.DeletePet;
-using PetFamily.Application.Modules.DeleteVolunteer;
-using PetFamily.Application.Modules.GetPet;
-using PetFamily.Application.Modules.UpdateVolunteerMainInfo;
-using PetFamily.Application.Modules.UpdateVolunteerSocialNetwork;
-using PetFamily.Application.Modules.UploadFilesToPet;
+using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+using PetFamily.Application.PetManagment.UseCases.AddPet;
+using PetFamily.Application.PetManagment.UseCases.CreateVolunteer;
+using PetFamily.Application.PetManagment.UseCases.DeletePet;
+using PetFamily.Application.PetManagment.UseCases.DeleteVolunteer;
+using PetFamily.Application.PetManagment.UseCases.GetPet;
+using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
+using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerSocialNetwork;
+using PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Api.Controllers.Volunteers;
 
 public class VolunteerController : ApplicationController
 {
+
     [HttpDelete("{volunteerId:guid}/pet/{petId:guid}")]
     public async Task<ActionResult> DeletePet(
         [FromRoute] Guid volunteerId,

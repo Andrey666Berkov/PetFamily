@@ -30,6 +30,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         ValueObjectList<PetPhoto>? petPhotos
     ) : base(id)
     {
+        
         NickName = nickName;
         Description = description;
         PetType = petType;
@@ -52,7 +53,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
 
     public string NickName { get; private set; } = default!;
     public PetType PetType { get; private set; }
-    public SerialNumber SerialNumber { get; private set; }
+    public Position Position { get; private set; }
     public string Description { get; private set; } = default!;
     public string? Color { get; private set; }
     public string? InfoHelth { get; private set; }
@@ -72,6 +73,29 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     /// //////////////////////////
 
     //methods
+    
+    public UnitResult<Error> MoviePositionForward()
+    {
+        var newPosition = Position.Forward();
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
+    }
+    
+    public UnitResult<Error> MoviePositionBack()
+    {
+        var newPosition = Position.Back();
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
+    }
+    
     public void UpdateFiles(ValueObjectList<PetPhoto> photosList)
     {
         Photos = photosList;
@@ -96,9 +120,13 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         }
     }
     
-    public void SetSerialNumber(SerialNumber serialNumber)
+    public void SetPosition(Position position)
     {
-        SerialNumber = serialNumber;
+        Position = position;
+    }
+    public void MoviePosition(Position position)
+    {
+        Position = position;
     }
 
     public void Restore()

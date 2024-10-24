@@ -2,7 +2,6 @@ using PetFamily.Api.Extensions;
 using PetFamily.Api.Middlewares;
 using PetFamily.Api.Validations;
 using PetFamily.Application;
-using PetFamily.Application.Modules;
 using PetFamily.Infrastructure;
 using PetFamily.Infrastructure.Repositories;
 using Serilog;

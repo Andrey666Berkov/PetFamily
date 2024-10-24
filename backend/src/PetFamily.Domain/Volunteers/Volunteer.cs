@@ -96,26 +96,83 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     public UnitResult<Error> AddPet(Pet pet)
     {
-        var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+        var serialNumberResult = Position.Create(_pets.Count + 1);
         if (serialNumberResult.IsFailure)
             return Errors.General.ValueIsInavalid("Invalid serial number");
 
-        pet.SetSerialNumber(serialNumberResult.Value);
+        pet.SetPosition(serialNumberResult.Value);
 
         _pets.Add(pet);
         return Result.Success<Error>();
     }
-    
-    public UnitResult<Error> MovieSerialNumberPet(Pet pet, SerialNumber serialNumber)
+
+    public UnitResult<Error> MoviePositionPet(Pet pet, Position newPosition)
     {
-        var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
-        if (serialNumberResult.IsFailure)
-            return Errors.General.ValueIsInavalid("Invalid serial number");
+        var currentPosition = pet.Position;
+        if (currentPosition == newPosition || _pets.Count == 1)
+            return Result.Success<Error>();
 
-        pet.SetSerialNumber(serialNumberResult.Value);
+        var adjustedPositionResult = AdjustNewPositionIfOutOfRange(newPosition);
+        if (adjustedPositionResult.IsFailure)
+            return adjustedPositionResult.Error;
 
-        _pets.Add(pet);
+        newPosition = adjustedPositionResult.Value;
+
+        var reuslt = MoviePetsBetweenPositions(newPosition, currentPosition);
+        if (reuslt.IsFailure)
+            return reuslt.Error;
+        
+        pet.MoviePosition(newPosition);
         return Result.Success<Error>();
+    }
+
+
+    private UnitResult<Error> MoviePetsBetweenPositions(Position newPosition, Position currentPosition)
+    {
+        if (newPosition.Value <= currentPosition.Value)
+        {
+            var petsToMovie = _pets
+                .Where(i => i.Position.Value >= newPosition.Value
+                            && i.Position.Value < currentPosition.Value)
+                .ToList();
+            foreach (var petToMovie in petsToMovie)
+            {
+                var result = petToMovie.MoviePositionForward();
+                if (result.IsFailure)
+                    return result.Error;
+            }
+        }
+        else if (newPosition.Value > currentPosition.Value)
+        {
+            var petsToMovie = _pets
+                .Where(i => i.Position.Value > currentPosition.Value
+                            && i.Position.Value <= newPosition.Value)
+                .ToList();
+
+            foreach (var petToMovie in petsToMovie)
+            {
+                var result = petToMovie.MoviePositionBack();
+                if (result.IsFailure)
+                    return result.Error;
+            }
+        }
+        
+        
+        return Result.Success<Error>();
+       
+    }
+
+
+    private Result<Position, Error> AdjustNewPositionIfOutOfRange(Position newPosition)
+    {
+        if (newPosition.Value <= _pets.Count)
+            return newPosition;
+
+        var lastPosition = Position.Create(_pets.Count - 1);
+        if (lastPosition.IsFailure)
+            return lastPosition.Error;
+
+        return lastPosition.Value;
     }
 
     public int DeletePet(Pet pet)

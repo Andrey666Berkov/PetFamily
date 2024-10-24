@@ -5,16 +5,15 @@ namespace PetFamily.Domain.Volunteers;
 
 public record ListRequisites
 {
+    public List<Requisite> Requisites { get; }
     private ListRequisites()
     {
     }
-
+    
     public ListRequisites(IEnumerable<Requisite> requisites)
     {
         Requisites = requisites.ToList();
     }
-
-    public List<Requisite> Requisites { get; }
 
     public static Result<ListRequisites, Error>
         Create(IEnumerable<Requisite> requisites)

@@ -6,6 +6,9 @@ namespace PetFamily.Application.FileProvider;
 
 public interface IFilesProvider
 {
+    Task<UnitResult<Error>> RemoveFiles(
+        FileInfo filesInfo,
+        CancellationToken cancellationToken = default);
     Task<Result<IReadOnlyList<FilePath>, Error>> UploadFilesAsync(
         IEnumerable<FileDataDto> filesData,
         CancellationToken cancellationToken = default);
@@ -17,4 +20,5 @@ public interface IFilesProvider
     Task<Result<string, Error>> DeletePetAsync(
         DeleteDataDto deleteDataDto,
         CancellationToken cancellationToken = default);
+    
 }

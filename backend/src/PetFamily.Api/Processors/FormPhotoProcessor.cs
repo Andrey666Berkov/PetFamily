@@ -1,6 +1,4 @@
 ﻿using PetFamily.Application.Dtos;
-using PetFamily.Application.Modules.AddPet;
-using PetFamily.Application.Modules.UploadFilesToPet;
 
 namespace PetFamily.Api.Processors;
 
