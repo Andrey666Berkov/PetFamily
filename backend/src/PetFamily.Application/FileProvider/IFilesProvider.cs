@@ -9,16 +9,16 @@ public interface IFilesProvider
     Task<UnitResult<Error>> RemoveFiles(
         FileInfo filesInfo,
         CancellationToken cancellationToken = default);
-    Task<Result<IReadOnlyList<FilePath>, Error>> UploadFilesAsync(
+    Task<Result<IReadOnlyList<FilePath>, Error>> Handler(
         IEnumerable<FileDataDto> filesData,
         CancellationToken cancellationToken = default);
 
     Task<Result<string, Error>> GetFileAsync(
-        GetPetDto getObjectDto,
+        GetPetCommand getObjectCommand,
         CancellationToken cancellationToken = default);
 
     Task<Result<string, Error>> DeletePetAsync(
-        DeleteDataDto deleteDataDto,
+        DeleteDataCommand deleteDataCommand,
         CancellationToken cancellationToken = default);
     
 }

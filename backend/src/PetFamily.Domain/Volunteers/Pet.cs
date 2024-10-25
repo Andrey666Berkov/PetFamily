@@ -27,7 +27,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         bool isCastrated,
         Requisite requisite,
         SpeciesBreed speciesBreed,
-        ValueObjectList<PetPhoto>? petPhotos
+        List<PetFile>? petPhotos
     ) : base(id)
     {
         
@@ -43,13 +43,15 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         IsCastrated = isCastrated;
         SpeciesBreed = speciesBreed;
         AddRequisites(requisite);
-        Photos = petPhotos ?? new ValueObjectList<PetPhoto>();
+        _files = petPhotos ?? new List<PetFile>();
     }
 
 
     /// //////////////////////////////////////
     //property
     private bool _isDeleted = false;
+
+    private readonly List<PetFile> _files = [];
 
     public string NickName { get; private set; } = default!;
     public PetType PetType { get; private set; }
@@ -68,7 +70,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public StatusHelper StatusHelper { get; private set; }
     public ListRequisites RequisiteList { get; private set; }
     public DateTime CreatedOn => DateTime.Now;
-    public ValueObjectList<PetPhoto> Photos { get; private set; }
+    public IReadOnlyList<PetFile> Files => _files;
 
     /// //////////////////////////
 
@@ -96,9 +98,10 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         return Result.Success<Error>();
     }
     
-    public void UpdateFiles(ValueObjectList<PetPhoto> photosList)
+    public void UpdateFiles(List<PetFile> photosList)
     {
-        Photos = photosList;
+        _files.Clear();
+        _files.AddRange(photosList);
     }
 
     public void AddRequisites(Requisite requisite)

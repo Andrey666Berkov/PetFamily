@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.IDs;
@@ -8,7 +9,7 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.PetManagment.UseCases.DeleteVolunteer;
 
-public class DeleteVolunteerUseCase
+public class DeleteVolunteerUseCase : ICommandUSeCase<Guid, DeleteVolunteerCommand>
 {
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly ILogger<DeleteVolunteerUseCase> _logger;
@@ -26,7 +27,7 @@ public class DeleteVolunteerUseCase
         _validator = validator;
         _unitOfWork = unitOfWork;
     }
-    public async Task<Result<Guid, ErrorList>> Delete(
+    public async Task<Result<Guid, ErrorList>> Handler(
         DeleteVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {

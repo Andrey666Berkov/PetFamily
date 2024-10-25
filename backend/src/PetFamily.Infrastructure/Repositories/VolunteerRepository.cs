@@ -24,17 +24,17 @@ public class VolunteerRepository : IVolunteerRepository
 
         return volunteer.Id.Value;
     }
-    
+
     public async Task<Result<IEnumerable<Volunteer>>> GetWithPagination(
         CancellationToken cancellationToken)
     {
         var volunteer = await _context.Volunteers.ToListAsync(cancellationToken);
-        
+
         return volunteer;
     }
-    
+
     public async Task<Result<Volunteer, Error>> GetById(
-        VolunteerId volunteerId, 
+        VolunteerId volunteerId,
         CancellationToken cancellationToken)
     {
         var volunteer = await _context
@@ -46,10 +46,10 @@ public class VolunteerRepository : IVolunteerRepository
         {
             return Errors.General.NotFound(volunteerId.Value);
         }
-            return volunteer;
-       
+
+        return volunteer;
     }
-    
+
     public async Task<Result<Volunteer, Error>> GetByName(
         string firstName,
         CancellationToken cancellationToken = default)
@@ -58,13 +58,13 @@ public class VolunteerRepository : IVolunteerRepository
             .Volunteers
             .Include(pet => pet.Pets)
             .FirstOrDefaultAsync(v => v.Initials.FirstName == firstName, cancellationToken);
-            
-        if(volunteer is null)
+
+        if (volunteer is null)
             return Errors.General.ValueIsInavalid("volunteer");
-        
+
         return volunteer;
     }
-    
+
     public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         _context.Volunteers.Attach(volunteer);
@@ -72,41 +72,11 @@ public class VolunteerRepository : IVolunteerRepository
 
         return volunteer.Id.Value;
     }
-    
+
     public async Task<Guid> Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         _context.Remove(volunteer);
         await _context.SaveChangesAsync(cancellationToken);
-        
-
         return volunteer.Id.Value;
     }
-    
-    public async Task<Result<Guid, Error>> DeletePet(
-        VolunteerId volunteerId, 
-        PetId petId,
-        CancellationToken cancellationToken = default)
-    {
-        var volunteerResult=await GetById(volunteerId, cancellationToken);
-        if(volunteerResult.IsFailure)
-            return volunteerResult.Error;
-        
-        var volunteer = volunteerResult.Value;
-        var pet=volunteer.Pets.FirstOrDefault(p=>p.Id==petId);
-        
-        if(pet is null)
-            return Errors.General.NotFound(volunteerId.Value);
-
-        volunteer.DeletePet(pet);
-        
-        await _context.SaveChangesAsync(cancellationToken);
-        
-        return pet.Id.Value;
-    }
-   
 }
-
-
-
-
-

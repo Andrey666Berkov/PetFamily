@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Controllers.Volunteers.Requests;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
 using PetFamily.Application.PetManagment.UseCases.AddPet;
 using PetFamily.Application.PetManagment.UseCases.CreateVolunteer;
-using PetFamily.Application.PetManagment.UseCases.DeletePet;
 using PetFamily.Application.PetManagment.UseCases.DeleteVolunteer;
 using PetFamily.Application.PetManagment.UseCases.GetPet;
 using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
@@ -21,23 +21,7 @@ namespace PetFamily.Api.Controllers.Volunteers;
 public class VolunteerController : ApplicationController
 {
 
-    [HttpDelete("{volunteerId:guid}/pet/{petId:guid}")]
-    public async Task<ActionResult> DeletePet(
-        [FromRoute] Guid volunteerId,
-        [FromRoute] Guid petId,
-        [FromServices] DeletePetUseCase deletePetUseCase,
-        CancellationToken cancellationToken = default)
-    {
-        var deleteDataDto = new DeleteDataDto(volunteerId, petId, "photos");
-        var petdelete = await deletePetUseCase
-            .DeleteUseCase(deleteDataDto);
-        if (petdelete.IsFailure)
-            return petdelete.Error.ToResponse();
-
-        return Ok(petdelete.Value);
-    }
-
-    [HttpPost("{volunteerid:guid}/get-pet/{petid:guid}")]
+  [HttpPost("{volunteerid:guid}/get-pet/{petid:guid}")]
     public async Task<ActionResult> GetPet(
         [FromRoute] Guid petid,
         [FromRoute] Guid volunteerid,
@@ -46,9 +30,9 @@ public class VolunteerController : ApplicationController
     {
         var bucket = "photos";
         var presignedGetObjectArgsDto =
-            new GetPetDto(bucket, petid, volunteerid);
+            new GetPetCommand(bucket, petid, volunteerid);
 
-        var petResult = await getPetUseCase.GetPet(
+        var petResult = await getPetUseCase.Handler(
             presignedGetObjectArgsDto,
             cancellationToken);
         if (petResult.IsFailure)
@@ -70,7 +54,7 @@ public class VolunteerController : ApplicationController
 
         var command = new UploadFilesToPetCommand(id, petId, petPhotos);
         
-        var result= await useCase.UpLoadFile(command, cancellationToken);
+        var result= await useCase.Handler(command, cancellationToken);
         if (result.IsFailure)
             return result.Error.ToResponse();
 
@@ -82,7 +66,7 @@ public class VolunteerController : ApplicationController
     public async Task<ActionResult> AddPet(
         [FromRoute] Guid valunteerId,
         [FromBody] AddPetRequest request, //Т.к. IFormFile из фромбоди получить не можем
-        [FromServices] AddPetUseCase addPetUseCase,
+        [FromServices] AddPetUseCase addPetUseCase, 
         CancellationToken cancellationToken = default)
     {
         var address = new AddressDto(
@@ -102,7 +86,7 @@ public class VolunteerController : ApplicationController
             requisiteDto);
             
 
-        var providerUseCaseResult = await addPetUseCase.ProviderUseCase(
+        var providerUseCaseResult = await addPetUseCase.Handler(
             commands,
             cancellationToken);
 
@@ -121,7 +105,7 @@ public class VolunteerController : ApplicationController
         var command = request.CreateCommand();
         
         var result = await createVolunteerUseCase
-            .Create(command, cancellationToken);
+            .Handler(command, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -143,7 +127,7 @@ public class VolunteerController : ApplicationController
         var validationResult = await validator.ValidateAsync(updateCommand, cancellationToken);
       
 
-        var result = await updateVolunteer.Update(updateCommand, cancellationToken);
+        var result = await updateVolunteer.Handler(updateCommand, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -161,7 +145,7 @@ public class VolunteerController : ApplicationController
     {
         var command = new UpdateSocialNetworkCommand(id, dto.SocialNetworks);
 
-        var result = await updateVolunteer.Update(command, cancellationToken);
+        var result = await updateVolunteer.Handler(command, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();
@@ -179,7 +163,7 @@ public class VolunteerController : ApplicationController
         var request = new DeleteVolunteerCommand(id);
 
         var result = await deleteVolunteer
-            .Delete(request, cancellationToken);
+            .Handler(request, cancellationToken);
 
         if (result.IsFailure)
             return result.Error.ToResponse();

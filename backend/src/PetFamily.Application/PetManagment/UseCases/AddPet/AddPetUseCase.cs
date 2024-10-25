@@ -1,6 +1,8 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Windows.Input;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
@@ -12,7 +14,7 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.PetManagment.UseCases.AddPet;
 
-public class AddPetUseCase
+public class AddPetUseCase : ICommandUSeCase<Guid, FileDataDtoCommand>
 {
     private const string BUCKET_NAME = "photos";
     private readonly IFilesProvider _filesProvider;
@@ -36,7 +38,7 @@ public class AddPetUseCase
     }
 
     //method 
-    public async Task<Result<Guid, ErrorList>> ProviderUseCase(
+    public async Task<Result<Guid, ErrorList>> Handler(
         FileDataDtoCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -94,4 +96,3 @@ public class AddPetUseCase
         return pet;
     }
 }
-

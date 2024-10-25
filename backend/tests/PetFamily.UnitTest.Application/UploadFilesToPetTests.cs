@@ -70,7 +70,7 @@ public class UploadFilesToPetTests
         ];
 
         _fileProviderMock
-            .Setup(v => v.UploadFilesAsync(It.IsAny<List<FileDataDto>>(),ct))
+            .Setup(v => v.Handler(It.IsAny<List<FileDataDto>>(),ct))
             .ReturnsAsync(Result.Success<IReadOnlyList<FilePath>, Error>(filePaths));
         
                       // Mock for IVolunteerRepository

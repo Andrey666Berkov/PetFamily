@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
@@ -12,7 +13,7 @@ using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
 
-public class UploadFilesPetUseCase
+public class UploadFilesPetUseCase : ICommandUSeCase<Guid, UploadFilesToPetCommand>
 {
     private const string BUCKET_NAME = "photos";
     private readonly IFilesProvider _filesProvider;
@@ -39,7 +40,7 @@ public class UploadFilesPetUseCase
     }
 
     //method 
-    public async Task<Result<Guid, ErrorList>> UpLoadFile(
+    public async Task<Result<Guid, ErrorList>> Handler(
         UploadFilesToPetCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -81,7 +82,7 @@ public class UploadFilesPetUseCase
             filesData.Add(photoData);
         }
 
-        var filePathResult = await _filesProvider.UploadFilesAsync(filesData, cancellationToken);
+        var filePathResult = await _filesProvider.Handler(filesData, cancellationToken);
 
         if (filePathResult.IsFailure)
         {
@@ -92,7 +93,7 @@ public class UploadFilesPetUseCase
         }
 
         var petFiles = filePathResult.Value
-            .Select(p => new PetPhoto(p))
+            .Select(p => new PetFile(p))
             .ToList();
         
         petResult.Value.UpdateFiles(petFiles);
@@ -103,4 +104,5 @@ public class UploadFilesPetUseCase
         
         return petResult.Value.Id.Value;
     }
+  
 }

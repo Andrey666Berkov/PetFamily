@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
-using PetFamily.Infrastructure.Configuration.Read;
 using PetFamily.Infrastructure.Constans;
 
 namespace PetFamily.Infrastructure.DbContexts;
@@ -11,8 +10,8 @@ namespace PetFamily.Infrastructure.DbContexts;
 public class ReadDbContext(
     IConfiguration configuration) : DbContext, IReadDbContext
 {
-    public DbSet<VolunteerDto> Volunteers { get;  } = null!;
-    public DbSet<PetDto> Pets { get;  } = null!;
+    public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public IQueryable<PetDto> Pets => Set<PetDto>();
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -20,6 +19,8 @@ public class ReadDbContext(
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
         optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        
     }
     
     private ILoggerFactory CreateLoggerFactory()=>
@@ -30,7 +31,11 @@ public class ReadDbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new VolunteerDtoConfiguration());
-        modelBuilder.ApplyConfiguration(new PetDtoConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Inject).Assembly, type=>
+            type.FullName?.Contains("Configurations.Read")?? false);
+       
+        
+        /*modelBuilder.ApplyConfiguration(new VolunteerDtoConfiguration());
+        modelBuilder.ApplyConfiguration(new PetDtoConfiguration());*/
     }
 }

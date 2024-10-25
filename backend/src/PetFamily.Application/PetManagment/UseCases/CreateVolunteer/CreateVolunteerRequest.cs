@@ -1,4 +1,6 @@
-﻿namespace PetFamily.Application.PetManagment.UseCases.CreateVolunteer;
+﻿using PetFamily.Application.Abstractions;
+
+namespace PetFamily.Application.PetManagment.UseCases.CreateVolunteer;
 
 public record CreateVolunteerRequest(
     RequesitInitionalDto Initional,
@@ -23,7 +25,7 @@ public record CreateVolunteerCommand(
     string PhoneNumber,
     int Experience,
     IEnumerable<RequesitDto>? RequisitesDto,
-    IEnumerable<SocialNetworkDto>? SocialNetworkDto);
+    IEnumerable<SocialNetworkDto>? SocialNetworkDto) : ICommands;
 
 public record RequesitDto(string Title, string Description);
 public record RequesitInitionalDto(

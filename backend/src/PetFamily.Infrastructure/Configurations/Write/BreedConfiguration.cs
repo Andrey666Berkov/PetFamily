@@ -4,19 +4,19 @@ using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
 
-namespace PetFamily.Infrastructure.Configuration;
+namespace PetFamily.Infrastructure.Configurations.Write;
 
-public class SpeciesConfiguration:IEntityTypeConfiguration<Species>
+public class BreedConfiguration:IEntityTypeConfiguration<Breed>
 {
-    public void Configure(EntityTypeBuilder<Species> builder)
+    public void Configure(EntityTypeBuilder<Breed> builder)
     {
-        builder.ToTable("species");
+        builder.ToTable("breed");
         
         builder.HasKey(s => s.Id);
         
         builder.Property(s => s.Id).
             HasConversion(id => id.Value, 
-                value => SpeciesId.Create(value));
+                value => BreedId.Create(value));
 
         builder.Property(t => t.Name)
             .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
@@ -25,9 +25,5 @@ public class SpeciesConfiguration:IEntityTypeConfiguration<Species>
         builder.Property(t => t.Description)
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH)
             .IsRequired();
-
-        builder.HasMany(c => c.Breeds)
-            .WithOne()
-            .HasForeignKey("species_id");
     }
 }

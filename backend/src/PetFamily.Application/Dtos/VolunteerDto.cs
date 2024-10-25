@@ -9,6 +9,12 @@ public class VolunteerDto
     public string Description { get; init; } =string.Empty;
     public int Experience { get; init; }
     public int PhoneNumber { get; init; }
+    public RequisiteDto[] Requisites { get; set; } = [];
+
+    public SocialNetworkDto[] SocialNetworks { get; set; } = [];
     public PetDto[] Pets { get; init; } = [];
 
 }
+
+public record RequisiteDto(string Name, string Description);
+public record SocialNetworkDto(string Name, string Url);

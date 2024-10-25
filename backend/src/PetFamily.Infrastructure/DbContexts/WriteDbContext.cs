@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Species;
 using PetFamily.Domain.Volunteers;
-using PetFamily.Infrastructure.Configuration;
 using PetFamily.Infrastructure.Constans;
 
 namespace PetFamily.Infrastructure.DbContexts;
@@ -30,9 +29,10 @@ public class WriteDbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new VolunteerConfiguration());
-        modelBuilder.ApplyConfiguration(new PetConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Inject).Assembly, type=>
+            type.FullName?.Contains("Configurations.Write")?? false);
+        /*modelBuilder.ApplyConfiguration(new PetConfiguration());
         modelBuilder.ApplyConfiguration(new BreedConfiguration());
-        modelBuilder.ApplyConfiguration(new SpeciesConfiguration());
+        modelBuilder.ApplyConfiguration(new SpeciesConfiguration());*/
     }
 }

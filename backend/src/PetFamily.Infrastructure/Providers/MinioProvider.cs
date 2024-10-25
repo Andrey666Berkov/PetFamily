@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.JavaScript;
-using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
@@ -28,7 +25,8 @@ public class MinioProvider : IFilesProvider
         {
             var bucketexistArgs = new BucketExistsArgs().WithBucket(busket);
 
-            var bucketExist = await _minioClient.BucketExistsAsync(bucketexistArgs, cancellationToken);
+            var bucketExist = await _minioClient
+                .BucketExistsAsync(bucketexistArgs, cancellationToken);
 
             if (bucketExist == false)
             {
@@ -76,7 +74,7 @@ public class MinioProvider : IFilesProvider
         _logger = logger;
     }
 
-    public async Task<Result<IReadOnlyList<FilePath>, Error>> UploadFilesAsync(
+    public async Task<Result<IReadOnlyList<FilePath>, Error>> Handler(
         IEnumerable<FileDataDto> filesData,
         CancellationToken cancellationToken = default)
     {
@@ -149,7 +147,7 @@ public class MinioProvider : IFilesProvider
     }
 
     public async Task<Result<string, Error>> GetFileAsync(
-        GetPetDto getObjectDto,
+        GetPetCommand getObjectCommand,
         CancellationToken cancellationToken = default)
     {
         try
@@ -160,8 +158,8 @@ public class MinioProvider : IFilesProvider
             };
 
             var presignetGetObjectArgs = new PresignedGetObjectArgs()
-                .WithBucket(getObjectDto.Bucket)
-                .WithObject(getObjectDto.PetId.ToString())
+                .WithBucket(getObjectCommand.Bucket)
+                .WithObject(getObjectCommand.PetId.ToString())
                 .WithExpiry(1000)
                 .WithHeaders(reqParams);
 
@@ -181,19 +179,19 @@ public class MinioProvider : IFilesProvider
 
 
     public async Task<Result<string, Error>> DeletePetAsync(
-        DeleteDataDto deleteDataDto,
+        DeleteDataCommand deleteDataCommand,
         CancellationToken cancellationToken = default)
     {
         try
         {
             var args = new RemoveObjectArgs()
-                .WithBucket(deleteDataDto.Bucket)
-                .WithObject(deleteDataDto.PetId.ToString());
+                .WithBucket(deleteDataCommand.Bucket)
+                .WithObject(deleteDataCommand.PetId.ToString());
 
             await _minioClient.RemoveObjectAsync(args, cancellationToken);
 
-            _logger.LogInformation($"REMOVE object in minio: {deleteDataDto.PetId.ToString()}");
-            return $"REMOVE object in minio: {deleteDataDto.PetId.ToString()}";
+            _logger.LogInformation($"REMOVE object in minio: {deleteDataCommand.PetId.ToString()}");
+            return $"REMOVE object in minio: {deleteDataCommand.PetId.ToString()}";
         }
         catch (Exception e)
         {

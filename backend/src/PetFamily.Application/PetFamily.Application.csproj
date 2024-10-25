@@ -15,6 +15,7 @@
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-preview.7.24405.7" />
+      <PackageReference Include="Scrutor" Version="5.0.1" />
       <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Shared" Version="1.4.0" />
     </ItemGroup>
 

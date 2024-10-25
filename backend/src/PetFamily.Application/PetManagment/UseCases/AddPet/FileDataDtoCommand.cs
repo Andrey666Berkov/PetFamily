@@ -1,4 +1,7 @@
-﻿namespace PetFamily.Application.PetManagment.UseCases.AddPet;
+﻿using System.Windows.Input;
+using PetFamily.Application.Abstractions;
+
+namespace PetFamily.Application.PetManagment.UseCases.AddPet;
 
 public record FileDataDtoCommand(
     Guid VolunteerId,
@@ -9,7 +12,7 @@ public record FileDataDtoCommand(
     double Weigth,
     int Heigth,
     int NumberPhone,
-    bool IsCastrated);
+    bool IsCastrated) : ICommands;
 
 public record AddressDto(string Street, string Country, string City);
 public record RequisiteDto(string Title, string Description);

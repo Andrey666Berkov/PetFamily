@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.IDs;
@@ -9,7 +10,7 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
 
-public class UpdateVolunteerInfoUseCase
+public class UpdateVolunteerInfoUseCase : ICommandUSeCase<Guid, UpdateVolunteerInfoCommand>
 {
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly ILogger<UpdateVolunteerInfoUseCase> _logger;
@@ -28,7 +29,7 @@ public class UpdateVolunteerInfoUseCase
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<Result<Guid, ErrorList>> Update(
+    public async Task<Result<Guid, ErrorList>> Handler(
         UpdateVolunteerInfoCommand command,
        
         CancellationToken cancellationToken = default)

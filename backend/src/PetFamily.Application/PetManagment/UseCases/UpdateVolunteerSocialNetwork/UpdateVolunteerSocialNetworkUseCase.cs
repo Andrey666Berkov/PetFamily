@@ -1,14 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.PetManagment.UseCases.UpdateVolunteerSocialNetwork;
 
-public class UpdateVolunteerSocialNetworkUseCase
+public class UpdateVolunteerSocialNetworkUseCase: ICommandUSeCase<Volunteer, UpdateSocialNetworkCommand>
 {
     private readonly IVolunteerRepository _repository;
     private readonly ILogger<UpdateVolunteerSocialNetworkUseCase> _logger;
@@ -24,7 +26,7 @@ public class UpdateVolunteerSocialNetworkUseCase
         _validator = validator;
     }
 
-    public async Task<Result<Volunteer, ErrorList>> Update(
+    public async Task<Result<Volunteer, ErrorList>> Handler(
         UpdateSocialNetworkCommand command
         , CancellationToken cancellationToken)
     {

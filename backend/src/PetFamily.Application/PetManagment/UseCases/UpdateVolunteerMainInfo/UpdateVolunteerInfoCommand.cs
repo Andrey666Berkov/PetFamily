@@ -1,9 +1,11 @@
-﻿namespace PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
+﻿using PetFamily.Application.Abstractions;
+
+namespace PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
 
 public record UpdateVolunteerInfoCommand(
-    Guid VolunteerID, 
+    Guid VolunteerID,
     RequesitInitialDto Initials,
-    string Description);
+    string Description) : ICommands;
 
 public record RequesitInitialDto(
     string FirstName,

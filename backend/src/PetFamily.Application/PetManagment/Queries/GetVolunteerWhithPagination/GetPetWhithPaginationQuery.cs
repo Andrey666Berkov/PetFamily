@@ -1,3 +1,10 @@
-﻿namespace PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+﻿using PetFamily.Application.Abstractions;
 
-public record GetPetWhithPaginationQuery(int Page, int PageSize);
+namespace PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+
+public record GetPetWhithPaginationQuery(
+    string? NickName, 
+    /*int? PositionFrom,
+    int? PositionTo,*/
+    int Page, 
+    int PageSize) : IQuery;

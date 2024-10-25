@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Application.Dtos;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Shared.ValueObjects;
 using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Infrastructure.Configuration;
+namespace PetFamily.Infrastructure.Configurations.Write;
 
 public class PetConfiguration : IEntityTypeConfiguration<Pet>
 {
@@ -46,13 +48,31 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             lb.Property(l => l.Value)
                 .IsRequired()
-                .HasColumnName("serial_number");
+                .HasColumnName("position");
         });
 
-        builder.OwnsOne(p => p.Photos, po =>
+        builder.Property(i => i.Files)
+            .HasConversion(
+                files => JsonSerializer.Serialize(
+                    files
+                        .Select(c => new PetFileDto()
+                        {
+                            PathToStorage = c.FilePath.FullPath
+                        })
+                    , JsonSerializerOptions.Default),
+                json => JsonSerializer
+                    .Deserialize<List<PetFileDto>>(json, JsonSerializerOptions.Default)!.Select(dto =>
+                        new PetFile(FilePath.CreateOfString(dto.PathToStorage).Value, false))
+                    .ToList(),
+                new ValueComparer<IReadOnlyList<PetFile>>(
+                    (c1, c2) => c1.SequenceEqual(c2),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => (IReadOnlyList<PetFile>)c.ToList()));
+
+        /*builder.OwnsOne(p => p.Files, po =>
         {
             po.ToJson("photos");
-            
+
             po.OwnsMany(ph => ph.Values, pp =>
             {
                 pp.Property(d => d.FilePathToStorage)
@@ -62,7 +82,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
             });
-        });
+        });*/
 
         builder.ComplexProperty(p => p.SpeciesBreed, po =>
         {

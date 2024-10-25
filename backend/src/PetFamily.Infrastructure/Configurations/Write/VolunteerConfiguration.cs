@@ -1,11 +1,10 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Infrastructure.Configuration;
+namespace PetFamily.Infrastructure.Configurations.Write;
 
 public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 {

@@ -10,7 +10,7 @@ public class PetController : ApplicationController
     [HttpGet]
     public async Task<ActionResult> Get(
         [FromQuery] GetPetWithPaginationRequest request,
-        [FromServices] GetPetWhithPaginationUseCase handle,
+        [FromServices] GetFilteredPetWhithPaginationUseCase handle,
         CancellationToken cancellationToken = default)
     {
         var query = request.ToQuery();
