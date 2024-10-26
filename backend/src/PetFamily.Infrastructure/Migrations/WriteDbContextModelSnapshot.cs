@@ -181,19 +181,6 @@ namespace PetFamily.Infrastructure.Migrations
                                 .HasColumnName("position");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("SpeciesBreed", "PetFamily.Domain.Volunteers.Pet.SpeciesBreed#SpeciesBreed", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<Guid>("BreedId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("breed_id");
-
-                            b1.Property<Guid>("SpeciesId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("species_id");
-                        });
-
                     b.HasKey("Id")
                         .HasName("pk_pets");
 
@@ -290,6 +277,29 @@ namespace PetFamily.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
 
+                    b.OwnsOne("PetFamily.Domain.Species.SpeciesBreed", "SpeciesBreed", b1 =>
+                        {
+                            b1.Property<Guid>("PetId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<Guid>("BreedId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("breed_id");
+
+                            b1.Property<Guid>("SpeciesId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("species_id");
+
+                            b1.HasKey("PetId");
+
+                            b1.ToTable("pets");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetId")
+                                .HasConstraintName("fk_pets_pets_id");
+                        });
+
                     b.OwnsOne("PetFamily.Domain.Volunteers.ListRequisites", "RequisiteList", b1 =>
                         {
                             b1.Property<Guid>("PetId")
@@ -339,6 +349,9 @@ namespace PetFamily.Infrastructure.Migrations
                         });
 
                     b.Navigation("RequisiteList")
+                        .IsRequired();
+
+                    b.Navigation("SpeciesBreed")
                         .IsRequired();
                 });
 

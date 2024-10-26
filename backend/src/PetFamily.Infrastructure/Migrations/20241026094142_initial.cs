@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetFamily.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,6 +77,8 @@ namespace PetFamily.Infrastructure.Migrations
                     weight = table.Column<double>(type: "double precision", nullable: true),
                     height = table.Column<int>(type: "integer", nullable: true),
                     number_phone_owner = table.Column<int>(type: "integer", nullable: true),
+                    species_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    breed_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_castrated = table.Column<bool>(type: "boolean", nullable: false),
                     birth_date = table.Column<DateOnly>(type: "date", nullable: true),
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
@@ -88,8 +90,6 @@ namespace PetFamily.Infrastructure.Migrations
                     country = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     street = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     position = table.Column<int>(type: "integer", nullable: false),
-                    breed_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    species_id = table.Column<Guid>(type: "uuid", nullable: false),
                     requisites = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>

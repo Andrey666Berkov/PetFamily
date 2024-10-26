@@ -51,6 +51,23 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("position");
         });
 
+        builder.OwnsOne(c => c.SpeciesBreed, tb =>
+            {
+                tb.Property(c => c.BreedId)
+                    .IsRequired()
+                    .HasColumnName("breed_id");
+
+                tb.Property(c => c.SpeciesId)
+                    .IsRequired()
+                    .HasColumnName("species_id");
+
+                /*tb.Property(c => c.SpeciesId)
+                    .HasConversion(sguid => sguid.Value,
+                        v => SpeciesId.Create(v))
+                    .HasColumnName("species_id");*/
+            }
+        );
+        
         builder.Property(i => i.Files)
             .HasConversion(
                 files => JsonSerializer.Serialize(
@@ -83,8 +100,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
             });
         });*/
-
-        builder.ComplexProperty(p => p.SpeciesBreed, po =>
+        /*builder.ComplexProperty(p => p.SpeciesBreed, po =>
         {
             po.Property(sp => sp.SpeciesId)
                 .HasConversion(c => c.Value,
@@ -93,7 +109,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             po.Property(sp => sp.BreedId)
                 .IsRequired()
                 .HasColumnName("breed_id");
-        });
+        });*/
 
         builder.ComplexProperty(c => c.Address, b =>
         {

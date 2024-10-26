@@ -19,9 +19,9 @@ public class PetDto
     public bool IsVaccinated { get; private set; } = false;
     public string StatusHelper { get; private set; } = string.Empty;
     public string Requisites { get; private set; } = string.Empty;
-    public Guid SpeciesId { get;  private set; }
+    public Guid Species_Id { get;  init; }
 
-    public Guid BreedId { get; private set; }
+    public Guid Breed_Id { get; init; }
     public PetFileDto[] Files { get; private set; } = null!;
 }
 

@@ -13,15 +13,9 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(p => p.SpeciesId)
-            .HasConversion(
-                c => c,
-                gui=>gui);
-
-        builder.Property(p => p.BreedId)
-            .HasConversion(
-                c => c,
-                gui=>gui);
+        builder.Property(x => x.Species_Id).HasColumnName("species_id");
+        builder.Property(x => x.Breed_Id).HasColumnName("breed_id");
+        
             
         
         builder.Property(i => i.Files)

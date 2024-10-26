@@ -75,8 +75,8 @@ public class AddPetUseCase : ICommandUSeCase<Guid, FileDataDtoCommand>
             command.requisite.Description).Value;
 
         var speciesBreed = SpeciesBreed.Create(
-            SpeciesId.CreateEmpty(),
-            BreedId.CreateEmpty().Value).Value;
+            SpeciesId.CreateNew().Value,
+            BreedId.CreateNew().Value).Value;
 
         var pet = new Pet(
             petId,
