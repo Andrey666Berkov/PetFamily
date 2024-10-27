@@ -5,15 +5,17 @@ namespace PetFamily.Domain.ValueObjects;
 
 public record Address
 {
-   private Address(string street, string city, string country)
+   
+    public string Street { get; }
+    public string Country { get; }
+    public string City { get; }
+    
+    private Address(string street, string city, string country)
     {
         Street = street;
         City = city;
         Country = country;
     }
-    public string Street { get; }
-    public string Country { get; }
-    public string City { get; }
 
     public static Result<Address, Error> Create(string street, string city, string country)
     {

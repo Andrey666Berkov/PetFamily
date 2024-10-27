@@ -6,6 +6,12 @@ namespace PetFamily.Domain.Species;
 
 public class Species : Shared.Entity<SpeciesId>
 {
+   private readonly List<Breed> _breeds=[]; 
+    
+    public string Name { get; private set; }= default!;
+    public string Description { get; private set; }= default!;
+    public IReadOnlyList<Breed> Breeds =>_breeds;
+    
     private Species(SpeciesId id) : base(id)
     {
     }
@@ -17,12 +23,6 @@ public class Species : Shared.Entity<SpeciesId>
         Name = name;
         Description = description;
     }
-    
-    private readonly List<Breed> _breeds=[]; 
-    
-    public string Name { get; private set; }= default!;
-    public string Description { get; private set; }= default!;
-    public IReadOnlyList<Breed> Breeds =>_breeds;
 
     public static Result<Species, Error> Create(SpeciesId id, string name, string description)
     {

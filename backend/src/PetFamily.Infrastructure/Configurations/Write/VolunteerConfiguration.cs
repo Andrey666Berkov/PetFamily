@@ -20,7 +20,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.ComplexProperty(c => c.Initials, b =>
         {
             b.IsRequired();
-
+            
             b.Property(p => p.FirstName)
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("first_name");
@@ -33,10 +33,11 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("middle_name");
 
-            builder.Property<bool>("_isDeleted")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("is_deleted");
+
         });
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted");
 
         builder.Property(t => t.Description)
             .IsRequired()
@@ -54,7 +55,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             em.IsRequired();
             em.Property(e => e.Phonenumber)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("phone_number");
         });
 
         builder.OwnsOne(p => p.RequisitesList, po =>
@@ -95,5 +97,6 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");
+       
     }
 }

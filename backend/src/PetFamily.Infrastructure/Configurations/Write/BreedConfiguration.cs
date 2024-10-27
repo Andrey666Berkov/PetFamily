@@ -10,7 +10,7 @@ public class BreedConfiguration:IEntityTypeConfiguration<Breed>
 {
     public void Configure(EntityTypeBuilder<Breed> builder)
     {
-        builder.ToTable("breed");
+        builder.ToTable("breeds");
         
         builder.HasKey(s => s.Id);
         

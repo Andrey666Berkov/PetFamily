@@ -17,7 +17,9 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Id).HasConversion(id => id.Value, //конвертируй из PetID(в Pet) в Guid(d Db)
+        builder
+            .Property(x => x.Id)
+            .HasConversion(id => id.Value, //конвертируй из PetID(в Pet) в Guid(d Db)
             value => PetId.Create(value)); // а обратно из db в Pet bиз Guid в PetId
 
         builder.Property(t => t.NickName)
@@ -51,24 +53,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("position");
         });
 
-        builder.OwnsOne(c => c.SpeciesBreed, tb =>
-            {
-                tb.Property(c => c.BreedId)
-                    .IsRequired()
-                    .HasColumnName("breed_id");
-
-                tb.Property(c => c.SpeciesId)
-                    .IsRequired()
-                    .HasColumnName("species_id");
-
-                /*tb.Property(c => c.SpeciesId)
-                    .HasConversion(sguid => sguid.Value,
-                        v => SpeciesId.Create(v))
-                    .HasColumnName("species_id");*/
-            }
-        );
-        
-        builder.Property(i => i.Files)
+       builder.Property(i => i.Files)
             .HasConversion(
                 files => JsonSerializer.Serialize(
                     files
@@ -100,16 +85,33 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
             });
         });*/
-        /*builder.ComplexProperty(p => p.SpeciesBreed, po =>
+        
+        builder.ComplexProperty(p => p.SpeciesBreed, po =>
         {
             po.Property(sp => sp.SpeciesId)
-                .HasConversion(c => c.Value,
-                    value => SpeciesId.Create(value))
+                .IsRequired()
                 .HasColumnName("species_id");
             po.Property(sp => sp.BreedId)
                 .IsRequired()
                 .HasColumnName("breed_id");
-        });*/
+        });
+        
+        /*builder.OwnsOne(c => c.SpeciesBreed, tb =>
+            {
+                tb.Property(c => c.BreedId)
+                    .IsRequired()
+                    .HasColumnName("breed_id");
+
+                tb.Property(c => c.SpeciesId)
+                    .IsRequired()
+                    .HasColumnName("species_id");
+
+                /*tb.Property(c => c.SpeciesId)
+                    .HasConversion(sguid => sguid.Value,
+                        v => SpeciesId.Create(v))
+                    .HasColumnName("species_id");#1#
+            }
+        );*/
 
         builder.ComplexProperty(c => c.Address, b =>
         {

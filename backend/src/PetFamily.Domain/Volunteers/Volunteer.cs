@@ -8,6 +8,22 @@ namespace PetFamily.Domain.Volunteers;
 
 public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
+   
+
+    //property
+    private readonly List<Pet> _pets = [];
+    private bool _isDeleted = false;
+
+    public Initials Initials { get; private set; }
+
+    public Email Email { get; private set; }
+    public string Description { get; private set; } = default!;
+    public int Experience { get; private set; }
+    public PhoneNumber PhoneNumber { get; private set; }
+    public IReadOnlyList<Pet> Pets => _pets;
+    public ListRequisites RequisitesList { get; private set; } = null!;
+    public ListSocialNetwork SocialNetworkList { get; private set; }
+
     //constructor
     private Volunteer(VolunteerId id) : base(id)
     {
@@ -31,21 +47,6 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         RequisitesList = requisite;
         SocialNetworkList = socialNetwork;
     }
-
-    //property
-    private readonly List<Pet> _pets = [];
-    private bool _isDeleted = false;
-
-    public Initials Initials { get; set; }
-
-    public Email Email { get; private set; }
-    public string Description { get; private set; } = default!;
-    public int Experience { get; private set; }
-    public PhoneNumber PhoneNumber { get; private set; }
-    public IReadOnlyList<Pet> Pets => _pets;
-    public ListRequisites RequisitesList { get; private set; } = null!;
-    public ListSocialNetwork SocialNetworkList { get; private set; }
-
     //methods
     public Result<Pet, Error> GetPetById(PetId petId)
     {

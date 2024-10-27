@@ -12,11 +12,11 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
         builder.ToTable("pets");
 
         builder.HasKey(x => x.Id);
-
-        builder.Property(x => x.Species_Id).HasColumnName("species_id");
-        builder.Property(x => x.Breed_Id).HasColumnName("breed_id");
         
-            
+       
+        
+        builder.Property(x => x.SpeciesId).HasColumnName("species_id");
+        builder.Property(x => x.BreedId).HasColumnName("breed_id");
         
         builder.Property(i => i.Files)
             .HasConversion(
@@ -24,7 +24,6 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
                     , JsonSerializerOptions.Default),
                 json => JsonSerializer
                     .Deserialize<PetFileDto[]>(json, JsonSerializerOptions.Default)!);
-                    
         
         /*uilder.Property(i=>i.Files)
             .HasConversion( )
