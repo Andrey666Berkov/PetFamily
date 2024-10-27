@@ -9,7 +9,7 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Infrastructure.Configurations.Write;
 
-public class PetConfiguration : IEntityTypeConfiguration<Pet>
+public class PвetConfiguration : IEntityTypeConfiguration<Pet>
 {
     public void Configure(EntityTypeBuilder<Pet> builder)
     {

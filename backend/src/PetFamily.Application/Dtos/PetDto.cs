@@ -13,7 +13,7 @@ public class PetDto
     public double? Weight { get; private set; }
     public int? Height { get; private set; }
     public int? NumberPhoneOwner { get; private set; }
-    public string SpeciesBreed { get; private set; }
+    
     public bool IsCastrated { get; private set; } = false;
     public DateOnly BirthDate { get; private set; }
     public bool IsVaccinated { get; private set; } = false;
