@@ -252,7 +252,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
-                                .HasColumnName("phone_number_phonenumber");
+                                .HasColumnName("phone_number");
                         });
 
                     b.HasKey("Id")

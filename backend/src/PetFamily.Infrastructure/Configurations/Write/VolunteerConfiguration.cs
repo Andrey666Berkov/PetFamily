@@ -54,7 +54,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             em.IsRequired();
             em.Property(e => e.Phonenumber)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("phone_number");
         });
 
         builder.OwnsOne(p => p.RequisitesList, po =>
