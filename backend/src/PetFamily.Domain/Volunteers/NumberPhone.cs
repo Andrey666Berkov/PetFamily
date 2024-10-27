@@ -27,10 +27,11 @@ public record PhoneNumber
             string phoneNumber = regex.Match(numberPhone).Value;
             return new PhoneNumber(phoneNumber);
         }*/
-        if (string.IsNullOrWhiteSpace(numberPhone)==false)
+        if (string.IsNullOrWhiteSpace(numberPhone))
         {
-            return new PhoneNumber(numberPhone);
+            return Errors.General.ValueIsInavalid("PhoneNumber");
+            
         }
-        return Errors.General.ValueIsInavalid("PhoneNumber");
+        return new PhoneNumber(numberPhone);
     }
 }

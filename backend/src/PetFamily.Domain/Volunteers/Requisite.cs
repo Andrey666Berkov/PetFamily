@@ -15,10 +15,10 @@ public record Requisite
     public static Result<Requisite, Error> Create(string title, string description)
     {
         if (string.IsNullOrWhiteSpace(title))
-            return Errors.General.ValueIsInavalid("Requisire_title");
+            return Errors.General.ValueIsInavalid("Requisite_title");
         
         if (string.IsNullOrWhiteSpace(description))
-            return Errors.General.ValueIsInavalid("Requisire_description");
+            return Errors.General.ValueIsInavalid("Requisite_description");
         
         return new Requisite(title, description);
     }

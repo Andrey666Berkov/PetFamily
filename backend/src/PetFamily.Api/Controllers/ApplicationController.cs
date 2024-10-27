@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Response;
-using PetFamily.Application.Modules.CreateVolunteer;
 using PetFamily.Domain;
 using PetFamily.Domain.Shared;
 

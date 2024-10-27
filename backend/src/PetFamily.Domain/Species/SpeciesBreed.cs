@@ -5,16 +5,16 @@ namespace PetFamily.Domain.Species;
 
 public record SpeciesBreed
 {
-    private SpeciesBreed(SpeciesId speciesId, Guid breedId)
+    private SpeciesBreed(Guid speciesId, Guid breedId)
     {
         SpeciesId = speciesId;
         BreedId = breedId;
     }
-    public SpeciesId SpeciesId { get; }
+    public Guid SpeciesId { get; }
     public Guid BreedId { get; }
     
 
-    public static Result<SpeciesBreed> Create(SpeciesId speciesId, Guid breedId)
+    public static Result<SpeciesBreed> Create(Guid speciesId, Guid breedId)
     {
         return Result
             .Success<SpeciesBreed>(new SpeciesBreed(speciesId, breedId));
