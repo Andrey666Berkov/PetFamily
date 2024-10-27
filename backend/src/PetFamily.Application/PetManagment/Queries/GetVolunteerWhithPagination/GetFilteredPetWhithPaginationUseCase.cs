@@ -7,7 +7,7 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
 
-public class GetFilteredPetWhithPaginationUseCase : IQueryUSeCase<PageList<PetDto>,GetPetWhithPaginationQuery>
+public class GetFilteredPetWhithPaginationUseCase : IQueryUSeCase<PageList<PetDto>, GetPetWhithPaginationQuery>
 {
     private readonly IReadDbContext _readDbContext;
 
@@ -21,14 +21,14 @@ public class GetFilteredPetWhithPaginationUseCase : IQueryUSeCase<PageList<PetDt
         CancellationToken cancellationToken = default)
     {
         var petQuery = _readDbContext.Pets.AsQueryable();
-        
+
         if (!string.IsNullOrWhiteSpace((query.NickName)))
         {
             var petTitleFilter = petQuery
                 .Where(i => i.NickName.Contains(query.NickName));
         }
 
-        
+
         //будущая фильтрация и сортировка
 
         return await petQuery.ToPageList(query.Page, query.PageSize, cancellationToken);

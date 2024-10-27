@@ -255,7 +255,7 @@ public class VolunteerTests
                     5555555,
                     false,
                     requisite,
-                    SpeciesBreed.Create(SpeciesId.CreateNew(), Guid.NewGuid()).Value,
+                    SpeciesBreed.Create(SpeciesId.CreateNew().Value, Guid.NewGuid()).Value,
                     null
                 )).ToList();
 
@@ -293,7 +293,7 @@ public class VolunteerTests
             5555555,
             false,
             requisite,
-            SpeciesBreed.Create(SpeciesId.CreateNew(), Guid.NewGuid()).Value,
+            SpeciesBreed.Create(SpeciesId.CreateNew().Value, Guid.NewGuid()).Value,
             null
         );
 
