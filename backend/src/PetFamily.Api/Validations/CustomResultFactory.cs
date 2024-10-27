@@ -17,21 +17,22 @@ public class CustomResultFactory: IFluentValidationAutoValidationResultFactory
             throw new InvalidOperationException("ValidationProblemDetails is null");
         }
 
+        IEnumerable<Error> errorss = [];
         List<ResponseError> errors = [];
         foreach (var (invalidField, validationErrors) in validationProblemDetails.Errors)
         {
             var responseErrors = from errorMassage in validationErrors
                 let error=Error.Deserialize(errorMassage)
-                select new ResponseError(
+                select Error.Validation(
                     error.Code, 
                     error.Message,
                     invalidField);
 
-            errors.AddRange(responseErrors);
+            errorss.ToList().AddRange(responseErrors);
         }
-        var envelope=Envelope.Error(errors);
+        var errorList=new ErrorList(errorss);
         
-        return new ObjectResult(envelope)
+        return new ObjectResult(errorList)
         {
             StatusCode = StatusCodes.Status400BadRequest
         };

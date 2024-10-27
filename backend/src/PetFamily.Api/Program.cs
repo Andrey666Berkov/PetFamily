@@ -1,7 +1,8 @@
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Middlewares;
 using PetFamily.Api.Validations;
-using PetFamily.Application.Modules;
+using PetFamily.Application;
+using PetFamily.Infrastructure;
 using PetFamily.Infrastructure.Repositories;
 using Serilog;
 using Serilog.Events;
@@ -12,7 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.Debug()
-    .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") ??
+    .WriteTo.Seq(builder
+                     .Configuration
+                     .GetConnectionString("Seq") ??
                  throw new ArgumentNullException("Seq"))
     .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning)
@@ -25,15 +28,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSerilog();
 
 builder.Services
-    .AddInfrostructure()
+    .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
+/*
 builder.Services.AddFluentValidationAutoValidation(con =>
     con.OverrideDefaultResultFactoryWith<CustomResultFactory>());
+    */
 
 var app = builder.Build();
 
-//app.UseExeptionMiddleware();
+app.UseExeptionMiddleware();
 
 app.UseSerilogRequestLogging();
 
