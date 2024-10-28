@@ -5,13 +5,13 @@ namespace PetFamily.Api.Controllers.Volunteers.Requests;
 public record AddPetRequest(
     AddressRequest Address,
     RequisiteRequest Requisite,
-    string NickName,
+    string NickName ,
     string Description,
-    double Weight,
-    int Height,
-    int NumberPhone,
     bool IsCastrated,
-    string Backet)
+    string Backet,
+    double Weight=5.0,
+    int Height=3,
+    int NumberPhone=6)
 {
     public FileDataDtoCommand CreateCommand(Guid volunteerId,
         AddressDto address, RequisiteDto requisite )

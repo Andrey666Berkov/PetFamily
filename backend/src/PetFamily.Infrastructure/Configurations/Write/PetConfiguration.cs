@@ -84,7 +84,9 @@ public class PвetConfiguration : IEntityTypeConfiguration<Pet>
                 new ValueComparer<IReadOnlyList<PetFile>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                    c => (IReadOnlyList<PetFile>)c.ToList()));
+                    c => (IReadOnlyList<PetFile>)c.ToList()))
+            .HasColumnType("jsonb")
+            .HasColumnName("files");
 
         /*builder.OwnsOne(p => p.Files, po =>
         {

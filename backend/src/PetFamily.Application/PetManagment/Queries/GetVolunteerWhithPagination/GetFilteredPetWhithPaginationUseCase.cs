@@ -22,23 +22,17 @@ public class GetFilteredPetWhithPaginationUseCase : IQueryUSeCase<PageList<PetDt
     {
         var petQuery = _readDbContext.Pets;
 
-        if (string.IsNullOrWhiteSpace((query.NickName))==false)
-        {
-            petQuery = petQuery
-                .Where(i => i.NickName.Contains(query.NickName));
-        }
+        petQuery = petQuery.WhereIf(string.IsNullOrWhiteSpace((query.NickName)) == false,
+            i => i.NickName.Contains(query.NickName!));
+
+        petQuery = petQuery.WhereIf(query.PositionTo!=null,
+            i => i.Position<=query.PositionTo);
         
-        if (query.PositionTo!=null)
-        {
-            petQuery = petQuery
-                .Where(i => i.Position<=query.PositionTo);
-        }
+        petQuery = petQuery.WhereIf(query.PositionFrom!=null,
+            i => i.Position >= query.PositionFrom);
+
+        petQuery = petQuery.OrderBy(i => i.Position);
         
-        if (query.PositionFrom!=null)
-        {
-            petQuery = petQuery
-                .Where(i => i.Position >= query.PositionFrom);
-        }
         
         //будущая фильтрация и сортировка
 

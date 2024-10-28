@@ -13,11 +13,25 @@ public class PetController : ApplicationController
         [FromServices] GetFilteredPetWhithPaginationUseCase handle,
         CancellationToken cancellationToken = default)
     {
-        var query = request.ToQuery();
+        var petQuery = request.ToQuery();
         
-        var response=await handle.Handle(query, cancellationToken);
+        var response=await handle.Handle(petQuery, cancellationToken);
+        
+        return Ok(response);
+    }
+    
+    [HttpGet("dapper")]
+    public async Task<ActionResult> GetDapper(
+        [FromQuery] GetPetWithPaginationRequest request,
+        [FromServices] GetFilteredPetWhithPaginationUseCaseDapper handle,
+        CancellationToken cancellationToken = default)
+    {
+        var petQuery = request.ToQuery();
+        
+        var response=await handle.Handle(petQuery, cancellationToken);
         
         return Ok(response);
     }
 }
+
 
