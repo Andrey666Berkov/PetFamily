@@ -42,6 +42,9 @@ public class GetFilteredPetWhithPaginationUseCase : IQueryUSeCase<PageList<PetDt
         
         //будущая фильтрация и сортировка
 
-        return await petQuery.ToPageList(query.Page, query.PageSize, cancellationToken);
+        return await petQuery.ToPageList(
+            query.Page,
+            query.PageSize, 
+            cancellationToken);
     }
 }
