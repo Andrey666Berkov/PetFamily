@@ -20,15 +20,26 @@ public class GetFilteredPetWhithPaginationUseCase : IQueryUSeCase<PageList<PetDt
         GetPetWhithPaginationQuery query,
         CancellationToken cancellationToken = default)
     {
-        var petQuery = _readDbContext.Pets.AsQueryable();
+        var petQuery = _readDbContext.Pets;
 
-        if (!string.IsNullOrWhiteSpace((query.NickName)))
+        if (string.IsNullOrWhiteSpace((query.NickName))==false)
         {
-            var petTitleFilter = petQuery
+            petQuery = petQuery
                 .Where(i => i.NickName.Contains(query.NickName));
         }
-
-
+        
+        if (query.PositionTo!=null)
+        {
+            petQuery = petQuery
+                .Where(i => i.Position<=query.PositionTo);
+        }
+        
+        if (query.PositionFrom!=null)
+        {
+            petQuery = petQuery
+                .Where(i => i.Position >= query.PositionFrom);
+        }
+        
         //будущая фильтрация и сортировка
 
         return await petQuery.ToPageList(query.Page, query.PageSize, cancellationToken);
