@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Minio.DataModel.Args;
 using PetFamily.Api.Controllers.Volunteers.Requests;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
@@ -20,7 +21,16 @@ namespace PetFamily.Api.Controllers.Volunteers;
 
 public class VolunteerController : ApplicationController
 {
+    [HttpPost("{volunteerid:guid}/get-volunteer")]
+    public async Task<ActionResult> GetAllVolunteer(
+        [FromBody]GetAllVolunteersUseCase useCase,
+        CancellationToken cancellationToken = default)
+    {
+        
 
+        return Ok(petResult.Value);
+    }
+    
   [HttpPost("{volunteerid:guid}/get-pet/{petid:guid}")]
     public async Task<ActionResult> GetPet(
         [FromRoute] Guid petid,
