@@ -100,7 +100,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("Files")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("jsonb")
                         .HasColumnName("files");
 
                     b.Property<int?>("Height")
@@ -129,8 +129,9 @@ namespace PetFamily.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("number_phone_owner");
 
-                    b.Property<int>("PetType")
-                        .HasColumnType("integer")
+                    b.Property<string>("PetType")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("pet_type");
 
                     b.Property<int>("StatusHelper")

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
@@ -22,23 +23,37 @@ public class GetFilteredPetWhithPaginationUseCase : IQueryUSeCase<PageList<PetDt
     {
         var petQuery = _readDbContext.Pets;
 
-        petQuery = petQuery.WhereIf(string.IsNullOrWhiteSpace((query.NickName)) == false,
-            i => i.NickName.Contains(query.NickName!));
+        Expression<Func<PetDto, object>> keySelector = query.SortBy?.ToLower() switch
+        {
+            "nickname" => (issue) => issue.NickName,
+            "position" => (issue) => issue.Position,
+            _ => (issue) => issue.Id
+        };
+        
+        petQuery= query.SortDirection?.ToLower() == "desc" 
+            ? petQuery.OrderByDescending(keySelector) 
+            : petQuery.OrderBy(keySelector);
 
-        petQuery = petQuery.WhereIf(query.PositionTo!=null,
-            i => i.Position<=query.PositionTo);
-        
-        petQuery = petQuery.WhereIf(query.PositionFrom!=null,
-            i => i.Position >= query.PositionFrom);
 
-        petQuery = petQuery.OrderBy(i => i.Position);
-        
-        
+        petQuery = petQuery
+            .WhereIf(string.IsNullOrWhiteSpace((query.NickName)) == false,
+                i => i.NickName.Contains(query.NickName!));
+
+        petQuery = petQuery
+            .WhereIf(query.PositionTo != null,
+                i => i.Position <= query.PositionTo);
+
+        petQuery = petQuery
+            .WhereIf(query.PositionFrom != null,
+                i => i.Position >= query.PositionFrom);
+
+
+
         //будущая фильтрация и сортировка
 
         return await petQuery.ToPageList(
             query.Page,
-            query.PageSize, 
+            query.PageSize,
             cancellationToken);
     }
 }

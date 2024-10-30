@@ -5,7 +5,7 @@ public class PetDto
     public Guid Id { get; init; }
     public Guid VolunteerId { get; init; }
     public string NickName { get;  set; } = string.Empty;
-    public int PetType { get;  set; }
+    public string PetType { get;  set; }
     public int Position { get;  set; }
     public string Description { get; private set; } = default!;
     public string? Color { get;  set; }
