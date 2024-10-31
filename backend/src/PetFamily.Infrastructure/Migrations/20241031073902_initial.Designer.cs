@@ -13,7 +13,7 @@ using PetFamily.Infrastructure.DbContexts;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20241030070351_initial")]
+    [Migration("20241031073902_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -256,7 +256,7 @@ namespace PetFamily.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)")
-                                .HasColumnName("phone_number_phonenumber");
+                                .HasColumnName("phone_number");
                         });
 
                     b.HasKey("Id")

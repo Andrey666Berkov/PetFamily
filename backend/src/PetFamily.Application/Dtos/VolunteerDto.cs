@@ -8,7 +8,7 @@ public class VolunteerDto
     public string Email { get; init; }=string.Empty;
     public string Description { get; init; } =string.Empty;
     public int Experience { get; init; }
-    public int PhoneNumber { get; init; }
+    public string PhoneNumber { get; init; }=String.Empty;
     public RequisiteDto[] Requisites { get; set; } = [];
 
     public SocialNetworkDto[] SocialNetworks { get; set; } = [];

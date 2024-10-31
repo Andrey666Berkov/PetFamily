@@ -41,17 +41,17 @@ public class GetFilteredPetWhithPaginationUseCaseDapper :
             parameters.Add("@NickName", query.NickName);
         }
         
-    
-        
         sql.ApplySorting(parameters ,query.SortBy, query.SortDirection);
         sql.ApplyPagination(parameters, query.Page, query.PageSize);
         
         _logger.LogInformation($"Sql: {sql.ToString()}");
 
-        var pet = await connection.QueryAsync<PetDto, string, PetDto>(sql.ToString(),
+        var pet = await connection
+            .QueryAsync<PetDto, string, PetDto>(sql.ToString(),
             (pet, jsonFiles) =>
             {
-                var files = JsonSerializer.Deserialize<PetFileDto[]>(jsonFiles) ?? [];
+                var files = JsonSerializer
+                    .Deserialize<PetFileDto[]>(jsonFiles) ?? [];
                 pet.Files = files;
                 return pet;
             },

@@ -36,7 +36,7 @@ namespace PetFamily.Infrastructure.Migrations
                     first_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     last_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     middle_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    phone_number_phonenumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    phone_number = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     requisites = table.Column<string>(type: "jsonb", nullable: false),
                     social_network = table.Column<string>(type: "jsonb", nullable: false)
                 },

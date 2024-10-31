@@ -1,34 +1,59 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Minio.DataModel.Args;
 using PetFamily.Api.Controllers.Volunteers.Requests;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
-using PetFamily.Application.Abstractions;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+using PetFamily.Application.PetManagment.Queries.GetAllVolunteersWithPaginationUseCase;
 using PetFamily.Application.PetManagment.UseCases.AddPet;
 using PetFamily.Application.PetManagment.UseCases.CreateVolunteer;
 using PetFamily.Application.PetManagment.UseCases.DeleteVolunteer;
 using PetFamily.Application.PetManagment.UseCases.GetPet;
+using PetFamily.Application.PetManagment.UseCases.GetVolunteerWithPagination;
 using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
 using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerSocialNetwork;
 using PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
-using PetFamily.Domain.Shared;
-
 namespace PetFamily.Api.Controllers.Volunteers;
 
 public class VolunteerController : ApplicationController
 {
-    [HttpPost("{volunteerid:guid}/get-volunteer")]
-    public async Task<ActionResult> GetAllVolunteer(
-        [FromBody]GetAllVolunteersUseCase useCase,
+    [HttpGet("AllColunteers")]
+    public async Task<ActionResult> GetAllVolunteers(
+        [FromQuery] GetVolunteerWithPaginationRequest request,
+        [FromServices]GetVolunteerWithPaginationUseCase useCase,
         CancellationToken cancellationToken = default)
     {
+        var volunteerQuery = request.ToQuery();
         
+        var response=await useCase.Handle(volunteerQuery, cancellationToken);
 
-        return Ok(petResult.Value);
+        return Ok(response);
+    }
+    [HttpGet("DRAPPER")]
+    public async Task<ActionResult> GetVolunteerDrapper(
+        [FromQuery] GetVolunteerWithPaginationRequest request,
+        [FromServices]GetAllVolunteersWithPaginationDapperUseCase useCase,
+        CancellationToken cancellationToken = default)
+    {
+        var volunteerQuery = request.ToQuery();
+        
+        var response=await useCase.Handle(volunteerQuery, cancellationToken);
+
+        return Ok(response);
+    }
+    
+    [HttpGet("All")]
+    public async Task<ActionResult> GetAllVolunteer(
+        [FromQuery] GetVolunteerWithPaginationRequest request,
+        [FromServices]GetAllVolunteersWithPaginationDapperUseCase useCase,
+        CancellationToken cancellationToken = default)
+    {
+        var volunteerQuery = request.ToQuery();
+        
+        var response=await useCase.Handle(volunteerQuery, cancellationToken);
+
+        return Ok(response);
     }
     
   [HttpPost("{volunteerid:guid}/get-pet/{petid:guid}")]
