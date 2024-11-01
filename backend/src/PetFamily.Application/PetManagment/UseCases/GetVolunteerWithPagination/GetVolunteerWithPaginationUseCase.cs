@@ -17,7 +17,7 @@ public class GetVolunteerWithPaginationUseCase :IQueryUSeCase<PageList<Volunteer
 {
     private readonly IReadDbContext _readDbContext;
     private readonly ILogger<GetVolunteerWithPaginationUseCase> _logger;
-    private readonly IValidator<GetVolunteerWhithPaginationQuery> _validator;
+   
     public GetVolunteerWithPaginationUseCase(
         IReadDbContext readDbContext,
         
@@ -31,28 +31,23 @@ public class GetVolunteerWithPaginationUseCase :IQueryUSeCase<PageList<Volunteer
         GetVolunteerWhithPaginationQuery query,
         CancellationToken cancellationToken= default )
     {
-        var validQuery =await _validator.ValidateAsync(query);
-        if (validQuery.IsValid == false)
-        {
-            
-        }
         var volunteers =  _readDbContext.Volunteers;
         
         if(string.IsNullOrWhiteSpace(query.FirstName)==false)
-            volunteers=volunteers.Where(c=>c.Name.Contains(query.FirstName));
+            volunteers=volunteers.Where(c=>c.FirstName.Contains(query.FirstName));
 
         
         if (string.IsNullOrWhiteSpace(query.SortBy) == false)
         {
             Expression<Func<VolunteerDto, object>> keySelector = query.SortBy switch
             {
-                "first_name" => c => c.Name,
+                "first_name" => c => c.FirstName,
                 "email" => c => c.Email,
                 "phonenumber" => c => c.PhoneNumber,
                 "experience" => c => c.Experience,
                 _ => c => c.Id
             };
-            volunteers=query.SortDirection.ToLower()=="desc"
+            volunteers=query.SortDirection!.ToLower()=="desc"
                 ? volunteers.OrderByDescending(keySelector) 
                 : volunteers.OrderBy(keySelector);
         }
