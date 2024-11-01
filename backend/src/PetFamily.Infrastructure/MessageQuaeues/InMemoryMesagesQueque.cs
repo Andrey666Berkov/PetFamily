@@ -1,6 +1,6 @@
 ﻿using System.Threading.Channels;
 using PetFamily.Application.Massaging;
-using FileInfo = PetFamily.Application.FileProvider.FileInfo;
+
 
 namespace PetFamily.Infrastructure.MessageQuaeues;
 
