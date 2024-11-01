@@ -83,7 +83,7 @@ namespace PetFamily.Infrastructure.Migrations
                     birth_date = table.Column<DateOnly>(type: "date", nullable: true),
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
                     status_helper = table.Column<int>(type: "integer", nullable: false),
-                    files = table.Column<string>(type: "text", nullable: false),
+                    files = table.Column<string>(type: "jsonb", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: true),
                     city = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),

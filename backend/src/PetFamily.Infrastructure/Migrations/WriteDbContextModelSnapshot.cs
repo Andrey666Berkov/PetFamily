@@ -100,7 +100,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("Files")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("jsonb")
                         .HasColumnName("files");
 
                     b.Property<int?>("Height")

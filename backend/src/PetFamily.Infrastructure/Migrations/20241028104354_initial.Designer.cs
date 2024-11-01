@@ -13,7 +13,7 @@ using PetFamily.Infrastructure.DbContexts;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20241028070323_initial")]
+    [Migration("20241028104354_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -103,7 +103,7 @@ namespace PetFamily.Infrastructure.Migrations
 
                     b.Property<string>("Files")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("jsonb")
                         .HasColumnName("files");
 
                     b.Property<int?>("Height")
