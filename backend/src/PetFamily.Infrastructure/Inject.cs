@@ -66,6 +66,9 @@ public static class Inject
         services.AddScoped<WriteDbContext>();
         services.AddScoped<IReadDbContext, ReadDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+        
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true; //мапить имена с нижнеми подчеркиваниями
 
         return services;
     }

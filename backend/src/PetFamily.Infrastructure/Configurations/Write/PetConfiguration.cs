@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Application.Dtos;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Volunteers;
@@ -69,22 +70,10 @@ public class PвetConfiguration : IEntityTypeConfiguration<Pet>
         );
         
         builder.Property(i => i.Files)
-            .HasConversion(
-                files => JsonSerializer.Serialize(
-                    files
-                        .Select(c => new PetFileDto()
-                        {
-                            PathToStorage = c.FilePath.FullPath
-                        })
-                    , JsonSerializerOptions.Default),
-                json => JsonSerializer
-                    .Deserialize<List<PetFileDto>>(json, JsonSerializerOptions.Default)!.Select(dto =>
-                        new PetFile(FilePath.CreateOfString(dto.PathToStorage).Value, false))
-                    .ToList(),
-                new ValueComparer<IReadOnlyList<PetFile>>(
-                    (c1, c2) => c1.SequenceEqual(c2),
-                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                    c => (IReadOnlyList<PetFile>)c.ToList()));
+            .ValueObjectCollection(
+                c => new PetFileDto() { PathToStorage = c.FilePath.FullPath },
+                dto => new PetFile(FilePath.CreateOfString(dto.PathToStorage).Value, false))
+            .HasColumnName("files");
 
         /*builder.OwnsOne(p => p.Files, po =>
         {
@@ -131,5 +120,9 @@ public class PвetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");
+        
+        builder.Property(c=>c.PetType)
+            .HasConversion(c=>c.ToString(),
+                v=>(PetType)Enum.Parse(typeof(PetType), v));
     }
 }

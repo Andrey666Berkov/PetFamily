@@ -1,12 +1,12 @@
+using Microsoft.OpenApi.Models;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Middlewares;
-using PetFamily.Api.Validations;
 using PetFamily.Application;
+using PetFamily.Authentication;
 using PetFamily.Infrastructure;
-using PetFamily.Infrastructure.Repositories;
 using Serilog;
 using Serilog.Events;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,17 +24,42 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(v =>
+{
+    v.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        In = ParameterLocation.Header,
+        Description = "JWT: Bearer {token}",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    v.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme()
+            {
+                Reference = new OpenApiReference()
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
 builder.Services.AddSerilog();
 
 builder.Services
     .AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication()
+    .AddAuthentication1(builder.Configuration);
 
 /*
 builder.Services.AddFluentValidationAutoValidation(con =>
     con.OverrideDefaultResultFactoryWith<CustomResultFactory>());
     */
+
 
 var app = builder.Build();
 
@@ -52,6 +77,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

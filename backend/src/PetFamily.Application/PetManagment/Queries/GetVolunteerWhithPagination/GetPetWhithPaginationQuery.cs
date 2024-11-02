@@ -3,8 +3,10 @@
 namespace PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
 
 public record GetPetWhithPaginationQuery(
-    string? NickName, 
-    /*int? PositionFrom,
-    int? PositionTo,*/
-    int Page, 
-    int PageSize) : IQuery;
+    string? NickName,
+    int Page,
+    int PageSize,
+    int? PositionFrom,
+    int? PositionTo,
+    string? SortBy,
+    string? SortDirection) : IQuery;

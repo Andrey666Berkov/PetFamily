@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
 
 namespace PetFamily.Application.Extensions;
@@ -25,4 +26,15 @@ public static class QueryExtensions
             Page = page
         };
     }
+    
+    public static IQueryable<T> WhereIf<T>(
+        this IQueryable<T> source,
+        bool condition,
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken = default)
+    {
+      return condition ? source.Where(predicate) : source;
+    }
+    
+    
 }

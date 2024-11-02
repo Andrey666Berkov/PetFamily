@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.UnitTest", "tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.UnitTest.Application", "tests\PetFamily.UnitTest.Application\PetFamily.UnitTest.Application.csproj", "{0BBBBAE3-84DC-46BA-92FB-908C9298D115}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Authentication", "src\PetFamily.Authentication\PetFamily.Authentication.csproj", "{EEF8F772-3E33-40D7-BAE9-0E72FB73FF6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,5 +55,9 @@ Global
 		{0BBBBAE3-84DC-46BA-92FB-908C9298D115}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BBBBAE3-84DC-46BA-92FB-908C9298D115}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BBBBAE3-84DC-46BA-92FB-908C9298D115}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF8F772-3E33-40D7-BAE9-0E72FB73FF6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF8F772-3E33-40D7-BAE9-0E72FB73FF6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF8F772-3E33-40D7-BAE9-0E72FB73FF6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF8F772-3E33-40D7-BAE9-0E72FB73FF6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

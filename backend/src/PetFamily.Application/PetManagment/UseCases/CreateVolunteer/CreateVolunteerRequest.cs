@@ -7,14 +7,20 @@ public record CreateVolunteerRequest(
     string Email,
     string Description,
     string PhoneNumber,
-    int Experience,
     IEnumerable<RequesitDto>? RequisitesDto,
-    IEnumerable<SocialNetworkDto>? SocialNetworkDto)
+    IEnumerable<SocialNetworkDto>? SocialNetworkDto,
+    int Experience=5)
 {
     public  CreateVolunteerCommand CreateCommand()
     {
-        return new CreateVolunteerCommand(Initional, Email, Description, PhoneNumber, Experience,
-            RequisitesDto, SocialNetworkDto);
+        return new CreateVolunteerCommand(
+            Initional, 
+            Email,
+            Description,
+            PhoneNumber,
+            Experience,
+            RequisitesDto,
+            SocialNetworkDto);
     }
 }
 

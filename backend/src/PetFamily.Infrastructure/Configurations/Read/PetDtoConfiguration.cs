@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Application.Dtos;
+using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Infrastructure.Configurations.Read;
 
@@ -15,16 +16,18 @@ public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
 
         builder.Property(x => x.Species_Id).HasColumnName("species_id");
         builder.Property(x => x.Breed_Id).HasColumnName("breed_id");
-        
-            
+        builder.Property(x => x.BirthDate)
+            .IsRequired(false)
+            .HasColumnName("birth_date");
         
         builder.Property(i => i.Files)
             .HasConversion(
                 files => JsonSerializer.Serialize(string.Empty
                     , JsonSerializerOptions.Default),
                 json => JsonSerializer
-                    .Deserialize<PetFileDto[]>(json, JsonSerializerOptions.Default)!);
-                    
+                    .Deserialize<PetFileDto[]>(json, 
+                        JsonSerializerOptions.Default)!);
+        
         
         /*uilder.Property(i=>i.Files)
             .HasConversion( )
