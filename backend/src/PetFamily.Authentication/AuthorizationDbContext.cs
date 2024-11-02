@@ -32,3 +32,5 @@ public class AuthorizationDbContext(IConfiguration configuration) : IdentityDbCo
       base.OnModelCreating(modelBuilder);
     }
 }
+
+//fdasfadsefasfdfsads
