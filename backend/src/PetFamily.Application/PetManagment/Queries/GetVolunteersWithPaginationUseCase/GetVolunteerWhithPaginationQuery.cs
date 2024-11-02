@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Abstractions;
 
-namespace PetFamily.Application.PetManagment.Queries.GetAllVolunteersWithPaginationUseCase;
+namespace PetFamily.Application.PetManagment.Queries.GetVolunteersWithPaginationUseCase;
 
 public record GetVolunteerWhithPaginationQuery(
     string? FirstName,

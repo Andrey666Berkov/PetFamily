@@ -1,4 +1,4 @@
-﻿namespace PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+﻿namespace PetFamily.Application.Volunteers;
 
 public class PageList<T>
 {

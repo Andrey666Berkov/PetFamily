@@ -52,8 +52,7 @@ builder.Services.AddSerilog();
 
 builder.Services
     .AddInfrastructure(builder.Configuration)
-    .AddApplication()
-    .AddAuthentication1(builder.Configuration);
+    .AddApplication();
 
 /*
 builder.Services.AddFluentValidationAutoValidation(con =>

@@ -22,15 +22,14 @@ namespace PetFamily.Authentication;
 
 public static class Inject
 {
-    public static IServiceCollection AddAuthentication1(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services)
     {
 
-        services.AddIdentity<User, Role>();
-        services.AddScoped<AuthorizationDbContext>();
+        services.AddIdentity<User, Role>()
+            .AddEntityFrameworkStores<AuthorizationDbContext>();
         
-       // services.AddScoped<AuthorizationDbContext>();
+        // services.AddScoped<AuthorizationDbContext>();
             
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(op =>

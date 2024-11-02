@@ -4,6 +4,7 @@ using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;

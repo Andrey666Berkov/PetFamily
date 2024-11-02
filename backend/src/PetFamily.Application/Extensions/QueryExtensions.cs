@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+using PetFamily.Application.Volunteers;
 
 namespace PetFamily.Application.Extensions;
 

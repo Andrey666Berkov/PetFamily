@@ -1,14 +1,12 @@
-﻿using System.Data;
-using System.Text;
+﻿using System.Text;
 using Dapper;
-using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
-using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
-using Microsoft.Extensions.Logging;
+using PetFamily.Application.Volunteers;
 
-namespace PetFamily.Application.PetManagment.Queries.GetAllVolunteersWithPaginationUseCase;
+namespace PetFamily.Application.PetManagment.Queries.GetVolunteersWithPaginationUseCase;
 
 public class GetAllVolunteersWithPaginationDapperUseCase :
     IQueryUSeCase<PageList<VolunteerDto>, GetVolunteerWhithPaginationQuery>

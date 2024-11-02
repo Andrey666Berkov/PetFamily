@@ -6,8 +6,9 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
-using PetFamily.Application.PetManagment.Queries.GetAllVolunteersWithPaginationUseCase;
+using PetFamily.Application.PetManagment.Queries.GetVolunteersWithPaginationUseCase;
 using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Shared;
 
 

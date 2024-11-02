@@ -10,7 +10,7 @@ using PetFamily.Api.Controllers.Volunteers.Requests;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.PetManagment.Queries.GetAllVolunteersWithPaginationUseCase;
+using PetFamily.Application.PetManagment.Queries.GetVolunteersWithPaginationUseCase;
 using PetFamily.Application.PetManagment.UseCases.AddPet;
 using PetFamily.Application.PetManagment.UseCases.CreateVolunteer;
 using PetFamily.Application.PetManagment.UseCases.DeleteVolunteer;
