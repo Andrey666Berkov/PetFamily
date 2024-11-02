@@ -1,11 +1,8 @@
-using System.Text;
-using System.Text.Encodings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Middlewares;
 using PetFamily.Application;
+using PetFamily.Authentication;
 using PetFamily.Infrastructure;
 using Serilog;
 using Serilog.Events;
@@ -55,26 +52,14 @@ builder.Services.AddSerilog();
 
 builder.Services
     .AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication()
+    .AddAuthentication1(builder.Configuration);
 
 /*
 builder.Services.AddFluentValidationAutoValidation(con =>
     con.OverrideDefaultResultFactoryWith<CustomResultFactory>());
     */
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(op =>
-    {
-        op.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateIssuerSigningKey = false,
-            ValidateLifetime = false,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("dafsdasdfdsdsfsdfsdfsdfsdfsdfsdfsdfwefdweewfwefweffdsafasdfasd"))
-        };
-    });
 
 var app = builder.Build();
 
