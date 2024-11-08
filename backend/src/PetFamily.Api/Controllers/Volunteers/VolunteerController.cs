@@ -1,11 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using CSharpFunctionalExtensions;
-using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using PetFamily.Api.Controllers.Volunteers.Requests;
 using PetFamily.Api.Extensions;
 using PetFamily.Api.Processors;
@@ -19,69 +13,57 @@ using PetFamily.Application.PetManagment.UseCases.GetVolunteerWithPagination;
 using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
 using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerSocialNetwork;
 using PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
-namespace PetFamily.Api.Controllers.Volunteers;
 
+namespace PetFamily.Api.Controllers.Volunteers;
 
 public class VolunteerController : ApplicationController
 {
-
-    [HttpPost("jwt")]
-    public async Task<ActionResult> Login(CancellationToken cancellationToken)
-    {
-        var claims = new List<Claim> { new Claim(JwtRegisteredClaimNames.Sub, "iserid") };
-
-        var jwt = new JwtSecurityToken(
-            issuer: "test",
-            audience: "test",
-            claims: claims,
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes("dafsdasdfdsdsfsdfsdfsdfsdfsdfsdfsdfwefdweewfwefweffdsafasdfasd")),
-                SecurityAlgorithms.HmacSha256));
     
-
-    var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-        return Ok(encodedJwt);
-    }
-    [Authorize]
-    [HttpGet("AllColunteers")]
+    
+    
+    
+    [HttpGet("AllVolunteers")]
     public async Task<ActionResult> GetAllVolunteers(
         [FromQuery] GetVolunteerWithPaginationRequest request,
-        [FromServices]GetVolunteerWithPaginationUseCase useCase,
+        [FromServices] GetVolunteerWithPaginationUseCase useCase,
         CancellationToken cancellationToken = default)
     {
         var volunteerQuery = request.ToQuery();
-        
-        var response=await useCase.Handle(volunteerQuery, cancellationToken);
+
+        var response = await useCase.Handle(volunteerQuery, cancellationToken);
 
         return Ok(response);
     }
+
     [HttpGet("DRAPPER")]
     public async Task<ActionResult> GetVolunteerDrapper(
         [FromQuery] GetVolunteerWithPaginationRequest request,
-        [FromServices]GetAllVolunteersWithPaginationDapperUseCase useCase,
+        [FromServices] GetAllVolunteersWithPaginationDapperUseCase useCase,
         CancellationToken cancellationToken = default)
     {
         var volunteerQuery = request.ToQuery();
-        
-        var response=await useCase.Handle(volunteerQuery, cancellationToken);
+
+        var response = await useCase.Handle(volunteerQuery,
+            cancellationToken);
 
         return Ok(response);
     }
-    
+
     [HttpGet("All")]
     public async Task<ActionResult> GetAllVolunteer(
         [FromQuery] GetVolunteerWithPaginationRequest request,
-        [FromServices]GetAllVolunteersWithPaginationDapperUseCase useCase,
+        [FromServices] GetAllVolunteersWithPaginationDapperUseCase useCase,
         CancellationToken cancellationToken = default)
     {
         var volunteerQuery = request.ToQuery();
-        
-        var response=await useCase.Handle(volunteerQuery, cancellationToken);
+
+        var response = await useCase.Handle(volunteerQuery,
+            cancellationToken);
 
         return Ok(response);
     }
-    
-  [HttpPost("{volunteerid:guid}/get-pet/{petid:guid}")]
+
+    [HttpPost("{volunteerid:guid}/get-pet/{petid:guid}")]
     public async Task<ActionResult> GetPet(
         [FromRoute] Guid petid,
         [FromRoute] Guid volunteerid,
@@ -113,20 +95,20 @@ public class VolunteerController : ApplicationController
         var petPhotos = process.Process(files);
 
         var command = new UploadFilesToPetCommand(id, petId, petPhotos);
-        
-        var result= await useCase.Handler(command, cancellationToken);
+
+        var result = await useCase.Handler(command, cancellationToken);
         if (result.IsFailure)
             return result.Error.ToResponse();
 
         return Ok(result.Value);
     }
-    
+
 
     [HttpPost("{valunteerId:guid}/add-pet")]
     public async Task<ActionResult> AddPet(
         [FromRoute] Guid valunteerId,
         [FromBody] AddPetRequest request, //Т.к. IFormFile из фромбоди получить не можем
-        [FromServices] AddPetUseCase addPetUseCase, 
+        [FromServices] AddPetUseCase addPetUseCase,
         CancellationToken cancellationToken = default)
     {
         var address = new AddressDto(
@@ -144,7 +126,7 @@ public class VolunteerController : ApplicationController
             valunteerId,
             address,
             requisiteDto);
-            
+
 
         var providerUseCaseResult = await addPetUseCase.Handler(
             commands,
@@ -163,7 +145,7 @@ public class VolunteerController : ApplicationController
         CancellationToken cancellationToken = default)
     {
         var command = request.CreateCommand();
-        
+
         var result = await createVolunteerUseCase
             .Handler(command, cancellationToken);
 
@@ -181,11 +163,10 @@ public class VolunteerController : ApplicationController
         [FromServices] IValidator<UpdateVolunteerInfoCommand> validator,
         CancellationToken cancellationToken = default)
     {
-        
         var updateCommand = new UpdateVolunteerInfoCommand(id, req.Initials, req.Description);
 
         var validationResult = await validator.ValidateAsync(updateCommand, cancellationToken);
-      
+
 
         var result = await updateVolunteer.Handler(updateCommand, cancellationToken);
 

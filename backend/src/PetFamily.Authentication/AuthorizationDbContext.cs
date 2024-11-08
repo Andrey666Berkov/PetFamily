@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.AccountManagment.DataModels;
 using PetFamily.Infrastructure.Constans;
 
 
 namespace PetFamily.Authentication;
 
 public class AuthorizationDbContext(IConfiguration configuration)
-    : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
+    : IdentityDbContext<User, Role, Guid>
 {
     /*
     public DbSet<User> Users  => Set<User>();
@@ -34,14 +35,14 @@ public class AuthorizationDbContext(IConfiguration configuration)
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<IdentityUser<Guid>>()
+        modelBuilder.Entity<User>()
             .ToTable("users");
         
-        modelBuilder.Entity<IdentityRole<Guid>>()
+        modelBuilder.Entity<Role>()
             .ToTable("roles");
         
         modelBuilder.Entity<IdentityUserClaim<Guid>>()
-            .ToTable("user_claims");
+           .ToTable("user_claims");
         
         modelBuilder.Entity<IdentityUserToken<Guid>>()
             .ToTable("user_tokens");

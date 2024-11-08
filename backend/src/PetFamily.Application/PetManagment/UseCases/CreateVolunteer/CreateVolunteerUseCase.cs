@@ -43,7 +43,7 @@ public class CreateVolunteerUseCase : ICommandUSeCase<Guid, CreateVolunteerComma
             .GetByName(command.Initional.FirstName);
 
         if (valunteerNameResult.IsSuccess)
-            return Errors.Volunteers.AllReadyExist().ToErrorList();
+            return Errors.General.AllReadyExist().ToErrorList();
 
         //создание доменной модели
         //ListRequisites

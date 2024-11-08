@@ -59,7 +59,6 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         List<PetFile>? petPhotos
     ) : base(id)
     {
-        
         NickName = nickName;
         Description = description;
         PetType = petType;
@@ -73,7 +72,6 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         SpeciesBreed = speciesBreed;
         AddRequisites(requisite);
         _files = petPhotos ?? new List<PetFile>();
-        
     }
     //methods
     

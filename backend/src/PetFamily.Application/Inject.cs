@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.AccountManagment;
 using PetFamily.Application.Database;
 using PetFamily.Application.Massaging;
 using PetFamily.Application.PetManagment.UseCases.AddPet;
@@ -23,6 +24,8 @@ public static class Inject
             .AddQueries()
             .AddComands()
             .AddValidatorsFromAssembly(typeof(Inject).Assembly);
+        
+     
 
      /* services.AddScoped<GetFilteredPetWhithPaginationUseCase>()
         services.AddScoped<UpdateVolunteerInfoUseCase>() ;

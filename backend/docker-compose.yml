@@ -36,3 +36,11 @@ volumes:
   postgres-data:
   minio_data:
 
+
+  petfamily.api:
+    image: petfamily.api
+    build:
+      context: .
+      dockerfile: src/PetFamily.Api/Dockerfile
+
+ 

@@ -22,8 +22,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
     .CreateLogger();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(v =>
 {
     v.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -52,7 +51,8 @@ builder.Services.AddSerilog();
 
 builder.Services
     .AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication()
+    .AddAuthorizationInfrastructure(builder.Configuration);
 
 /*
 builder.Services.AddFluentValidationAutoValidation(con =>
