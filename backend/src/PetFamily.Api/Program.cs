@@ -47,6 +47,8 @@ builder.Services.AddSwaggerGen(v =>
         }
     });
 });
+
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSerilog();
 
 builder.Services
