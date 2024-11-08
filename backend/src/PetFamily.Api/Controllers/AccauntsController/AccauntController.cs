@@ -15,26 +15,29 @@ namespace PetFamily.Api.Controllers.AccauntsController;
 
 public class AccauntController : ApplicationController
 {
-    
     [Permission("pet.create")]
     [HttpGet("create")]
     public async Task<ActionResult> Create()
-    { 
+    {
         return Ok();
     }
+
+
     [Permission("pet.update")]
-    [HttpGet("create")]
+    [HttpGet("update")]
     public async Task<ActionResult> Update()
-    { 
+    {
         return Ok();
     }
-    
+
+
     [Authorize]
     [HttpGet("user")]
     public async Task<ActionResult> TestUser()
-    { 
+    {
         return Ok();
     }
+
     [HttpPost("registration")]
     public async Task<ActionResult> Register(
         [FromBody] RegisterUserRequest request,
@@ -44,10 +47,10 @@ public class AccauntController : ApplicationController
         var result = await handler.Handler(request.ToCommand(), cancellationToken);
         if (result.IsFailure)
             return result.Error.ToResponse();
-        
+
         return Ok();
     }
-    
+
     [HttpPost("loginnnn")]
     public async Task<ActionResult> Login(
         [FromBody] LoginUserRequests userRequest,
@@ -57,7 +60,7 @@ public class AccauntController : ApplicationController
         var result = await handler.Handler(userRequest.ToCommand(), cancellationToken);
         if (result.IsFailure)
             return result.Error.ToResponse();
-        
+
         return Ok(result.Value);
     }
 }

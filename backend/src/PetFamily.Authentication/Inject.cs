@@ -38,8 +38,7 @@ public static class Inject
             op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             op.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
+        }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
             {
                 var jwtOptions = configuration.GetSection(JwtOptions.JWT)
                     .Get<JwtOptions>() ?? throw new Exception("Missing jwt options");

@@ -12,10 +12,11 @@ namespace PetFamily.Authentication;
 public class AuthorizationDbContext(IConfiguration configuration)
     : IdentityDbContext<User, Role, Guid>
 {
-    /*
-    public DbSet<User> Users  => Set<User>();
+    
+    /*public DbSet<User> Users  => Set<User>();
     public DbSet<Role> Roles  => Set<Role>();
     */
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
