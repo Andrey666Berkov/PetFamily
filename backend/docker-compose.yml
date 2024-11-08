@@ -16,7 +16,7 @@
     container_name: seq
     restart: always
     environment:
-       - ACCEPT_EULA=Y
+      - ACCEPT_EULA=Y
     ports:
       - 5341:5341
       - 8081:80
@@ -30,17 +30,9 @@
     volumes:
       - minio_data:/data
     command: server --console-address ":9001" /data
-    
+
 
 volumes:
   postgres-data:
   minio_data:
 
-
-  petfamily.api:
-    image: petfamily.api
-    build:
-      context: .
-      dockerfile: src/PetFamily.Api/Dockerfile
-
- 
