@@ -52,7 +52,9 @@ public static class Inject
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtOptions.Key))
+                        Encoding.UTF8.GetBytes(jwtOptions.Key)),
+                    ClockSkew = TimeSpan.Zero
+                    
                 };
             });
 
@@ -77,7 +79,7 @@ public static class Inject
         }*/
             );
 
-        services.AddSingleton<IAuthorizationHandler, CreatePetRquarementHandler>();
+        services.AddSingleton<IAuthorizationHandler, PermissionRequarementHandler>();
         services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
         
         return services;

@@ -14,13 +14,14 @@ public class RegisterUserHandler :ICommandUSeCase<RegisterUserCommand>
     
     public RegisterUserHandler(
         UserManager<User> usrManager,
+        RoleManager<Role> roleManager,
         ILogger<RegisterUserHandler> logger)
     {
         _usrManager = usrManager;
         _logger = logger;
     }
 
-    public async Task<UnitResult<ErrorList>> Handler(
+    public async Task<UnitResult<ErrorList>>  Handler(
         RegisterUserCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -44,6 +45,10 @@ public class RegisterUserHandler :ICommandUSeCase<RegisterUserCommand>
             _logger.LogInformation("User created: {userName} successfully", command.UserName);
             return Result.Success<ErrorList>();
         }
+
+        _usrManager.AddToRoleAsync(user, "Partisipant");
+         
+        
         var errors=result.Errors
             .Select(c => Error.Failure(c.Code, c.Description))
             .ToList();

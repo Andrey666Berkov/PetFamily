@@ -27,9 +27,9 @@ public class JWTTokenProvider : ITokenProvider
         
         var claims = new List<Claim>
         {
-            new Claim(CustomClaims.Sub, user.Id.ToString()),
-            new Claim(CustomClaims.Email, user.Email ?? ""),
-            new Claim("Permission", "Pet")
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+            new Claim("Permission", "pet.create")
         };
         
         var jwtToken = new JwtSecurityToken(

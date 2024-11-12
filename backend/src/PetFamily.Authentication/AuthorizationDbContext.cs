@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,8 +40,42 @@ public class AuthorizationDbContext(IConfiguration configuration)
         modelBuilder.Entity<User>()
             .ToTable("users");
         
+        modelBuilder.Entity<User>()
+            .Property(u=>u.SocialNetworks)
+            .HasConversion(
+                s=>JsonSerializer.Serialize(s, JsonSerializerOptions.Default),
+                json=>JsonSerializer.Deserialize<List<SocialNetwork>>(json, JsonSerializerOptions.Default)!);
+        
         modelBuilder.Entity<Role>()
             .ToTable("roles");
+        
+        modelBuilder.Entity<Permission>()
+            .ToTable("permissions");
+
+        modelBuilder.Entity<Permission>()
+            .HasIndex(p => p.Code)
+            .IsUnique();
+        
+        modelBuilder.Entity<Permission>()
+            .Property(c=>c.Description)
+            .HasMaxLength(300);
+      
+        modelBuilder.Entity<RolePermission>()
+            .ToTable("role_permissions");
+        
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp=>rp.Role)
+            .WithMany(r=> r.RolePermissions)
+            .HasForeignKey(rp=>rp.RoleId);
+        
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp=>rp.Permission)
+            .WithMany()
+            .HasForeignKey(rp=>rp.PermissionId);
+
+        modelBuilder.Entity<RolePermission>()
+            .HasKey(p => new { p.RoleId, p.PermissionId });
+        
         
         modelBuilder.Entity<IdentityUserClaim<Guid>>()
            .ToTable("user_claims");
@@ -56,6 +91,7 @@ public class AuthorizationDbContext(IConfiguration configuration)
         
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user_role");
+        
         
     
     }

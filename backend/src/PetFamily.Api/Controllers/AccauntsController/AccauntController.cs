@@ -13,6 +13,13 @@ using PetFamily.Authentication;
 
 namespace PetFamily.Api.Controllers.AccauntsController;
 
+public static class Permissions
+{
+    public static class Pet
+    {
+        public const string Create ="pet.create";
+    }
+}
 public class AccauntController : ApplicationController
 {
     [Permission("pet.create")]
@@ -22,8 +29,8 @@ public class AccauntController : ApplicationController
         return Ok();
     }
 
-
-    [Permission("pet.update")]
+    [Authorize]
+    //[Permission("pet.update")]
     [HttpGet("update")]
     public async Task<ActionResult> Update()
     {

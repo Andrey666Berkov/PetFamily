@@ -12,6 +12,7 @@ public class PermissionPolicyProvider : IAuthorizationPolicyProvider
             return Task.FromResult<AuthorizationPolicy?>(null);
 
         var policy = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()  //иначе можно зайти не аунтифицированым(проверка на токен)
             .AddRequirements(new PermissionAttribute(policyName))
             .Build();
 
