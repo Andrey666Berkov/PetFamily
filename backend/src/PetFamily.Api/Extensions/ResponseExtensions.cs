@@ -2,17 +2,17 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Api.Response;
-using PetFamily.Domain.Shared;
+using PetFamily.Core;
 
 namespace PetFamily.Api.Extensions;
 
 public static class ResponseExtensions
 {
-    public static ActionResult ToResponse(this Error error)
+    public static ActionResult ToResponse(this ErrorMy errorMy)
     {
-        var statusCode = GetStatusForErrorType(error.Type);
+        var statusCode = GetStatusForErrorType(errorMy.Type);
 
-        var envelop = Envelope.Error(error.ToErrorList());
+        var envelop = Envelope.Error(errorMy.ToErrorList());
              
         return new ObjectResult(envelop)
         {

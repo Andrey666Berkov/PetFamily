@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
-using PetFamily.Api.Extensions;
+using PetFamily.Api.Authorization;
 using PetFamily.Api.Middlewares;
 using PetFamily.Application;
-using PetFamily.Authentication;
+
 using PetFamily.Infrastructure;
 using Serilog;
 using Serilog.Events;
@@ -55,13 +56,16 @@ builder.Services.AddSerilog();
 builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
-    .AddAuthorizationInfrastructure(builder.Configuration);
+    ;
+
+
 
 /*
 builder.Services.AddFluentValidationAutoValidation(con =>
     con.OverrideDefaultResultFactoryWith<CustomResultFactory>());
     */
-
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequarementHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
 var app = builder.Build();
 
@@ -74,7 +78,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    await app.ApplyMigration();
+   // await app.ApplyMigration();
 }
 
 app.UseHttpsRedirection();

@@ -7,8 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="PetFamily.Domain">
+        <HintPath>..\PetFamily.Api\bin\Debug\net8.0\PetFamily.Domain.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PetFamily.Core\PetFamily.Core.csproj" />
     </ItemGroup>
 
 </Project>

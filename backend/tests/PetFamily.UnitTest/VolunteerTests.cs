@@ -2,8 +2,9 @@ using CSharpFunctionalExtensions;
 using FluentAssertions;
 using PetFamily.Domain.IDs;
 using PetFamily.Domain.Species;
-using PetFamily.Domain.ValueObjects;
 using PetFamily.Domain.Volunteers;
+using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Pet.Domain.Volunteers.Species;
 
 namespace PetFamily.UnitTest;
 

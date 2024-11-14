@@ -1,4 +1,4 @@
-﻿using PetFamily.Domain.Shared;
+﻿using PetFamily.Core;
 
 namespace PetFamily.Api.Response;
 

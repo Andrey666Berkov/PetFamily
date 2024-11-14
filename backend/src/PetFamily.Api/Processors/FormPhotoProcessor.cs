@@ -1,4 +1,4 @@
-﻿using PetFamily.Application.Dtos;
+﻿using PetFamily.Core.Dtos;
 
 namespace PetFamily.Api.Processors;
 

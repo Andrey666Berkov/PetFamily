@@ -6,19 +6,19 @@ using FluentValidation.Results;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Moq;
-using PetFamily.Application.Database;
-using PetFamily.Application.Dtos;
 using PetFamily.Application.FileProvider;
-using PetFamily.Application.Massaging;
 using PetFamily.Application.PetManagment;
 using PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
+using PetFamily.Core;
+using PetFamily.Core.Massaging;
 using PetFamily.Domain.IDs;
-using PetFamily.Domain.Shared;
 using PetFamily.Domain.Species;
-using PetFamily.Domain.ValueObjects;
 using PetFamily.Domain.Volunteers;
-using PetFamily.Infrastructure.MessageQuaeues;
-using FileInfo = PetFamily.Application.FileProvider.FileInfo;
+using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Pet.Domain.Volunteers.Species;
+using PetFamily.Shared;
+using PetFamily.Shared.Dtos;
+using FileInfo = PetFamily.Shared.Dtos.FileInfo;
 
 namespace PetFamily.Application.UnitTest;
 
@@ -71,7 +71,7 @@ public class UploadFilesToPetTests
 
         _fileProviderMock
             .Setup(v => v.Handler(It.IsAny<List<FileDataDto>>(),ct))
-            .ReturnsAsync(Result.Success<IReadOnlyList<FilePath>, Error>(filePaths));
+            .ReturnsAsync(Result.Success<IReadOnlyList<FilePath>, ErrorMy>(filePaths));
         
                       // Mock for IVolunteerRepository
         _volunteerRepositoryMock

@@ -1,8 +1,4 @@
-﻿using CSharpFunctionalExtensions;
-using PetFamily.Api.Extensions;
-using PetFamily.Api.Response;
-using PetFamily.Domain;
-using PetFamily.Domain.Shared;
+﻿using PetFamily.Api.Response;
 
 namespace PetFamily.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;

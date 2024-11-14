@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using PetFamily.Api.Response;
-using PetFamily.Domain.Shared;
+using PetFamily.Core;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
 
 namespace PetFamily.Api.Validations;
@@ -17,13 +17,13 @@ public class CustomResultFactory: IFluentValidationAutoValidationResultFactory
             throw new InvalidOperationException("ValidationProblemDetails is null");
         }
 
-        IEnumerable<Error> errorss = [];
+        IEnumerable<ErrorMy> errorss = [];
         List<ResponseError> errors = [];
         foreach (var (invalidField, validationErrors) in validationProblemDetails.Errors)
         {
             var responseErrors = from errorMassage in validationErrors
-                let error=Error.Deserialize(errorMassage)
-                select Error.Validation(
+                let error=ErrorMy.Deserialize(errorMassage)
+                select ErrorMy.Validation(
                     error.Code, 
                     error.Message,
                     invalidField);

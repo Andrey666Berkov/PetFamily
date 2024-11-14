@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Infrastructure;
-using PetFamily.Infrastructure.DbContexts;
+﻿
 
+/*
 namespace PetFamily.Api.Extensions;
 
 public static class AppExtensions
@@ -15,4 +14,4 @@ public static class AppExtensions
    
         return app;
     }
-}
+}*/

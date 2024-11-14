@@ -1,19 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
-using PetFamily.Application.Database;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.Massaging;
-using PetFamily.Application.PetManagment;
 using PetFamily.Infrastructure.BackgroundServices;
-using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.Files;
-using PetFamily.Infrastructure.MessageQuaeues;
 using PetFamily.Infrastructure.Options;
-using PetFamily.Infrastructure.Providers;
-using PetFamily.Infrastructure.Repositories;
-using FileInfo = PetFamily.Application.FileProvider.FileInfo;
-
 namespace PetFamily.Infrastructure;
 
 public static class Inject
@@ -35,14 +25,14 @@ public static class Inject
 
     private static IServiceCollection AddMesagesQueque(this IServiceCollection services)
     {
-        services.AddSingleton<IMessageQueque<IEnumerable<FileInfo>>, InMemoryMesagesQueque<IEnumerable<FileInfo>>>();
+        //services.AddSingleton<IMessageQueque<IEnumerable<FileInfo>>, InMemoryMesagesQueque<IEnumerable<FileInfo>>>();
 
         return services;
     }
 
     private static IServiceCollection AddRepositoryServices(this IServiceCollection services)
     {
-        services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+      //  services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 
         return services;
     }
@@ -56,17 +46,17 @@ public static class Inject
 
     private static IServiceCollection AddFilesCleanerServoces(this IServiceCollection services)
     {
-        services.AddScoped<IFilesCleanerService, FilesCleanerService>();
+      //  services.AddScoped<IFilesCleanerService, FilesCleanerService>();
 
         return services;
     }
 
     private static IServiceCollection AddDbContexts(this IServiceCollection services)
     {
-        services.AddScoped<WriteDbContext>();
+        /*services.AddScoped<WriteDbContext>();
         services.AddScoped<IReadDbContext, ReadDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+        services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();*/
         
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true; //мапить имена с нижнеми подчеркиваниями
 
@@ -91,7 +81,7 @@ public static class Inject
             o.WithSSL(minioOptions.WithSSL);
         });
 
-        services.AddScoped<IFilesProvider, MinioProvider>();
+       // services.AddScoped<IFilesProvider, MinioProvider>();
 
         return services;
     }

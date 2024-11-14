@@ -9,7 +9,6 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
             <PrivateAssets>all</PrivateAssets>
@@ -33,20 +32,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PetFamily.Application\PetFamily.Application.csproj" />
-      <ProjectReference Include="..\PetFamily.Authentication\PetFamily.Authentication.csproj" />
-      <ProjectReference Include="..\PetFamily.Domain\PetFamily.Domain.csproj" />
-      <ProjectReference Include="..\PetFamily.Infrastructure\PetFamily.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\AccauntsController\RegisterUser\" />
+      <ProjectReference Include="..\PetFamily.Infrastructure\PetFamily.Infrastructure.csproj" />
+      <ProjectReference Include="..\PetFamily.Core\PetFamily.Core.csproj" />
     </ItemGroup>
 
 </Project>

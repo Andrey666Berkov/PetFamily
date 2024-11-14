@@ -1,17 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using PetFamily.Application.Abstractions;
-using PetFamily.Application.AccountManagment;
-using PetFamily.Application.Database;
-using PetFamily.Application.Massaging;
-using PetFamily.Application.PetManagment.UseCases.AddPet;
-using PetFamily.Application.PetManagment.UseCases.CreateVolunteer;
-using PetFamily.Application.PetManagment.UseCases.DeleteVolunteer;
-using PetFamily.Application.PetManagment.UseCases.GetPet;
-using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerMainInfo;
-using PetFamily.Application.PetManagment.UseCases.UpdateVolunteerSocialNetwork;
-using PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
-using PetFamily.Application.PetManagment.Queries.GetVolunteerWhithPagination;
+
+
+
+using PetFamily.Core.Abstractions;
 
 
 namespace PetFamily.Application;
