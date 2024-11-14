@@ -1,6 +1,6 @@
-﻿using petfamily.Accounts.Domain.DataModels;
+﻿using Petfamily.Accounts.Domain.DataModels;
 
-namespace petfamily.Accounts.Application;
+namespace Petfamily.Accounts.Application;
 
 public interface ITokenProvider
 {
