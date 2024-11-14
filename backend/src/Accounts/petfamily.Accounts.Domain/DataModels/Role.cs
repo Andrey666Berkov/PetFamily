@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
 
-namespace petfamily.Accounts.Domain.DataModels;
+using Microsoft.AspNetCore.Identity;
+
+namespace Petfamily.Accounts.Domain.DataModels;
 
 public class Role : IdentityRole<Guid>
 {

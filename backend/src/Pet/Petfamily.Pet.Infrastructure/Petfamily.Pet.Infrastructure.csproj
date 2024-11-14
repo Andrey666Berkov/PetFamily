@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\PetFamily.Shared.Core\PetFamily.Shared.Core.csproj" />
+      <ProjectReference Include="..\..\Shared\PetFamily.Shared.SharedKernel\PetFamily.Shared.SharedKernel.csproj" />
+      <ProjectReference Include="..\PetFamily.Pet.Application\PetFamily.Pet.Application.csproj" />
+      <ProjectReference Include="..\PetFamily.Pet.Domain\PetFamily.Pet.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Minio.AspNetCore" Version="6.0.1" />
+    </ItemGroup>
+
+</Project>

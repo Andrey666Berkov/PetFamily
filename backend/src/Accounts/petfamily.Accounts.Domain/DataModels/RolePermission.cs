@@ -1,4 +1,4 @@
-﻿namespace petfamily.Accounts.Domain.DataModels;
+﻿namespace Petfamily.Accounts.Domain.DataModels;
 
 public class RolePermission
 {
