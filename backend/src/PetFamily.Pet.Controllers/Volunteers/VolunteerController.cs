@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PetFamily.Api.Controllers;
-using PetFamily.Api.Extensions;
-using PetFamily.Api.Processors;
+using PetFamily.Web.Processors;
+using PetFamily.Core;
+using PetFamily.Core.Controllers;
+using PetFamily.Core.Extensions;
 using PetFamily.Pet.Application.PetManagment.Queries.GetVolunteersWithPaginationUseCase;
 using PetFamily.Pet.Application.PetManagment.UseCases.AddPet;
 using PetFamily.Pet.Application.PetManagment.UseCases.CreateVolunteer;

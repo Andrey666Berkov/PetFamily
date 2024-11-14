@@ -1,10 +1,8 @@
-using CSharpFunctionalExtensions;
 using FluentAssertions;
-using PetFamily.Domain.IDs;
-using PetFamily.Domain.Species;
-using PetFamily.Domain.Volunteers;
-using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Pet.Domain.Volunteers;
+using PetFamily.Pet.Domain.Volunteers.IDs;
 using PetFamily.Pet.Domain.Volunteers.Species;
+using PetFamily.Pet.Domain.Volunteers.ValueObjects;
 
 namespace PetFamily.UnitTest;
 
@@ -243,7 +241,7 @@ public class VolunteerTests
 
         var address = Address.Create("city", "street", "ggg").Value;
         var pets = Enumerable.Range(1, petCount).Select(_ =>
-            new Pet(
+            new Pet.Domain.Volunteers.Pet(
                 PetId.CreateNewPetId(),
                     "NameA",
                     "description",
@@ -274,14 +272,14 @@ public class VolunteerTests
         return volunteer;
     }
     
-    private Pet CreatePet()
+    private Pet.Domain.Volunteers.Pet CreatePet()
     {
         var requisite = Requisite.Create("alfa","herovds").Value;
         var requisiteList = ListRequisites.Create([requisite]).Value;
         
         var address = Address.Create("city", "street", "ggg").Value;
         
-        var pet = new Pet(
+        var pet = new Pet.Domain.Volunteers.Pet(
             PetId.CreateNewPetId(),
             "NewPaTY",
             "description",

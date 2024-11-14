@@ -11,7 +11,7 @@ public interface ICommandUSeCase<TResponse,in TCommand> where TCommand : IComman
 
 public interface ICommandUSeCase<in TCommand> where TCommand : ICommands
 {
-    public  Task<UnitResult<ErrorList>> Handler(
+    public  Task<UnitResult<ErrorList>> Handle(
         TCommand command,
         CancellationToken cancellationToken = default);
 }

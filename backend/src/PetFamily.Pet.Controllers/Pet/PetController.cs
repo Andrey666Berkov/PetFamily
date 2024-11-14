@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PetFamily.Api.Controllers;
+using PetFamily.Core.Controllers;
 using PetFamily.Pet.Application.PetManagment.Queries.GetVolunteerWhithPagination;
 using PetFamily.Pet.Controllers.Pet.Requests;
 

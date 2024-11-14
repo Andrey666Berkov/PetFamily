@@ -12,10 +12,10 @@ public static class Inject
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services
-            .AddQueries()
-            .AddComands()
-            .AddValidatorsFromAssembly(typeof(Inject).Assembly);
+        //services
+          //  .AddQueries()
+        //    .AddComands();
+           // .AddValidatorsFromAssembly(typeof(Inject).Assembly);
         
      
 
@@ -32,7 +32,7 @@ public static class Inject
         return services;
     }
 
-    private static IServiceCollection AddComands(this IServiceCollection services)
+    /*private static IServiceCollection AddComands(this IServiceCollection services)
     {
         return services.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
             .AddClasses(classes => classes
@@ -48,5 +48,5 @@ public static class Inject
                 .AssignableTo(typeof(IQueryUSeCase<,>)))
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
-    }
+    }*/
 }

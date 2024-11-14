@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace petfamily.Accounts.Domain.DataModels;
+namespace Petfamily.Accounts.Domain.DataModels;
 
 public class User : IdentityUser<Guid>
 {

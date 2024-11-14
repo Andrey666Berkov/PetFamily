@@ -7,18 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\petfamily.Accounts.Domain\petfamily.Accounts.Domain.csproj" />
-      <ProjectReference Include="..\PetFamily.Core\PetFamily.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="PetFamily.Domain">
-        <HintPath>..\PetFamily.Api\bin\Debug\net8.0\PetFamily.Domain.dll</HintPath>
-      </Reference>
+      <ProjectReference Include="..\..\PetFamily.Core\PetFamily.Core.csproj" />
+      <ProjectReference Include="..\Petfamily.Accounts.Domain\Petfamily.Accounts.Domain.csproj" />
     </ItemGroup>
 
 </Project>

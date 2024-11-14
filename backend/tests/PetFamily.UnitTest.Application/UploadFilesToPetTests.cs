@@ -1,24 +1,17 @@
-
 using CSharpFunctionalExtensions;
-using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Moq;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.PetManagment;
-using PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
 using PetFamily.Core;
+using PetFamily.Core.Dtos;
 using PetFamily.Core.Massaging;
-using PetFamily.Domain.IDs;
-using PetFamily.Domain.Species;
-using PetFamily.Domain.Volunteers;
-using PetFamily.Domain.Volunteers.ValueObjects;
+using PetFamily.Pet.Application.PetManagment;
+using PetFamily.Pet.Application.PetManagment.UseCases.UploadFilesToPet;
+using PetFamily.Pet.Domain.Volunteers;
+using PetFamily.Pet.Domain.Volunteers.IDs;
 using PetFamily.Pet.Domain.Volunteers.Species;
-using PetFamily.Shared;
-using PetFamily.Shared.Dtos;
-using FileInfo = PetFamily.Shared.Dtos.FileInfo;
+using PetFamily.Pet.Domain.Volunteers.ValueObjects;
 
 namespace PetFamily.Application.UnitTest;
 
@@ -114,16 +107,6 @@ public class UploadFilesToPetTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(volunteer.Pets[0].Id.Value);*/
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     private Volunteer CreateVolunteerWithPet(int petCount)
     {
@@ -140,7 +123,7 @@ public class UploadFilesToPetTests
 
         var address = Address.Create("city", "street", "ggg").Value;
         var pets = Enumerable.Range(1, petCount).Select(_ =>
-            new Pet(
+            new Pet.Domain.Volunteers.Pet(
                 PetId.CreateNewPetId(),
                 "NameA",
                 "description",

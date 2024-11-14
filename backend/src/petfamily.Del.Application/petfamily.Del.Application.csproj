@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>petfamily.Accounts.Application</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\petfamily.DEL.Domain\petfamily.DEL.Domain.csproj" />
+      <ProjectReference Include="..\PetFamily.Core\PetFamily.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="PetFamily.Domain">
+        <HintPath>..\PetFamily.Api\bin\Debug\net8.0\PetFamily.Domain.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>
