@@ -16,7 +16,7 @@ public class ReadDbContext(
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constanse.DATABASE));
-        optionsBuilder.UseSnakeCaseNamingConvention();
+       // optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
         optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

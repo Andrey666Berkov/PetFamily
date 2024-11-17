@@ -1,8 +1,6 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Petfamily.Accounts.Application;
 using Petfamily.Accounts.Domain.DataModels;
 using PetFamily.Shared.Core.Options;
@@ -26,10 +24,6 @@ public static class DapandancyInjection
             .AddEntityFrameworkStores<AuthorizationDbContext>();
 
         services.AddScoped<AuthorizationDbContext>();
-
-
-
-      
            
         return services;
     }
