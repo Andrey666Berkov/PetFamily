@@ -8,12 +8,12 @@ using Petfamily.Accounts.Domain.DataModels;
 
 namespace Petfamily.Accounts.Infrastructure;
 
-public class AuthorizationDbContext(IConfiguration configuration)
+public class AccountDbContext(IConfiguration configuration)
     : IdentityDbContext<User, Role, Guid>
 {
-    /*public DbSet<User> Users  => Set<User>();
-    public DbSet<Role> Roles  => Set<Role>();
-    */
+    public DbSet<Permission> Permissions  => Set<Permission>();
+    public DbSet<RolePermission> RolesPermissions  => Set<RolePermission>();
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString("Database"));
@@ -35,28 +35,25 @@ public class AuthorizationDbContext(IConfiguration configuration)
         modelBuilder.Entity<User>()
             .ToTable("users");
         
-        modelBuilder.Entity<User>()
+        /*modelBuilder.Entity<User>()
             .Property(u=>u.SocialNetworks)
             .HasConversion(
                 s=>JsonSerializer.Serialize(s, JsonSerializerOptions.Default),
                 json=>JsonSerializer.Deserialize<List<SocialNetwork>>(json, JsonSerializerOptions.Default)!);
+                */
         
         modelBuilder.Entity<Role>()
             .ToTable("roles");
         
         modelBuilder.Entity<Permission>()
             .ToTable("permissions");
+        
+        modelBuilder.Entity<RolePermission>()
+            .ToTable("role_permissions");
 
         modelBuilder.Entity<Permission>()
             .HasIndex(p => p.Code)
             .IsUnique();
-        
-        modelBuilder.Entity<Permission>()
-            .Property(c=>c.Description)
-            .HasMaxLength(300);
-      
-        modelBuilder.Entity<RolePermission>()
-            .ToTable("role_permissions");
         
         modelBuilder.Entity<RolePermission>()
             .HasOne(rp=>rp.Role)
@@ -85,6 +82,8 @@ public class AuthorizationDbContext(IConfiguration configuration)
         
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user_role");
+
+        modelBuilder.HasDefaultSchema("accauntss");
     }
 }
 

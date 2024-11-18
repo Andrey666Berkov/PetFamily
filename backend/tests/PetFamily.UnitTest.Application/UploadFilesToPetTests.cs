@@ -148,7 +148,7 @@ public class UploadFilesToPetTests
         foreach (var pet in pets)
         {
             pet.SetPosition(Position.Create(i++).Value);
-        }
+        } 
         
         var volunteer=Volunteer.Create(volunteerId, initial, email, description, 
             numberPhone, experience, requisiteList, socialNetworkList).Value;

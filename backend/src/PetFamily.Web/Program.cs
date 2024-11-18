@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Petfamily.Accounts.Application;
 using Petfamily.Accounts.Controllers;
+using Petfamily.Accounts.Infrastructure;
 using PetFamily.Pet.Application;
 using PetFamily.Pet.Controllers.Pet;
 using PetFamily.Pet.Controllers.Volunteers;
@@ -65,14 +66,15 @@ builder.Services.AddSwaggerGen(v =>
 
 builder.Services.AddSerilog();
 
-builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequarementHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
 builder.Services
     .AddPetInfrastructure(builder.Configuration)
     .AddAccauntApplication()
     .AddPetApplication()
-    .AddSingleton<IAuthorizationHandler, PermissionRequarementHandler>()
+    .AddAuthorizationInfrastructure(builder.Configuration)
+    .AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
     .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
 builder.Services.AddAuthentication(op =>
@@ -106,6 +108,9 @@ builder.Services.AddFluentValidationAutoValidation(con =>
     */
 
 var app = builder.Build();
+
+var accauntSeeder = app.Services.GetService<AccauntsSeeder>();
+await accauntSeeder.SeedAsync();
 
 app.UseExeptionMiddleware();
 

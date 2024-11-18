@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -21,16 +22,27 @@ public static class DapandancyInjection
 
         services.AddOptions<JwtOptions>();
 
+        services.AddRegisterIdentity();
+
+        services.AddScoped<AccountDbContext>();
+
+        services.AddSingleton<AccauntsSeeder>();
+
+        
+        
+        return services;
+    }
+    
+    public static IServiceCollection AddRegisterIdentity(
+        this IServiceCollection services)
+    {
         services
             .AddIdentity<User, Role>(op => { op.User.RequireUniqueEmail = true; })
-            .AddEntityFrameworkStores<AuthorizationDbContext>();
-
-        services.AddScoped<AuthorizationDbContext>();
-
-
-
-      
+            .AddEntityFrameworkStores<AccountDbContext>()
+            .AddDefaultTokenProviders();
            
+        services.AddScoped<PermissionManager>();
+        services.AddScoped<RolePermissionManager>();
         return services;
     }
 }

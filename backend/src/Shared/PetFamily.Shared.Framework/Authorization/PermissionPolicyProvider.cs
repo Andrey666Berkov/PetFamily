@@ -4,7 +4,6 @@ namespace PetFamily.Shared.Framework.Authorization;
 
 public class PermissionPolicyProvider : IAuthorizationPolicyProvider
 {
-    
     public  Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
         if (string.IsNullOrWhiteSpace(policyName))

@@ -37,6 +37,8 @@ public class RegisterUserHandler :ICommandUSeCase<RegisterUserCommand>
         {
             Email = command.Email,
             UserName = command.UserName,
+            /*SocialNetworks = new List<SocialNetwork>(),
+            Roles=new List<Role>(),*/
         };
 
         var result = await _usrManager.CreateAsync(user, command.Password);

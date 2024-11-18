@@ -16,8 +16,9 @@ public class PetConfiguration :IEntityTypeConfiguration<PetFamily.Pet.Domain.Vol
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Id).HasConversion(id => id, //конвертируй из PetID(в Pet) в Guid(d Db)
-            value => PetId.Create(value.Value)); // а обратно из db в Pet bиз Guid в PetId
+        builder.Property(x => x.Id)
+            .HasConversion(id => id.Value, //конвертируй из PetID(в Pet) в Guid(d Db)
+            value => PetId.Create(value)); // а обратно из db в Pet bиз Guid в PetId
 
         builder.Property(t => t.NickName)
             .IsRequired()
