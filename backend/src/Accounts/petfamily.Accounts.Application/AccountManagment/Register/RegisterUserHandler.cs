@@ -33,14 +33,8 @@ public class RegisterUserHandler :ICommandUSeCase<RegisterUserCommand>
             return Errors.General.AllReadyExist().ToErrorList();
             */
 
-        var user = new User
-        {
-            Email = command.Email,
-            UserName = command.UserName,
-            /*SocialNetworks = new List<SocialNetwork>(),
-            Roles=new List<Role>(),*/
-        };
-
+        var user = User.Create(command.UserName, command.Email, command.Password);
+        
         var result = await _usrManager.CreateAsync(user, command.Password);
         if (result.Succeeded != false)
         {

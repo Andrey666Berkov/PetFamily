@@ -14,7 +14,7 @@ public class Volunteer : EntityMy<VolunteerId>, ISoftDeletable
     }
 
     private Volunteer(VolunteerId id,
-        Initials initials,
+        FullName fullName,
         Email email,
         string description,
         PhoneNumber phoneNumber,
@@ -23,7 +23,7 @@ public class Volunteer : EntityMy<VolunteerId>, ISoftDeletable
         ListSocialNetwork socialNetwork
     ) : base(id)
     {
-        Initials = initials;
+        FullName = fullName;
         Email = email;
         Description = description;
         PhoneNumber = phoneNumber;
@@ -36,7 +36,7 @@ public class Volunteer : EntityMy<VolunteerId>, ISoftDeletable
     private readonly List<Pet> _pets = [];
     private bool _isDeleted = false;
 
-    public Initials Initials { get; set; }
+    public FullName FullName { get; set; }
 
     public Email Email { get; private set; }
     public string Description { get; private set; } = default!;
@@ -78,9 +78,9 @@ public class Volunteer : EntityMy<VolunteerId>, ISoftDeletable
         }
     }
 
-    public void UpdateVolunteerInfo(Initials initials, string description)
+    public void UpdateVolunteerInfo(FullName fullName, string description)
     {
-        Initials = initials;
+        FullName = fullName;
         Description = description;
     }
 
@@ -213,7 +213,7 @@ public class Volunteer : EntityMy<VolunteerId>, ISoftDeletable
     /// //////////////////////////////////////
     //CreateVolunteer
     public static Result<Volunteer, ErrorMy> Create(VolunteerId id,
-        Initials initials,
+        FullName fullName,
         Email email,
         string description,
         PhoneNumber numberPhone,
@@ -227,7 +227,7 @@ public class Volunteer : EntityMy<VolunteerId>, ISoftDeletable
 
         var volunteer = new Volunteer(
             id,
-            initials,
+            fullName,
             email,
             description,
             numberPhone,

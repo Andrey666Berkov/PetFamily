@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +12,7 @@ public class AccountDbContext(IConfiguration configuration)
 {
     public DbSet<Permission> Permissions  => Set<Permission>();
     public DbSet<RolePermission> RolesPermissions  => Set<RolePermission>();
+    public DbSet<AdminAccaunt> AdminAccaunts  => Set<AdminAccaunt>();
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -44,9 +44,27 @@ public class AccountDbContext(IConfiguration configuration)
         
         modelBuilder.Entity<Role>()
             .ToTable("roles");
+
+        modelBuilder.Entity<User>()
+            .HasMany(c => c.Roles)
+            .WithMany()
+            .UsingEntity<IdentityUserRole<Guid>>();
         
         modelBuilder.Entity<Permission>()
             .ToTable("permissions");
+
+        modelBuilder.Entity<AdminAccaunt>()
+            .HasOne(a=>a.User)
+            .WithOne()
+            .HasForeignKey<AdminAccaunt>(a => a.UserId);
+        
+        modelBuilder.Entity<AdminAccaunt>()
+            .ComplexProperty(a=>a.FullName, fb =>
+            {
+                fb.Property(a=>a.FirstName).IsRequired().HasColumnName("first_name");
+                fb.Property(a=>a.LastName).IsRequired().HasColumnName("last_name");
+                fb.Property(a=>a.MiddleName).IsRequired().HasColumnName("middle_name");
+            });
         
         modelBuilder.Entity<RolePermission>()
             .ToTable("role_permissions");
@@ -83,7 +101,7 @@ public class AccountDbContext(IConfiguration configuration)
         modelBuilder.Entity<IdentityUserRole<Guid>>()
             .ToTable("user_role");
 
-        modelBuilder.HasDefaultSchema("accauntss");
+       modelBuilder.HasDefaultSchema("accauntss");
     }
 }
 

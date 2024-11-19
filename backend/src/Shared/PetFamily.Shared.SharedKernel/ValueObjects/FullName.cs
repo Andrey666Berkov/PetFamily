@@ -2,9 +2,9 @@
 
 namespace PetFamily.Shared.SharedKernel.ValueObjects;
 
-public record Initials
+public record FullName
 {
-    private Initials(string firstName, string lastName, string middleName)
+    private FullName(string firstName, string lastName, string middleName)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -15,7 +15,7 @@ public record Initials
     public string LastName { get;  } 
     public string MiddleName { get; }
     
-    public static Result<Initials,ErrorMy> Create(
+    public static Result<FullName,ErrorMy> Create(
         string firstName, 
         string lastName, 
         string middleName)
@@ -29,6 +29,6 @@ public record Initials
         if (string.IsNullOrWhiteSpace(middleName))
             return ErrorsMy.General.ValueIsInavalid(nameof(middleName));
             
-        return new Initials(firstName, lastName, middleName);
+        return new FullName(firstName, lastName, middleName);
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Petfamily.Accounts.Application;
 using Petfamily.Accounts.Domain.DataModels;
+using Petfamily.Accounts.Infrastructure.IdentityManagers;
+using Petfamily.Accounts.Infrastructure.Options;
+using Petfamily.Accounts.Infrastructure.Seeding;
 using PetFamily.Shared.Core.Options;
 
 namespace Petfamily.Accounts.Infrastructure;
@@ -19,6 +19,9 @@ public static class DapandancyInjection
 
         services.Configure<JwtOptions>(
             configuration.GetSection(JwtOptions.JWT));
+        
+        services.Configure<AdminOptions>(
+            configuration.GetSection(AdminOptions.ADMIN));
 
         services.AddOptions<JwtOptions>();
 
@@ -27,8 +30,7 @@ public static class DapandancyInjection
         services.AddScoped<AccountDbContext>();
 
         services.AddSingleton<AccauntsSeeder>();
-
-        
+        services.AddScoped<AccountsSeederSevices>();
         
         return services;
     }
@@ -43,6 +45,9 @@ public static class DapandancyInjection
            
         services.AddScoped<PermissionManager>();
         services.AddScoped<RolePermissionManager>();
+        services.AddScoped<AdminAccountManager>();
+        
+        
         return services;
     }
 }

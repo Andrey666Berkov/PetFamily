@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Petfamily.Accounts.Application;
 using Petfamily.Accounts.Controllers;
 using Petfamily.Accounts.Infrastructure;
+using Petfamily.Accounts.Infrastructure.Seeding;
 using PetFamily.Pet.Application;
 using PetFamily.Pet.Controllers.Pet;
 using PetFamily.Pet.Controllers.Volunteers;
@@ -16,7 +17,10 @@ using PetFamily.Shared.Framework.Authorization;
 using Serilog;
 using Serilog.Events;
 
+DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
+
+var c = builder.Configuration;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -66,14 +70,15 @@ builder.Services.AddSwaggerGen(v =>
 
 builder.Services.AddSerilog();
 
-builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+/*builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();*/
 
 builder.Services
     .AddPetInfrastructure(builder.Configuration)
     .AddAccauntApplication()
     .AddPetApplication()
     .AddAuthorizationInfrastructure(builder.Configuration)
+    .AddAccountPresentation(builder.Configuration)
     .AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
     .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
@@ -128,6 +133,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 

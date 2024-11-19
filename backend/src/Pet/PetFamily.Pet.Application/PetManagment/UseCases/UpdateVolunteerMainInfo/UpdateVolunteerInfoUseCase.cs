@@ -48,7 +48,7 @@ public class UpdateVolunteerInfoUseCase : ICommandUSeCase<Guid, UpdateVolunteerI
             return volunteerResult.Error.ToErrorList();
         
         //создаем обьект иницивлы
-        var initialsResult=Initials.Create(
+        var initialsResult=FullName.Create(
             command.Initials.FirstName,
             command.Initials.LastName, 
             command.Initials.MiddleName);

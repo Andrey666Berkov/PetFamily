@@ -10,7 +10,8 @@ namespace Petfamily.Accounts.Controllers;
 
 public class AccauntController : ApplicationController
 {
-    [Permission(Permission.Accounts.CreatePet)]
+    [Permission(Permission.Accounts.ReadPet)]
+    [Permission(Permission.Pets.CreatePet)]
     [HttpGet("create")]
     public async Task<ActionResult> Create()
     {

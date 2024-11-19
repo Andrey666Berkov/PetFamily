@@ -2,6 +2,8 @@
 
 namespace PetFamily.Shared.Framework.Authorization;
 
+
+//PermissionAttribute
 public class PermissionAttribute : AuthorizeAttribute, IAuthorizationRequirement
 {
     public string Code { get; }

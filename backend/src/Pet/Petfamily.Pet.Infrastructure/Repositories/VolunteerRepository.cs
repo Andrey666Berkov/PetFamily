@@ -57,7 +57,7 @@ public class VolunteerRepository : IVolunteerRepository
         var volunteer = await _context
             .Volunteers
             .Include(pet => pet.Pets)
-            .FirstOrDefaultAsync(v => v.Initials.FirstName == firstName, cancellationToken);
+            .FirstOrDefaultAsync(v => v.FullName.FirstName == firstName, cancellationToken);
 
         if (volunteer is null)
             return ErrorsMy.General.ValueIsInavalid("volunteer");

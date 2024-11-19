@@ -88,7 +88,7 @@ public class CreateVolunteerUseCase : ICommandUSeCase<Guid, CreateVolunteerComma
         var volunteerId = VolunteerId.CreateNew();
         
         //initials
-        var initials = Initials.Create(
+        var initials = FullName.Create(
             command.Initional.FirstName, 
             command.Initional.LastName, 
             command.Initional.MiddleName);
@@ -113,7 +113,7 @@ public class CreateVolunteerUseCase : ICommandUSeCase<Guid, CreateVolunteerComma
         
         _logger.LogInformation("Created volunteer name={ volunteerResult.Value.FirstName} " +
                                "id={volunteerResult.Value.Id.Value}",
-          volunteerResult.Value.Initials.FirstName,
+          volunteerResult.Value.FullName.FirstName,
           volunteerResult.Value.Id.Value);
 
         return Result.Success<Guid, ErrorListMy>(volunteerResult.Value.Id.Value);

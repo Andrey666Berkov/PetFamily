@@ -24,7 +24,7 @@ public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteer
 
         RuleFor(cvr => cvr.Initional)
             .MustBeValueObject(s =>
-                Initials.Create(s.FirstName, s.LastName, s.MiddleName));
+                FullName.Create(s.FirstName, s.LastName, s.MiddleName));
 
         RuleFor(cvr => cvr.Description).NotNull()
             .WithError(ErrorsMy.General.ValueIsInavalid("Description"))

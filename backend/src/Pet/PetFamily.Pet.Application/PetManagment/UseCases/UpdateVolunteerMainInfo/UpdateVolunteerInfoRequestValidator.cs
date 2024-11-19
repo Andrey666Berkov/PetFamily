@@ -11,7 +11,7 @@ public class UpdateVolunteerInfoRequestValidator : AbstractValidator<UpdateVolun
     {
         RuleFor(cvr => cvr.VolunteerID).NotEmpty().WithError(ErrorsMy.General.ValueIsRequired());
         RuleFor(cvr => cvr.Initials)
-            .MustBeValueObject(c => Initials
+            .MustBeValueObject(c => FullName
                 .Create(c.FirstName, c.LastName, c.MiddleName));
         
         RuleFor(cvr => cvr.Description).NotEmpty().WithError(ErrorsMy.General.ValueIsRequired());

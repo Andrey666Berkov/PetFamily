@@ -4,5 +4,5 @@ namespace Petfamily.Accounts.Application;
 
 public interface ITokenProvider
 {
-    string GenerationAccessToken(User user);
+    Task<string> GenerationAccessToken(User user);
 }

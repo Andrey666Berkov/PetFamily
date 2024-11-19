@@ -228,7 +228,7 @@ public class VolunteerTests
     // /////////////////////////
     private Volunteer CreateVolunteerWithPet(int petCount)
     {
-        var initial = Initials.Create("bob", "Fedorovich", "Popov").Value;
+        var initial = FullName.Create("bob", "Fedorovich", "Popov").Value;
         var email=Email.Create("bob@gmail.com").Value;
         var description = "description";
         var numberPhone=PhoneNumber.Create("555-555-5555").Value;

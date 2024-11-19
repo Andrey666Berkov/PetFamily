@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Petfamily.Accounts.Domain.DataModels;
 using PetFamily.Shared.Core.Abstractions;
@@ -27,17 +28,18 @@ public class LoginUseCase : ICommandUSeCase<string, LoginCommand>
         LoginCommand command, 
         CancellationToken cancellationToken = default)
     {
+        var c =await _userManager.Users.ToListAsync();
         var user =await _userManager.FindByEmailAsync(command.Email);
         if(user is null)
             return ErrorsMy.General.NotFound().ToErrorList();
         
-        var passwordConfird=await _userManager.CheckPasswordAsync(user, command.Password);
+        /*var passwordConfird=await _userManager.CheckPasswordAsync(user, command.Password);
         if (passwordConfird == false)
         {
             return ErrorsMy.User.InvalidCredentials().ToErrorList();
-        }
+        }*/
 
-        var token= _tokenProvider.GenerationAccessToken(user);
+        var token=await _tokenProvider.GenerationAccessToken(user);
         _logger.LogInformation($"Successfully logged in");
         
         return token;
