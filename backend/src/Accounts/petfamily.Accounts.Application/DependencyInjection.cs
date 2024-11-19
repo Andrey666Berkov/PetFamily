@@ -11,12 +11,12 @@ public static class DependencyInjection
     public static IServiceCollection AddAccauntApplication(this IServiceCollection services)
     {
         services
-            .AddAccauntComands()
-            .AddAccauntQuerys()
+           .AddAccauntComands()
+           .AddAccauntQuerys()
             .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
        // services.AddScoped<RegisterUserHandler>();
-      //  services.AddScoped<LoginUseCase>();
+       // services.AddScoped<LoginUseCase>();
         return services;
     }
 
@@ -42,7 +42,6 @@ public static class DependencyInjection
                 .AssignableTo(typeof(IQueryUSeCase<,>)))
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
-
 
         return services;
     }
