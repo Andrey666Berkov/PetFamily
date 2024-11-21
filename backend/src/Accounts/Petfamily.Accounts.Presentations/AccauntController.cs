@@ -5,8 +5,9 @@ using Petfamily.Accounts.Application.AccountManagment.Register;
 using PetFamily.Accounts.Contracts.Requests;
 using PetFamily.Shared.Framework;
 using PetFamily.Shared.Framework.Authorization;
+using Permission = PetFamily.Shared.Framework.Authorization.Permission;
 
-namespace Petfamily.Accounts.Controllers;
+namespace Petfamily.Accounts.Presentations;
 
 public class AccauntController : ApplicationController
 {

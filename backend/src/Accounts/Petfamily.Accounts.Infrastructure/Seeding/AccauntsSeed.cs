@@ -2,12 +2,11 @@
 
 namespace Petfamily.Accounts.Infrastructure.Seeding;
 
-public class AccauntsSeeder
+public class AccauntsSeed
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-   
 
-    public AccauntsSeeder(
+    public AccauntsSeed(
         IServiceScopeFactory serviceScopeFactory)
     {
         _serviceScopeFactory = serviceScopeFactory;

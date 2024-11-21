@@ -14,6 +14,8 @@ public class AccountDbContext(IConfiguration configuration)
     public DbSet<RolePermission> RolesPermissions  => Set<RolePermission>();
     public DbSet<AdminAccaunt> AdminAccaunts  => Set<AdminAccaunt>();
     
+  public DbSet<RefreshSession> RefreshSessions  => Set<RefreshSession>();
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString("Database"));
@@ -35,15 +37,16 @@ public class AccountDbContext(IConfiguration configuration)
         modelBuilder.Entity<User>()
             .ToTable("users");
         
-        /*modelBuilder.Entity<User>()
-            .Property(u=>u.SocialNetworks)
-            .HasConversion(
-                s=>JsonSerializer.Serialize(s, JsonSerializerOptions.Default),
-                json=>JsonSerializer.Deserialize<List<SocialNetwork>>(json, JsonSerializerOptions.Default)!);
-                */
-        
         modelBuilder.Entity<Role>()
             .ToTable("roles");
+        
+        modelBuilder.Entity<RefreshSession>()
+            .ToTable("refresh_sessions");
+        
+        modelBuilder.Entity<RefreshSession>()
+            .HasOne(r=>r.User)
+            .WithMany()
+            .HasForeignKey(r => r.UserId);
 
         modelBuilder.Entity<User>()
             .HasMany(c => c.Roles)

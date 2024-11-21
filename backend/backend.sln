@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petfamily.Accounts.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petfamily.Accounts.Domain", "src\Accounts\Petfamily.Accounts.Domain\Petfamily.Accounts.Domain.csproj", "{1B993162-5D2E-48C9-8905-34781CD5BFC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petfamily.Accounts.Presentation", "src\Accounts\Petfamily.Accounts.Presentation\Petfamily.Accounts.Presentation.csproj", "{E17C22B8-DD55-4A72-B671-D99CBAFD53A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petfamily.Accounts.Presentations", "src\Accounts\Petfamily.Accounts.Presentations\Petfamily.Accounts.Presentations.csproj", "{E17C22B8-DD55-4A72-B671-D99CBAFD53A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Contracts", "src\Accounts\PetFamily.Accounts.Contracts\PetFamily.Accounts.Contracts.csproj", "{89537550-A085-4799-9590-FE5A402456E8}"
 EndProject

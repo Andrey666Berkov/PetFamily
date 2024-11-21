@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Petfamily.Accounts.Domain.DataModels;
-using PetFamily.Shared.Framework;
+using PetFamily.Shared.Core;
+
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Petfamily.Accounts.Infrastructure;

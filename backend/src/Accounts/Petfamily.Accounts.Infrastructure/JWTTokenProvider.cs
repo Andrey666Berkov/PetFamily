@@ -16,7 +16,7 @@ public class JWTTokenProvider : ITokenProvider
 {
     private readonly PermissionManager _permissionManager;
     private readonly JwtOptions _jwtOptions;
-    private ITokenProvider _tokenProviderImplementation;
+    private readonly ITokenProvider _tokenProviderImplementation;
 
     public JWTTokenProvider(
         IOptions<JwtOptions> options,

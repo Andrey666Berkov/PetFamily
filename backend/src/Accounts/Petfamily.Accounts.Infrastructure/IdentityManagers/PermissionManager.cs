@@ -36,7 +36,7 @@ public class PermissionManager(AccountDbContext accountsDbContext)
             .SelectMany(r=>r.RolePermissions)
             .Select(rp=>rp.Permission.Code)
             .ToListAsync();
-       
-        return  permission.ToHashSet();
+
+        return permission.ToHashSet();
     }
 }

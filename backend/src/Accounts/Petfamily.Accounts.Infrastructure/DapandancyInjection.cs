@@ -30,6 +30,7 @@ public static class DapandancyInjection
         services.AddScoped<AccountDbContext>();
 
         services.AddSingleton<AccauntsSeeder>();
+        services.AddSingleton<AccauntsSeed>();
         services.AddScoped<AccountsSeederSevices>();
         
         return services;

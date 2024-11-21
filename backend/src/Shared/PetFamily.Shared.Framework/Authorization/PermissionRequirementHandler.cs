@@ -25,17 +25,15 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttri
         using var scope = _serviceScopeFactory.CreateScope();
         var accauntContract = scope.ServiceProvider.GetRequiredService<IAccountsContract>();
 
-        /*var userIdstring = context.User.Claims
+        var userIdstring = context.User.Claims
             .FirstOrDefault(claim => claim.Type == CustomClaims.Id)?.Value;
 
         if (!Guid.TryParse(userIdstring, out Guid userId))
         {
             context.Fail();
-        }*/
-        
-        var permissions = context.User.Claims
-            .Where(claim => claim.Type == CustomClaims.Permission)
-             .Select(claim => claim.Value);
+        }
+
+        var permissions =await accauntContract.GetUserPermissionCodesAsync(userId);
 
         if (permissions.Contains(permission.Code))
         {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Petfamily.Accounts.Application;
-using Petfamily.Accounts.Controllers;
+using Petfamily.Accounts.Presentations;
 using Petfamily.Accounts.Infrastructure;
 using Petfamily.Accounts.Infrastructure.Seeding;
 using PetFamily.Pet.Application;
@@ -16,6 +16,8 @@ using PetFamily.Web.Middlewares;
 using PetFamily.Shared.Framework.Authorization;
 using Serilog;
 using Serilog.Events;
+
+
 
 DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -78,7 +80,7 @@ builder.Services
     .AddAccauntApplication()
     .AddPetApplication()
     .AddAuthorizationInfrastructure(builder.Configuration)
-    .AddAccountPresentation(builder.Configuration)
+    .AddAccountPresentation()
     .AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
     .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
@@ -114,7 +116,7 @@ builder.Services.AddFluentValidationAutoValidation(con =>
 
 var app = builder.Build();
 
-var accauntSeeder = app.Services.GetService<AccauntsSeeder>();
+var accauntSeeder = app.Services.GetRequiredService<AccauntsSeed>();
 await accauntSeeder.SeedAsync();
 
 app.UseExeptionMiddleware();

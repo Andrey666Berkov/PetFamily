@@ -34,7 +34,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Accounts\Petfamily.Accounts.Presentation\Petfamily.Accounts.Presentation.csproj" />
+      <ProjectReference Include="..\Accounts\Petfamily.Accounts.Presentations\Petfamily.Accounts.Presentations.csproj" />
       <ProjectReference Include="..\Pet\PetFamily.Pet.Controllers\PetFamily.Pet.Controllers.csproj" />
       <ProjectReference Include="..\Shared\PetFamily.Shared.Core\PetFamily.Shared.Core.csproj" />
       <ProjectReference Include="..\Shared\PetFamily.Shared.Framework\PetFamily.Shared.Framework.csproj" />
