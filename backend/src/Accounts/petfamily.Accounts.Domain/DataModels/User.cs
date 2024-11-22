@@ -1,17 +1,24 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Identity;
 
 namespace Petfamily.Accounts.Domain.DataModels;
 
 public class User : IdentityUser<Guid>
 {
-    
+    public readonly PasswordHasher<User> _passwordHasher;
     private List<Role> _roles =[];
     public IReadOnlyList<Role> Roles => _roles;
 
     private User()
     {
+        _passwordHasher = new PasswordHasher<User>();
     }
-    
+
+    public  void SetRoles(List<Role> roles)
+    {
+        _roles= roles;
+    }
+ 
     public static User Create(string userName, string email, string password)
     {
         return new User
@@ -19,7 +26,7 @@ public class User : IdentityUser<Guid>
             UserName = userName,
             Email = email,
             NormalizedEmail= email.ToUpper(),
-            PasswordHash = password,
+          
         };
     }
     
@@ -31,7 +38,7 @@ public class User : IdentityUser<Guid>
             Email = email,
             _roles = [role],
             NormalizedEmail= email.ToUpper(),
-            PasswordHash = password
+           
         };
     }
 }

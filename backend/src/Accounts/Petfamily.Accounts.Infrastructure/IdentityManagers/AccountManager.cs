@@ -2,7 +2,7 @@
 
 namespace Petfamily.Accounts.Infrastructure.IdentityManagers;
 
-public class AdminAccountManager(AccountDbContext accountsDbContext)
+public class AccountManager(AccountDbContext accountsDbContext)
 {
     public async Task CreateAdminAccaunt(AdminAccaunt adminAccaunt)
     {

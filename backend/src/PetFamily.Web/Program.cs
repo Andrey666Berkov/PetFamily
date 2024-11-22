@@ -1,7 +1,5 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Petfamily.Accounts.Application;
 using Petfamily.Accounts.Presentations;
@@ -12,11 +10,11 @@ using PetFamily.Pet.Controllers.Pet;
 using PetFamily.Pet.Controllers.Volunteers;
 using Petfamily.Pet.Infrastructure;
 using PetFamily.Shared.Core.Options;
+using PetFamily.Shared.Framework;
 using PetFamily.Web.Middlewares;
 using PetFamily.Shared.Framework.Authorization;
 using Serilog;
 using Serilog.Events;
-
 
 
 DotNetEnv.Env.Load();
@@ -40,7 +38,6 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(AccauntController).Assembly)
     .AddApplicationPart(typeof(VolunteerController).Assembly)
     .AddApplicationPart(typeof(PetController).Assembly);
-
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -94,19 +91,10 @@ builder.Services.AddAuthentication(op =>
     var jwtOptions = builder.Configuration.GetSection(JwtOptions.JWT)
         .Get<JwtOptions>() ?? throw new Exception("Missing jwt options");
 
-    op.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidIssuer = jwtOptions.Issuer,
-        ValidAudience = jwtOptions.Audience,
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidateLifetime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtOptions.Key)),
-        ClockSkew = TimeSpan.Zero
-    };
+    op.TokenValidationParameters = TokenValidationParametersFactory
+        .CreateWithLifewTime(jwtOptions);
 });
+
 
 builder.Services.AddAuthorization();
 /*
@@ -128,7 +116,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-   // await app.ApplyMigration();
+    // await app.ApplyMigration();
 }
 
 app.UseHttpsRedirection();

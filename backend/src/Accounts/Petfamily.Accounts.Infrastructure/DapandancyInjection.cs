@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Petfamily.Accounts.Application;
+using Petfamily.Accounts.Application.AccountManagment.RefreshToken;
 using Petfamily.Accounts.Domain.DataModels;
 using Petfamily.Accounts.Infrastructure.IdentityManagers;
 using Petfamily.Accounts.Infrastructure.Options;
@@ -33,6 +34,8 @@ public static class DapandancyInjection
         services.AddSingleton<AccauntsSeed>();
         services.AddScoped<AccountsSeederSevices>();
         
+      
+        
         return services;
     }
     
@@ -46,8 +49,8 @@ public static class DapandancyInjection
            
         services.AddScoped<PermissionManager>();
         services.AddScoped<RolePermissionManager>();
-        services.AddScoped<AdminAccountManager>();
-        
+        services.AddScoped<AccountManager>();
+        services.AddScoped<IRefreshSessionManager,RefreshSessionManager>();
         
         return services;
     }

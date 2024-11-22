@@ -17,7 +17,7 @@ public class AccountsSeederSevices(
     PermissionManager permissionManager,
     RolePermissionManager rolePermissionManager,
     IOptions<AdminOptions> adminOptions,
-    AdminAccountManager adminAccountManager,
+    AccountManager accountManager,
     ILogger<AccountsSeederSevices> logger)
 {
     public async Task SeedAsync()
@@ -38,20 +38,27 @@ public class AccountsSeederSevices(
             var adminRole = await roleManager.FindByNameAsync(AdminAccaunt.ADMIN)
                             ?? throw new ApplicationException($"Role not find admin role");
 
+           
             var adminUser = User.CreateAdmin(
                 adminOptions.Value.UserName,
                 adminOptions.Value.Email, adminRole,
                 adminOptions.Value.Password);
-
+           
+            
             var fullName = FullName
                 .Create(
                     adminOptions.Value.UserName,
                     adminOptions.Value.UserName,
                     adminOptions.Value.UserName)
                 .Value;
+            adminUser.PasswordHash=new PasswordHasher<User>().HashPassword(adminUser, adminOptions.Value.Password);
             var adminAccaunt = new AdminAccaunt(fullName, adminUser);
+            
 
-            await adminAccountManager.CreateAdminAccaunt(adminAccaunt);
+            await accountManager.CreateAdminAccaunt(adminAccaunt);
+            
+            
+            
         }
     }
 

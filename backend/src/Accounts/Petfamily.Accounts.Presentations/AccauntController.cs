@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Petfamily.Accounts.Application.AccountManagment.Login;
+using Petfamily.Accounts.Application.AccountManagment.RefreshToken;
 using Petfamily.Accounts.Application.AccountManagment.Register;
 using PetFamily.Accounts.Contracts.Requests;
 using PetFamily.Shared.Framework;
@@ -13,6 +14,7 @@ public class AccauntController : ApplicationController
 {
     [Permission(Permission.Accounts.ReadPet)]
     [Permission(Permission.Pets.CreatePet)]
+    [Authorize]
     [HttpGet("create")]
     public async Task<ActionResult> Create()
     {
@@ -59,6 +61,22 @@ public class AccauntController : ApplicationController
     {
         var result = await handler.Handler(
             new LoginCommand(userRequest.Email, userRequest.Password),
+            cancellationToken);
+        
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+    
+    [HttpPost("refresh")]
+    public async Task<ActionResult> RefreshTokens(
+        [FromBody] RefreshTokensRequest refreshRequest,
+        [FromServices] RefreshTokenUseCase handler,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.Handler(
+            new RefreshTokenCommand(refreshRequest.AccessToken, refreshRequest.RefreshToken),
             cancellationToken);
         
         if (result.IsFailure)
