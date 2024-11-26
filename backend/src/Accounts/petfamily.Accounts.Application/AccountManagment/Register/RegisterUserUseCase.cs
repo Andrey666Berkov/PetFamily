@@ -7,15 +7,15 @@ using PetFamily.Shared.SharedKernel;
 
 namespace Petfamily.Accounts.Application.AccountManagment.Register;
 
-public class RegisterUserHandler :ICommandUSeCase<RegisterUserCommand>
+public class RegisterUserUseCase :ICommandUSeCase<RegisterUserCommand>
 {
     private readonly UserManager<User> _usrManager;
-    private readonly ILogger<RegisterUserHandler> _logger;
+    private readonly ILogger<RegisterUserUseCase> _logger;
     
-    public RegisterUserHandler(
+    public RegisterUserUseCase(
         UserManager<User> usrManager,
         RoleManager<Role> roleManager,
-        ILogger<RegisterUserHandler> logger)
+        ILogger<RegisterUserUseCase> logger)
     {
         _usrManager = usrManager;
         _logger = logger;
@@ -43,7 +43,6 @@ public class RegisterUserHandler :ICommandUSeCase<RegisterUserCommand>
         }
 
         _usrManager.AddToRoleAsync(user, "Partisipant");
-         
         
         var errors=result.Errors
             .Select(c => ErrorMy.Failure(c.Code, c.Description))

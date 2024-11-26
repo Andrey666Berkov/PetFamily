@@ -88,13 +88,15 @@ public class JWTTokenProvider : ITokenProvider
         return refreshSession;
     }
 
-    public async Task<Result<IReadOnlyList<Claim>, ErrorMy>> GetUserClaims(string JwtToken,  CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<Claim>, ErrorMy>> GetUserClaims(
+        string accessToken,
+        CancellationToken cancellationToken)
     {
        var jwtHandler=new JwtSecurityTokenHandler();
 
        var validationTokenParameters = TokenValidationParametersFactory.CreateWithOutLifewTime(_jwtOptions);
        
-       var validResult=await jwtHandler.ValidateTokenAsync(JwtToken, validationTokenParameters);
+       var validResult=await jwtHandler.ValidateTokenAsync(accessToken, validationTokenParameters);
 
        if (validResult.IsValid == false)
            return ErrorsMy.Tokens.InvalidToken();

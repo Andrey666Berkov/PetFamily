@@ -40,10 +40,10 @@ public class AccauntController : ApplicationController
     [HttpPost("registration")]
     public async Task<ActionResult> Register(
         [FromBody] RegisterUserRequest request,
-        [FromServices] RegisterUserHandler handler,
+        [FromServices] RegisterUserUseCase useCase,
         CancellationToken cancellationToken)
     {
-        var result = await handler.Handle(
+        var result = await useCase.Handle(
             new RegisterUserCommand(request.Email, request.UserName, request.Password),
             cancellationToken);
         

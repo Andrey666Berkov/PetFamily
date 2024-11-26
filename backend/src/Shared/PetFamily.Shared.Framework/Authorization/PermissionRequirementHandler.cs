@@ -5,7 +5,8 @@ using PetFamily.Shared.Core.Models;
 
 namespace PetFamily.Shared.Framework.Authorization;
 
-public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttribute>
+public class PermissionRequirementHandler :
+    AuthorizationHandler<PermissionAttribute>
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 

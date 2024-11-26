@@ -9,5 +9,5 @@ public interface ITokenProvider
 {
     Task<JwtTokenResult> GenerationAccessToken(User user, CancellationToken cancellationToken);
     Task<RefreshSession> GeneratedRefreshToken(User user, Guid accessTokenJti, CancellationToken cancellationToken);
-    Task<Result<IReadOnlyList<Claim>, ErrorMy>> GetUserClaims(string JwtToken, CancellationToken cancellationToken);
+    Task<Result<IReadOnlyList<Claim>, ErrorMy>> GetUserClaims(string accessToken, CancellationToken cancellationToken);
 }
