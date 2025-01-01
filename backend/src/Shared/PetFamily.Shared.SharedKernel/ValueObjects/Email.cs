@@ -7,7 +7,7 @@ public record Email
     
     private const string EMAIL_REGEX = @"/\A[^@]+@([^@\.]+\.)+[^@\.]+\z/";
     
-    public string Emaill { get; }
+    public string Name { get; }
 
     private Email()
     {
@@ -15,7 +15,7 @@ public record Email
     }
     private Email(string email)
     {
-        Emaill = email;
+        Name = email;
     }
 
     public static Result<Email, ErrorMy> Create(string email)

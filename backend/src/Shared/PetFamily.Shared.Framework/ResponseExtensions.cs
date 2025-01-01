@@ -6,7 +6,7 @@ using PetFamily.Shared.SharedKernel;
 namespace PetFamily.Shared.Framework;
 
 public static class ResponseExtensions
-{
+{ 
     public static ActionResult ToResponse(this ErrorMy errorMy)
     {
         var statusCode = GetStatusForErrorType(errorMy.Type);

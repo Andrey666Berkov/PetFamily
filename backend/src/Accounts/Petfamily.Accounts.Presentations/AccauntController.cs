@@ -30,11 +30,12 @@ public class AccauntController : ApplicationController
     }
 
 
+    [Permission(Permission.Pets.CreatePet)]
     [Authorize]
-    [HttpGet("user")]
+    [HttpPost("user")]
     public async Task<ActionResult> TestUser()
     {
-        return Ok();
+        return Ok("Hello");
     }
 
     [HttpPost("registration")]
@@ -52,7 +53,7 @@ public class AccauntController : ApplicationController
 
         return Ok();
     }
-
+    
     [HttpPost("loginnnn")]
     public async Task<ActionResult> Login(
         [FromBody] LoginUserRequests userRequest,
@@ -65,22 +66,32 @@ public class AccauntController : ApplicationController
         
         if (result.IsFailure)
             return result.Error.ToResponse();
+        
+        HttpContext.Response.Cookies.Append("refreshToken",result.Value.RefreshToken.ToString());
 
         return Ok(result.Value);
     }
     
     [HttpPost("refresh")]
     public async Task<ActionResult> RefreshTokens(
-        [FromBody] RefreshTokensRequest refreshRequest,
         [FromServices] RefreshTokenUseCase handler,
         CancellationToken cancellationToken)
     {
+        if (!HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+        {
+            return Unauthorized();
+        };
+        
+        Guid.TryParse(refreshToken, out var refreshTokenGuid);
         var result = await handler.Handler(
-            new RefreshTokenCommand(refreshRequest.AccessToken, refreshRequest.RefreshToken),
+            new RefreshTokenCommand(refreshTokenGuid),
             cancellationToken);
         
         if (result.IsFailure)
             return result.Error.ToResponse();
+        
+        HttpContext.Response.Cookies.Append("refreshToken",
+            result.Value.RefreshToken.ToString());
 
         return Ok(result.Value);
     }

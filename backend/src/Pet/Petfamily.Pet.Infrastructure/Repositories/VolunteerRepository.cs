@@ -4,6 +4,7 @@ using PetFamily.Pet.Application.PetManagment;
 using PetFamily.Pet.Domain.Volunteers;
 using Petfamily.Pet.Infrastructure.DbContexts;
 using PetFamily.Shared.SharedKernel;
+using PetFamily.Shared.SharedKernel.ValueObjects;
 using PetFamily.Shared.SharedKernel.ValueObjects.IDs;
 
 namespace Petfamily.Pet.Infrastructure.Repositories;
@@ -78,5 +79,15 @@ public class VolunteerRepository : IVolunteerRepository
         _context.Remove(volunteer);
         await _context.SaveChangesAsync(cancellationToken);
         return volunteer.Id.Value;
+    }
+    
+    
+    public async Task SetLock(Email email, CancellationToken cancellationToken = default)
+    {
+        var volunteer = _context.Database.ExecuteSqlInterpolatedAsync(
+            $"Select * from volunteers where firstname={email.Name} FOR UPDATE NOWAIT",
+            cancellationToken);
+         
+        
     }
 }

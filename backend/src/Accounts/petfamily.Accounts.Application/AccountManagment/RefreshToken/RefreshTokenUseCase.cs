@@ -11,7 +11,7 @@ using PetFamily.Shared.SharedKernel;
 
 namespace Petfamily.Accounts.Application.AccountManagment.RefreshToken;
 
-public record RefreshTokenCommand(string AccesssToken, Guid RefreshToken) : ICommands;
+public record RefreshTokenCommand(Guid RefreshToken) : ICommands;
 
 public class RefreshTokenUseCase : ICommandUSeCase<LoginResponses, RefreshTokenCommand>
 {
@@ -36,12 +36,16 @@ public class RefreshTokenUseCase : ICommandUSeCase<LoginResponses, RefreshTokenC
         RefreshTokenCommand command,
         CancellationToken cancellationToken = default)
     {
+        
+        //достаем из сессии рефТокен
         var OldRefreshSession = await _refreshManager
             .GetByReffreshToken(command.RefreshToken, cancellationToken);
 
+        
         if (OldRefreshSession.IsFailure)
             OldRefreshSession.Error.ToErrorList();
 
+        //старый рефреш проверяем на протухание
         if (OldRefreshSession.Value.ExpiresIn < DateTime.UtcNow)
         {
             return ErrorsMy.Tokens.ExpiredToken().ToErrorList();
@@ -52,29 +56,8 @@ public class RefreshTokenUseCase : ICommandUSeCase<LoginResponses, RefreshTokenC
         //провадидировать accessToken 
         //сгенерировать новый access и refresh  token
 
-        var userClaims = await _tokenProvider
-            .GetUserClaims(command.AccesssToken, cancellationToken);
         
-
-        var userId = userClaims.Value.FirstOrDefault(c => c.Type == CustomClaims.Id).Value;
-        if(Guid.TryParse(userId, out var iserId)==false)
-           return ErrorsMy.Tokens.Failure().ToErrorList();
-
-        if (OldRefreshSession.Value.UserId != iserId)
-        {
-            return ErrorsMy.Tokens.InvalidToken().ToErrorList();
-        }
-
-        var userJtiString =userClaims.Value.FirstOrDefault(c => c.Type == CustomClaims.Jti).Value;
-        if(Guid.TryParse(userJtiString, out var userJtiGuid)==false)
-            return ErrorsMy.Tokens.Failure().ToErrorList();
-        
-       
-        if (OldRefreshSession.Value.Jti != userJtiGuid)
-        {
-            return ErrorsMy.Tokens.InvalidToken().ToErrorList();
-        }
-        
+        //удаляем старый рефрешсессию
         _refreshManager.Delete(OldRefreshSession.Value);
         await _unitOfWork.SaveChanges(cancellationToken);
 
@@ -85,7 +68,11 @@ public class RefreshTokenUseCase : ICommandUSeCase<LoginResponses, RefreshTokenC
         var refreshToken = await _tokenProvider
             .GeneratedRefreshToken(OldRefreshSession.Value.User, accessToken.Jti, cancellationToken);
 
-        return new LoginResponses(accessToken.AccessToken, refreshToken.Id);
+        return new LoginResponses(
+            accessToken.AccessToken, 
+            refreshToken.Id, 
+            OldRefreshSession.Value.UserId,
+            OldRefreshSession.Value.User.ToString());
 
     }
 }

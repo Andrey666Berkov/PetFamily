@@ -53,6 +53,6 @@ public class LoginUseCase : ICommandUSeCase<LoginResponses, LoginCommand>
         var refreshToken = await _tokenProvider.GeneratedRefreshToken(user, accessTokenResult.Jti, cancellationToken);
         _logger.LogInformation($"Successfully logged in");
 
-        return new LoginResponses(accessTokenResult.AccessToken, refreshToken.Id);
+        return new LoginResponses(accessTokenResult.AccessToken, refreshToken.Id, user.Id, user.Email);
     }
 }

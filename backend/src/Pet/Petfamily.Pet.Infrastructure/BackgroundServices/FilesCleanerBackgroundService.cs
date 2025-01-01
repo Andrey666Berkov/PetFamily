@@ -28,7 +28,7 @@ public class FilesCleanerBackgroundService : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             
-            await services.Process(stoppingToken);
+            await services.Process(stoppingToken); 
         }
 
         await Task.CompletedTask;

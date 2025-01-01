@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.OpenApi.Models;
 using Petfamily.Accounts.Application;
 using Petfamily.Accounts.Presentations;
@@ -15,6 +16,7 @@ using PetFamily.Web.Middlewares;
 using PetFamily.Shared.Framework.Authorization;
 using Serilog;
 using Serilog.Events;
+using Sprache;
 
 
 DotNetEnv.Env.Load();
@@ -121,10 +123,26 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(config =>
+{
+    config.WithOrigins("http://localhost:5173")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+        
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
 
 app.MapControllers();
+
+app.MapGet("/api/users", () =>
+{
+    return Results.BadRequest("Все плохо");
+    /*List<string> users = ["users1", "users2", "users3"];
+    return Results.Ok(users);*/
+});
+
 
 app.Run();

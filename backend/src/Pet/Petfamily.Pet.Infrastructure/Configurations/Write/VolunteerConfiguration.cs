@@ -45,7 +45,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.ComplexProperty(v => v.Email, em =>
         {
             em.IsRequired();
-            em.Property(e => e.Emaill)
+            em.Property(e => e.Name)
                 .HasMaxLength(ConstantsMy.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("email");
         });
@@ -96,5 +96,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");
+
+        builder.Property<byte[]>("version")
+            .IsRowVersion() ;
     }
 }

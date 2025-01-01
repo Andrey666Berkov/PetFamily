@@ -30,17 +30,18 @@ public class UpdateVolunteerInfoUseCase : ICommandUSeCase<Guid, UpdateVolunteerI
     
     public async Task<Result<Guid, ErrorListMy>> Handler(
         UpdateVolunteerInfoCommand command,
-       
         CancellationToken cancellationToken = default)
     {
+        
+        
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
         
         if (validationResult.IsValid==false)
         {
             return validationResult.ToErrorList();
-        } 
-        
-        var transaction = await _unitOfWork.BeginTransaction(cancellationToken);
+        }
+
+        using var transaction = await _unitOfWork.BeginTransaction(cancellationToken);
         //Находим по ID этого волонтера
         VolunteerId volunteerId=VolunteerId.Create(command.VolunteerID);
         var volunteerResult=await _volunteerRepository.GetById(volunteerId, cancellationToken);
