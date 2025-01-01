@@ -1,24 +1,20 @@
-
+using System.ComponentModel.DataAnnotations;
 using CSharpFunctionalExtensions;
-using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Moq;
-using PetFamily.Application.Database;
-using PetFamily.Application.Dtos;
-using PetFamily.Application.FileProvider;
-using PetFamily.Application.Massaging;
-using PetFamily.Application.PetManagment;
-using PetFamily.Application.PetManagment.UseCases.UploadFilesToPet;
-using PetFamily.Domain.IDs;
-using PetFamily.Domain.Shared;
-using PetFamily.Domain.Species;
-using PetFamily.Domain.ValueObjects;
-using PetFamily.Domain.Volunteers;
-using PetFamily.Infrastructure.MessageQuaeues;
-using FileInfo = PetFamily.Application.FileProvider.FileInfo;
+using PetFamily.Pet.Application.PetManagment;
+using PetFamily.Pet.Application.PetManagment.UseCases.UploadFilesToPet;
+using PetFamily.Pet.Domain.Volunteers;
+using PetFamily.Shared.Core.Abstractions;
+using PetFamily.Shared.Core.Dtos;
+using PetFamily.Shared.Core.File;
+using PetFamily.Shared.Core.Massaging;
+using PetFamily.Shared.SharedKernel;
+using PetFamily.Shared.SharedKernel.ValueObjects;
+using PetFamily.Shared.SharedKernel.ValueObjects.IDs;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace PetFamily.Application.UnitTest;
 
@@ -71,7 +67,7 @@ public class UploadFilesToPetTests
 
         _fileProviderMock
             .Setup(v => v.Handler(It.IsAny<List<FileDataDto>>(),ct))
-            .ReturnsAsync(Result.Success<IReadOnlyList<FilePath>, Error>(filePaths));
+            .ReturnsAsync(Result.Success<IReadOnlyList<FilePath>, ErrorMy>(filePaths));
         
                       // Mock for IVolunteerRepository
         _volunteerRepositoryMock
@@ -114,20 +110,10 @@ public class UploadFilesToPetTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(volunteer.Pets[0].Id.Value);*/
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     private Volunteer CreateVolunteerWithPet(int petCount)
     {
-        var initial = Initials.Create("bob", "Fedorovich", "Popov").Value;
+        var initial = FullName.Create("bob", "Fedorovich", "Popov").Value;
         var email=Email.Create("bob@gmail.com").Value;
         var description = "description";
         var numberPhone=PhoneNumber.Create("555-555-5555").Value;
@@ -140,7 +126,7 @@ public class UploadFilesToPetTests
 
         var address = Address.Create("city", "street", "ggg").Value;
         var pets = Enumerable.Range(1, petCount).Select(_ =>
-            new Pet(
+            new Pet.Domain.Volunteers.Pet(
                 PetId.CreateNewPetId(),
                 "NameA",
                 "description",
@@ -162,7 +148,7 @@ public class UploadFilesToPetTests
         foreach (var pet in pets)
         {
             pet.SetPosition(Position.Create(i++).Value);
-        }
+        } 
         
         var volunteer=Volunteer.Create(volunteerId, initial, email, description, 
             numberPhone, experience, requisiteList, socialNetworkList).Value;

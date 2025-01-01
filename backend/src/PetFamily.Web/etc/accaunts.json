@@ -1,0 +1,32 @@
+﻿{
+  "Roles": {
+    "Admin": [
+      "pet.create",
+      "pet.read",
+      "pet.update",
+      "pet.delete",
+      "pet.move",
+      "solving.pet.read",     
+      "solving.pet.send.on.review"
+    ],
+    "observing": [      
+      "pet.read",
+      "solving.pet.read",
+      "solving.pet.send.on.review"
+    ]
+  },
+  "Permissions": {
+    "Pet": [
+      "pet.create",
+      "pet.read",
+      "pet.update",
+      "pet.delete",
+      "pet.move"
+    ],
+    "SolvingPets": [
+      "solving.pet.read",
+      "solving.pet.send.on.review"
+     
+    ]
+  }
+}
